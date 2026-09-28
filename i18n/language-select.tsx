@@ -29,4 +29,3 @@ export function LanguageSelect({className = ""}: {className?: string}) {
     {failed && <span role="alert">{intl.t('dynamic.languageSaveFailed')}</span>}
   </div>;
 }
-
