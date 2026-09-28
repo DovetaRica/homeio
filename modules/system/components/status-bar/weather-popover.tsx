@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { Droplets, Sun, Thermometer, Wind } from "@/components/icons/platform-icons";
 import {
@@ -39,7 +41,7 @@ export function WeatherPopover({ weather, onClose }: WeatherPopoverProps) {
                 {mainTemperature}
               </span>
               <span className="text-lg text-muted-foreground mb-0.5">
-                {hasMainTemperature ? "C" : ""}
+                {zh(hasMainTemperature ? "C" : "")}
               </span>
             </div>
             <p className="text-xs text-muted-foreground">
@@ -51,20 +53,20 @@ export function WeatherPopover({ weather, onClose }: WeatherPopoverProps) {
 
         <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
-            <Droplets className="size-3" /> Hum {weather?.current.humidityPercent ?? "--"}%
+            <Droplets className="size-3" /> 湿度 {weather?.current.humidityPercent ?? "--"}%
           </span>
           <span className="flex items-center gap-1">
-            <Wind className="size-3" /> Wind {weather?.current.windSpeedKph ?? "--"} km/h
+            <Wind className="size-3" /> 风速 {weather?.current.windSpeedKph ?? "--"} km/h
           </span>
           <span className="flex items-center gap-1">
-            <Sun className="size-3" /> Feels {feelsLike}
-            {hasFeelsLike ? "C" : ""}
+            <Sun className="size-3" /> 体感 {feelsLike}
+            {zh(hasFeelsLike ? "C" : "")}
           </span>
         </div>
 
         <div className="mt-4 border-t border-glass-border pt-3">
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
-            Next 5 Days
+            未来五天
           </p>
           <div className="flex items-stretch gap-1.5">
             {dailyForecast.length > 0 ? (
@@ -86,7 +88,7 @@ export function WeatherPopover({ weather, onClose }: WeatherPopoverProps) {
                 </div>
               ))
             ) : (
-              <span className="text-xs text-muted-foreground">No forecast available</span>
+              <span className="text-xs text-muted-foreground">暂无天气预报</span>
             )}
           </div>
         </div>

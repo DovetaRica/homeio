@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import type { TerminalOutputLine } from "@/lib/shared/contracts/terminal";
 import { useTerminalCommand } from "@/modules/shell/hooks/useTerminalCommand";
@@ -544,36 +546,36 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
-                aria-label="Search terminal output"
+                aria-label="搜索终端输出"
               >
                 <Search className="size-3.5" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>Search output (Ctrl+F)</TooltipContent>
+            <TooltipContent side="bottom" sideOffset={6}>搜索输出（Ctrl+F）</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={handleCopyAll}
                 className="rounded p-1 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-                aria-label="Copy all terminal output"
+                aria-label="复制全部终端输出"
               >
                 <Copy className="size-3.5" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>Copy all output</TooltipContent>
+            <TooltipContent side="bottom" sideOffset={6}>复制全部输出</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={handleDownloadTranscript}
                 className="rounded p-1 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-                aria-label="Download terminal transcript"
+                aria-label="下载终端记录"
               >
                 <Download className="size-3.5" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>Download transcript</TooltipContent>
+            <TooltipContent side="bottom" sideOffset={6}>下载记录</TooltipContent>
           </Tooltip>
         </div>
       </div>
@@ -604,16 +606,16 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
                 scheduleFocusInput();
               }
             }}
-            placeholder="Search output…"
+            placeholder="搜索输出…"
             className="flex-1 bg-transparent font-mono text-xs text-foreground outline-none placeholder:text-muted-foreground"
             spellCheck={false}
           />
 
           {searchQuery.trim() && (
             <span className="shrink-0 font-mono text-xs text-muted-foreground">
-              {searchMatchLineIndices.length > 0
+              {zh(searchMatchLineIndices.length > 0
                 ? `${searchMatchIndex + 1}/${searchMatchLineIndices.length}`
-                : "no matches"}
+                : "no matches")}
             </span>
           )}
 
@@ -621,14 +623,14 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
             <button
               onClick={() => navigateSearchMatch("prev")}
               className="rounded px-1 py-0.5 text-xs text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-              title="Previous match (Shift+Enter)"
+              title="上一个匹配项（Shift+Enter）"
             >
               ↑
             </button>
             <button
               onClick={() => navigateSearchMatch("next")}
               className="rounded px-1 py-0.5 text-xs text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-              title="Next match (Enter)"
+              title="下一个匹配项（Enter）"
             >
               ↓
             </button>
@@ -641,7 +643,7 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
               scheduleFocusInput();
             }}
             className="rounded p-1 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-            aria-label="Close search"
+            aria-label="关闭搜索"
           >
             <X className="size-3.5" />
           </button>
@@ -678,7 +680,7 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
               )}
               {line.type === "input" && (
                 <div>
-                  <span className="text-status-green">{line.prompt}</span>{" "}
+                  <span className="text-status-green">{line.prompt}</span>{zh(" ")}
                   <span className="text-foreground">{line.content}</span>
                 </div>
               )}
@@ -697,7 +699,7 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
 
         {readOnly ? (
           <div className="pt-2 text-xs text-muted-foreground">
-            Read-only mode. Command input is disabled.
+            只读模式：命令输入已禁用。
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex items-center">
@@ -735,10 +737,10 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
                 : "text-status-green/70"
           }
         >
-          {isExecuting ? "running…" : readOnly ? "read-only" : "ready"}
+          {zh(isExecuting ? "running…" : readOnly ? "read-only" : "ready")}
         </span>
         <span>{toPromptPath(cwd)}</span>
-        <span>{commandHistory.length} cmds</span>
+        <span>{commandHistory.length} 条命令</span>
       </div>
     </div>
   );

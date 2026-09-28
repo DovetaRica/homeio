@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   AlertDialog,
@@ -46,9 +48,9 @@ function PreferenceRow({
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
       <div className="min-w-0">
-        <div className="text-sm text-foreground">{label}</div>
+        <div className="text-sm text-foreground">{zh(label)}</div>
         {description && (
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{description}</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{zh(description)}</div>
         )}
       </div>
       {children}
@@ -91,7 +93,7 @@ export function PowerSection({
   return (
     <div className="flex flex-col gap-1">
       {/* ── Power Management ── */}
-      <SectionDivider title="Power Management" />
+      <SectionDivider title="电源管理" />
       <InfoBanner
         text="These actions will affect all running services. Make sure to save your work before proceeding."
         variant="warning"
@@ -110,25 +112,25 @@ export function PowerSection({
               )}
             >
               <RefreshCw className="size-5 text-status-amber group-hover:animate-spin" />
-              <span className="text-xs font-medium text-foreground">Reboot</span>
-              <span className="text-[11px] text-muted-foreground/60">Restart all services</span>
+              <span className="text-xs font-medium text-foreground">重启</span>
+              <span className="text-[11px] text-muted-foreground/60">重启所有服务</span>
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Reboot server?</AlertDialogTitle>
+              <AlertDialogTitle>要重启服务器吗？</AlertDialogTitle>
               <AlertDialogDescription>
-                All running Docker containers and services will be temporarily stopped and restarted. This takes about 30–60 seconds.
+                所有运行中的 Docker 容器和服务会暂时停止并重启，约需 30～60 秒。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>取消</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-status-amber text-white hover:bg-status-amber/90"
                 onClick={() => void onRebootNow()}
                 disabled={rebooting}
               >
-                {rebooting ? <><Loader2 className="size-4 animate-spin" />Rebooting…</> : "Reboot now"}
+                {rebooting ? <><Loader2 className="size-4 animate-spin" />正在重启…</> : "Reboot now"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -144,25 +146,25 @@ export function PowerSection({
               )}
             >
               <Power className="size-5 text-status-red" />
-              <span className="text-xs font-medium text-foreground">Shutdown</span>
-              <span className="text-[11px] text-muted-foreground/60">Power off the machine</span>
+              <span className="text-xs font-medium text-foreground">关机</span>
+              <span className="text-[11px] text-muted-foreground/60">关闭服务器电源</span>
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Shut down server?</AlertDialogTitle>
+              <AlertDialogTitle>要关闭服务器吗？</AlertDialogTitle>
               <AlertDialogDescription>
-                This powers the machine off completely. You will need to start it again manually before Homeio becomes available.
+                此操作将完全关闭服务器，需要手动开机后才能再次访问 Homeio。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>取消</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive text-white hover:bg-destructive/90"
                 onClick={() => void onShutdownNow()}
                 disabled={shuttingDown}
               >
-                {shuttingDown ? <><Loader2 className="size-4 animate-spin" />Shutting down…</> : "Shutdown now"}
+                {shuttingDown ? <><Loader2 className="size-4 animate-spin" />正在关机…</> : "Shutdown now"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -170,12 +172,12 @@ export function PowerSection({
       </div>
 
       {/* ── Scheduled Reboot ── */}
-      <SectionDivider title="Scheduled Reboot" />
+      <SectionDivider title="定时重启" />
       {scheduledReboot.error && <InfoBanner text={scheduledReboot.error} variant="warning" />}
       <div className="flex flex-col gap-1.5">
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
-            label="Scheduled reboot"
+            label="定时重启"
             description="Automatically reboot the server on a set schedule"
             enabled={scheduleEnabled}
             onToggle={() => setScheduleEnabled((v) => !v)}
@@ -183,20 +185,20 @@ export function PowerSection({
           />
         </div>
 
-        <PreferenceRow label="Frequency">
+        <PreferenceRow label="频率">
           <select
             value={scheduleFrequency}
             onChange={(e) => setScheduleFrequency(e.target.value as "daily" | "weekly")}
             disabled={!scheduleEnabled || scheduleDisabled}
             className={selectCls}
           >
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
+            <option value="daily">每天</option>
+            <option value="weekly">每周</option>
           </select>
         </PreferenceRow>
 
         {scheduleFrequency === "weekly" && (
-          <PreferenceRow label="Day of week">
+          <PreferenceRow label="星期">
             <select
               value={scheduleDayOfWeek}
               onChange={(e) => setScheduleDayOfWeek(e.target.value as ScheduledRebootInput["dayOfWeek"])}
@@ -210,7 +212,7 @@ export function PowerSection({
           </PreferenceRow>
         )}
 
-        <PreferenceRow label="Time" description="24-hour server local time">
+        <PreferenceRow label="时间" description="24-hour server local time">
           <select
             value={scheduleTime}
             onChange={(e) => setScheduleTime(e.target.value)}
@@ -225,22 +227,22 @@ export function PowerSection({
 
         <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
           <span className="text-[11px] text-muted-foreground/70">
-            {scheduleEnabled
+            {zh(scheduleEnabled
               ? `Reboot will run ${scheduleFrequency === "daily" ? "daily" : `every ${scheduleDayOfWeek}`} at ${scheduleTime}.`
-              : "Scheduled reboot is disabled."}
+              : "Scheduled reboot is disabled.")}
           </span>
           <button
             disabled={!scheduleDirty || scheduleDisabled}
             onClick={() => void onSaveScheduledReboot({ enabled: scheduleEnabled, frequency: scheduleFrequency, dayOfWeek: scheduleDayOfWeek, time: scheduleTime })}
             className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {scheduledReboot.isPending ? <><Loader2 className="size-3 animate-spin" />Saving…</> : "Save schedule"}
+            {scheduledReboot.isPending ? <><Loader2 className="size-3 animate-spin" />正在保存…</> : "Save schedule"}
           </button>
         </div>
       </div>
 
       {/* ── Factory Reset ── */}
-      <SectionDivider title="Factory Reset" />
+      <SectionDivider title="恢复出厂设置" />
       {power.factoryReset.error && <InfoBanner text={power.factoryReset.error} variant="warning" />}
       <InfoBanner
         text="Factory reset will stop all containers, remove Docker images, custom networks, and volumes, reset the database, delete everything under /DATA, recreate the default directories, and then reboot the machine."
@@ -248,8 +250,8 @@ export function PowerSection({
       />
       <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
         <div className="min-w-0">
-          <div className="text-sm text-foreground">Factory reset server</div>
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">Wipes all data and returns Homeio to a clean state</div>
+          <div className="text-sm text-foreground">重置服务器</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">清除所有数据并重置 Homeio</div>
         </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -258,24 +260,24 @@ export function PowerSection({
               className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-destructive/15 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/25 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <AlertTriangle className="size-3" />
-              {resetting ? "Resetting…" : "Factory Reset"}
+              {zh(resetting ? "Resetting…" : "Factory Reset")}
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Factory reset server?</AlertDialogTitle>
+              <AlertDialogTitle>要重置服务器吗？</AlertDialogTitle>
               <AlertDialogDescription>
-                This is destructive. Homeio will remove Docker containers, images, volumes, custom networks, reset the database, wipe /DATA, recreate a clean data root, and reboot. After reset, you will need to register a new user.
+                危险操作：将删除 Docker 容器、镜像、卷和自定义网络，重置数据库并清空 /DATA，然后重新创建数据目录并重启。重置后需要重新注册。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>取消</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive text-white hover:bg-destructive/90"
                 onClick={() => void onFactoryReset()}
                 disabled={resetting}
               >
-                {resetting ? <><Loader2 className="size-4 animate-spin" />Resetting…</> : "Factory reset"}
+                {resetting ? <><Loader2 className="size-4 animate-spin" />正在重置…</> : "Factory reset"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

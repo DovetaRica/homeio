@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { Cpu, MemoryStick, MonitorSpeaker, Thermometer } from "@/components/icons/platform-icons";
 import {
@@ -29,7 +31,7 @@ type GeneralSectionProps = {
 function InfoRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-4 py-2.5">
-      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-xs text-muted-foreground">{zh(label)}</span>
       <span className={cn("truncate text-right text-xs font-medium text-foreground", mono && "font-mono")}>
         {value}
       </span>
@@ -54,7 +56,7 @@ function HardwareRow({
         {icon}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">{label}</div>
+        <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">{zh(label)}</div>
         <div className="truncate text-xs font-medium text-foreground">{value}</div>
       </div>
     </div>
@@ -75,8 +77,8 @@ function PreferenceRow({
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3", disabled && "opacity-50")}>
       <div className="min-w-0">
-        <div className="text-sm text-foreground">{label}</div>
-        {description && <div className="mt-0.5 text-[11px] text-muted-foreground/70">{description}</div>}
+        <div className="text-sm text-foreground">{zh(label)}</div>
+        {description && <div className="mt-0.5 text-[11px] text-muted-foreground/70">{zh(description)}</div>}
       </div>
       {children}
     </div>
@@ -100,50 +102,50 @@ export function GeneralSection({
       ) : null}
 
       {/* ── System Info ── */}
-      <SectionDivider title="System Info" />
+      <SectionDivider title="系统信息" />
       <div className={cn(SETTINGS_PANEL_INSET, "divide-y divide-glass-border/50 px-4")}>
-        <InfoRow label="Hostname" value={data.hostname} />
-        <InfoRow label="OS" value={data.platform} />
-        <InfoRow label="Kernel" value={data.kernel} mono />
-        <InfoRow label="Architecture" value={data.architecture} />
-        <InfoRow label="Uptime" value={data.uptime} />
-        <InfoRow label="Homeio Version" value={data.appVersion} />
+        <InfoRow label="主机名" value={data.hostname} />
+        <InfoRow label="操作系统" value={data.platform} />
+        <InfoRow label="内核" value={data.kernel} mono />
+        <InfoRow label="架构" value={data.architecture} />
+        <InfoRow label="运行时间" value={data.uptime} />
+        <InfoRow label="Homeio 版本" value={data.appVersion} />
       </div>
 
       {/* ── Hardware ── */}
-      <SectionDivider title="Hardware" />
+      <SectionDivider title="硬件" />
       <div className={cn(SETTINGS_PANEL_INSET, "divide-y divide-glass-border/50 px-4")}>
         <HardwareRow
           icon={<Cpu className="size-3.5 text-primary" />}
-          label="Processor"
+          label="处理器"
           value={data.cpuSummary}
         />
         <HardwareRow
           icon={<MemoryStick className="size-3.5 text-primary" />}
-          label="Memory"
+          label="内存"
           value={data.memorySummary}
         />
         <HardwareRow
           icon={<Thermometer className="size-3.5 text-status-amber" />}
-          label="CPU Temperature"
+          label="处理器温度"
           value={data.temperatureSummary}
         />
         <HardwareRow
           icon={<MonitorSpeaker className="size-3.5 text-primary" />}
-          label="User"
+          label="用户"
           value={`${data.username} (${data.processUptime})`}
         />
       </div>
 
       {/* ── Preferences ── */}
-      <SectionDivider title="Preferences" />
+      <SectionDivider title="偏好设置" />
       {preferences.error ? (
         <InfoBanner text={preferences.error} variant="warning" />
       ) : null}
 
       <div className="flex flex-col gap-1.5">
         <PreferenceRow
-          label="Hostname"
+          label="主机名"
           description="Applies immediately with hostnamectl."
           disabled={capabilities.hostname.disabled}
         >
@@ -156,7 +158,7 @@ export function GeneralSection({
         </PreferenceRow>
 
         <PreferenceRow
-          label="Timezone"
+          label="时区"
           description="Applies immediately with timedatectl."
           disabled={capabilities.timezone.disabled}
         >
@@ -173,8 +175,8 @@ export function GeneralSection({
         </PreferenceRow>
 
         <PreferenceRow
-          label="Language"
-          description="Saved locally for Homeio UI only."
+          label="语言"
+          description="仅保存为当前浏览器的 Homeio 界面偏好。"
           disabled={capabilities.language.disabled}
         >
           <select

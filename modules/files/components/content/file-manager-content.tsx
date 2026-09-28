@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { FolderOpen, Loader2, Upload } from "@/components/icons/platform-icons";
 import {
@@ -113,7 +115,7 @@ export function FileManagerFileArea({
       {isDragOver && !isTrashView && !isStarredView ? (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-primary/60 bg-primary/5 pointer-events-none">
           <Upload className="mb-2 size-8 text-primary/70" />
-          <span className="text-sm font-medium text-primary/80">Drop files to upload</span>
+          <span className="text-sm font-medium text-primary/80">拖放文件以上传</span>
         </div>
       ) : null}
 
@@ -214,7 +216,7 @@ function renderBrowserState({
         </EmptyMedia>
         <EmptyHeader>
           <EmptyTitle className="text-sm font-normal text-muted-foreground">
-            Loading files...
+            正在加载文件…
           </EmptyTitle>
         </EmptyHeader>
       </Empty>
@@ -248,13 +250,13 @@ function renderBrowserState({
         </EmptyMedia>
         <EmptyHeader>
           <EmptyTitle className="text-sm font-normal text-muted-foreground">
-            {isGlobalSearchActive
+            {zh(isGlobalSearchActive
               ? globalSearchIsFetching
                 ? "Searching..."
                 : "No results found"
               : searchQuery
                 ? "No matching files found"
-                : "This folder is empty"}
+                : "This folder is empty")}
           </EmptyTitle>
         </EmptyHeader>
       </Empty>

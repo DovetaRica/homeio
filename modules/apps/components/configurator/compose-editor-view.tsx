@@ -8,12 +8,12 @@ export function ComposeEditorView({ composeDraft, onChange, parseError }: Compos
   return (
     <section className="flex-1 overflow-hidden px-4 py-3">
       <div className="mb-2 rounded-lg border border-glass-border bg-secondary/25 px-2.5 py-1.5 text-2xs text-muted-foreground">
-        Docker Compose is the source of truth. Classic fields are derived from this draft.
+        以 Docker Compose 为准，表单字段由此草稿生成。
       </div>
 
       {parseError ? (
         <div className="mb-2 rounded-lg border border-status-red/40 bg-status-red/10 px-2.5 py-1.5 text-2xs text-status-red">
-          Unable to parse compose: {parseError}
+          无法解析 Compose： {parseError}
         </div>
       ) : null}
 

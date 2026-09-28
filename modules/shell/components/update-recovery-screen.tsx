@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { reloadBrowserWindow } from "@/lib/desktop/browser-reload";
 import {
@@ -169,7 +171,7 @@ export function UpdateRecoveryScreen({
 
   return (
     <StatusScreen
-      title={phaseCopy.title}
+      title={zh(phaseCopy.title)}
       body={phaseCopy.body}
       failed={phase === "failed"}
       action={
@@ -179,7 +181,7 @@ export function UpdateRecoveryScreen({
             onClick={() => router.replace("/")}
             className="mt-6 inline-flex items-center rounded-[var(--radius)] bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:brightness-110"
           >
-            Return to Homeio
+            返回 Homeio
           </button>
         ) : null
       }

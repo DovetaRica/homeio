@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { getStoreOperationActionLabel } from "@/lib/shared/store-operations";
 import {
@@ -61,14 +63,14 @@ export function AppGridContent({
             <span className="size-1.5 shrink-0 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.6)] animate-pulse" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-medium text-foreground">
-                {getStoreOperationActionLabel(primaryOperation.action)}{" "}
+                {getStoreOperationActionLabel(primaryOperation.action)}{zh(" ")}
                 <span className="text-foreground/60">{primaryOperation.appName}</span>
               </p>
             </div>
             <span className="shrink-0 tabular-nums text-2xs text-muted-foreground/60">
-              {activeOperationsCount > 1
+              {zh(activeOperationsCount > 1
                 ? `+${activeOperationsCount - 1} more`
-                : `${primaryOperation.progressPercent}%`}
+                : `${primaryOperation.progressPercent}%`)}
             </span>
           </div>
           <div className="h-px w-full bg-glass-border/30">
@@ -87,7 +89,7 @@ export function AppGridContent({
               <div className="absolute inset-0 animate-grid-scan rounded-full bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
             </div>
             <p className="mt-4 text-2xs uppercase tracking-[0.2em] font-mono text-muted-foreground">
-              Syncing containers
+              正在同步容器
             </p>
           </div>
           {/* Skeleton placeholder icons that match the real grid layout */}
@@ -106,7 +108,7 @@ export function AppGridContent({
       ) : isAppsError && apps.length === 0 ? (
         <div className="mt-24 text-center">
           <p className="text-2xs uppercase tracking-[0.2em] font-mono text-status-red">
-            Connection failed
+            连接失败
           </p>
         </div>
       ) : apps.length === 0 ? (
@@ -135,9 +137,9 @@ export function AppGridContent({
                 } ${animationsEnabled ? "transition-all duration-200" : ""} ${
                   animationsEnabled ? "group-active:scale-95" : ""
                 }`}
-                aria-label={`Open ${app.name}`}
+                aria-label={zh(`Open ${app.name}`)}
                 data-app-status={app.status}
-                title={visualState.title}
+                title={zh(visualState.title)}
               >
                 <div className="relative">
                   <div
@@ -160,7 +162,7 @@ export function AppGridContent({
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={app.logoUrl}
-                          alt={`${app.name} logo`}
+                          alt={zh(`${app.name} logo`)}
                           className={`absolute inset-0 h-full w-full object-contain p-1.5 ${visualState.imageClass}`}
                           loading="lazy"
                           decoding="async"
@@ -217,7 +219,7 @@ export function AppGridContent({
                   {app.updateAvailable && app.status === "running" ? (
                     <span
                       className="pointer-events-none absolute -top-0.5 -right-0.5 size-2.5 rounded-full border border-background bg-primary"
-                      title="Update available"
+                      title="有可用更新"
                     />
                   ) : null}
                 </div>

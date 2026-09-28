@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { useDesktopPreferences } from "@/hooks/useDesktopPreferences";
 import {
@@ -99,7 +101,7 @@ export function SettingsPanel({
                   "mb-1 px-3 text-[10px] font-semibold uppercase tracking-[0.16em]",
                   group.label === "Danger Zone" ? "text-status-red/60" : "text-muted-foreground/50",
                 )}>
-                  {group.label}
+                  {zh(group.label)}
                 </div>
                 <div className="flex flex-col gap-0.5">
                   {sections.map((section) => {
@@ -119,7 +121,7 @@ export function SettingsPanel({
                           className={cn("size-4 shrink-0", isActive ? "text-primary" : "text-muted-foreground/60")}
                         />
                         <span className="flex-1 truncate text-left text-[13px] font-medium">
-                          {section.label}
+                          {zh(section.label)}
                         </span>
                         {section.badge && (
                           <span className={cn(SETTINGS_BADGE_SURFACE, "flex size-5 items-center justify-center text-xs font-bold text-primary")}>
@@ -152,20 +154,20 @@ export function SettingsPanel({
         <div className="max-w-2xl p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-foreground">
-              {activeDefinition.label}
+              {zh(activeDefinition.label)}
             </h2>
             {!activeDefinition.liveApply && activeDefinition.save ? (
               <button
                 className="px-3 py-1.5 text-xs font-medium rounded-lg bg-primary text-primary-foreground transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 enabled:hover:bg-primary/90"
                 disabled={!activeDefinition.save.canSave}
-                title={activeDefinition.save.title}
+                title={zh(activeDefinition.save.title)}
                 onClick={() => {
                   void activeDefinition.save?.onSave?.();
                 }}
               >
-                {activeDefinition.save.pending
+                {zh(activeDefinition.save.pending
                   ? (activeDefinition.save.label ?? "Saving...")
-                  : (activeDefinition.save.label ?? "Save Changes")}
+                  : (activeDefinition.save.label ?? "Save Changes"))}
               </button>
             ) : null}
           </div>

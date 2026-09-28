@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   ArrowDown,
@@ -203,14 +205,14 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
         className="flex flex-col gap-0 p-0 w-[92vw] sm:w-[92vw] sm:max-w-5xl h-[82vh] bg-popover/96 border-glass-border backdrop-blur-2xl overflow-hidden shadow-2xl shadow-black/45"
       >
         <VisuallyHidden>
-          <DialogTitle>{target?.appName ?? "App"} — Logs</DialogTitle>
+          <DialogTitle>{target?.appName ?? "App"} — 日志</DialogTitle>
         </VisuallyHidden>
         {/* Header */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-glass-border/60 shrink-0">
           <ScrollText className="size-4 text-muted-foreground shrink-0" />
           <div className="flex-1 min-w-0">
             <span className="text-sm font-semibold text-foreground truncate">
-              {target?.appName ?? "App"} — Logs
+              {target?.appName ?? "App"} — 日志
             </span>
           </div>
 
@@ -221,7 +223,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
             <Search className="size-3 text-muted-foreground pointer-events-none shrink-0" />
             <input
               type="text"
-              placeholder="Filter logs…"
+              placeholder="筛选日志…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent pl-2 pr-1 text-xs text-foreground placeholder:text-muted-foreground/60 focus:outline-none w-40"
@@ -238,7 +240,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
               )}
             >
               <ArrowDown className="size-3" />
-              Resume
+              继续
             </button>
           )}
 
@@ -246,7 +248,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
           <button
             onClick={downloadLogs}
             disabled={lines.length === 0}
-            title="Download logs"
+            title="下载日志"
             className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <Download className="size-3.5" />
@@ -271,14 +273,14 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
                       : "bg-muted-foreground/40",
               )}
             />
-            <span className="tabular-nums">{lines.length} lines</span>
+            <span className="tabular-nums">{lines.length} 行</span>
           </div>
 
           {/* Close */}
           <button
             onClick={onClose}
             className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors cursor-pointer"
-            aria-label="Close"
+            aria-label="关闭"
           >
             <X className="size-4" />
           </button>
@@ -297,7 +299,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
               )}
             >
               <RefreshCw className="size-3" />
-              Reconnect
+              重新连接
             </button>
           </div>
         )}
@@ -310,7 +312,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
         >
           {filteredLines.length === 0 && !streamError ? (
             <p className="text-xs text-muted-foreground/50 mt-4 text-center">
-              {search.trim() ? "No matching log lines." : "Waiting for logs…"}
+              {zh(search.trim() ? "No matching log lines." : "Waiting for logs…")}
             </p>
           ) : (
             <div className="space-y-px">
@@ -353,7 +355,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
                           : "text-green-100/80",
                     )}
                   >
-                    {line.message}
+                    {zh(line.message)}
                   </span>
                 </div>
               ))}
@@ -366,7 +368,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
         {streamEnded && (
           <div className="flex items-center gap-3 px-4 py-2 border-t border-glass-border/60 shrink-0">
             <span className="text-xs text-muted-foreground/60 flex-1">
-              Stream ended — container stopped or log tail reached.
+              日志流已结束：容器已停止或已到达日志末尾。
             </span>
             <button
               onClick={handleReconnect}
@@ -376,7 +378,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
               )}
             >
               <RefreshCw className="size-3" />
-              Reconnect
+              重新连接
             </button>
           </div>
         )}

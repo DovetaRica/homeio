@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { Bell, Trash2, CheckCircle2 } from "@/components/icons/platform-icons";
 import { useNotifications } from "@/modules/system/hooks/useNotifications";
@@ -50,20 +52,20 @@ export function NotificationsPanel() {
           <button
             onClick={() => markAllRead()}
             disabled={unreadCount === 0}
-            title="Mark all read"
+            title="全部标为已读"
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <CheckCircle2 className="size-3.5" />
-            Mark all read
+            全部标为已读
           </button>
           <button
             onClick={() => clearAll()}
             disabled={notifications.length === 0}
-            title="Clear all"
+            title="全部清除"
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-status-red disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Trash2 className="size-3.5" />
-            Clear all
+            全部清除
           </button>
         </div>
       </div>
@@ -74,7 +76,7 @@ export function NotificationsPanel() {
           <div className="flex flex-col items-center justify-center gap-3 py-20 text-center text-muted-foreground">
             <Bell className="size-10 opacity-20" />
             <p className="text-sm">
-              {filter === "unread" ? "No unread notifications" : "No notifications"}
+              {zh(filter === "unread" ? "No unread notifications" : "No notifications")}
             </p>
           </div>
         ) : (
@@ -96,7 +98,7 @@ export function NotificationsPanel() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-3">
                     <span className={cn("text-sm font-medium", n.read ? "text-muted-foreground" : "text-foreground")}>
-                      {n.title}
+                      {zh(n.title)}
                     </span>
                     <span className="shrink-0 text-xs text-muted-foreground/60">
                       {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}

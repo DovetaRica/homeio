@@ -1,4 +1,5 @@
 'use client'
+import { zh } from "@/lib/i18n/zh";
 
 import * as React from 'react'
 import * as RechartsPrimitive from 'recharts'
@@ -177,7 +178,7 @@ function ChartTooltipContent({
         className,
       )}
     >
-      {!nestLabel ? tooltipLabel : null}
+      {zh(!nestLabel ? tooltipLabel : null)}
       <div className="grid gap-1.5">
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || 'value'}`
@@ -227,7 +228,7 @@ function ChartTooltipContent({
                     )}
                   >
                     <div className="grid gap-1.5">
-                      {nestLabel ? tooltipLabel : null}
+                      {zh(nestLabel ? tooltipLabel : null)}
                       <span className="text-muted-foreground">
                         {itemConfig?.label || item.name}
                       </span>
@@ -296,7 +297,7 @@ function ChartLegendContent({
                 }}
               />
             )}
-            {itemConfig?.label}
+            {zh(itemConfig?.label)}
           </div>
         )
       })}

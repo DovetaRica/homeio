@@ -8,16 +8,16 @@ import { TelemetrySection } from "@/modules/settings/components/panel/sections/t
 export function AdvancedSection() {
   return (
     <div className="flex flex-col gap-1">
-      <SectionDivider title="Server Hardware" />
+      <SectionDivider title="服务器硬件" />
       <ServerInfoSection />
 
       <div className="mt-2">
-        <SectionDivider title="Logs" />
+        <SectionDivider title="日志" />
         <LogsSection />
       </div>
 
       <div className="mt-2">
-        <SectionDivider title="Usage Stats" />
+        <SectionDivider title="使用统计" />
         <TelemetrySection />
       </div>
     </div>

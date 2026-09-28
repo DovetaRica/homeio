@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { useState } from "react";
 import { ArrowLeft, Check, Copy, Download, Lock, Shield } from "@/components/icons/platform-icons";
@@ -184,7 +186,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
 
   return (
     <>
-      <SectionDivider title="Two-Factor Authentication" />
+      <SectionDivider title="双重身份验证" />
 
       {step === "idle" ? (
         <div className={cn(SETTINGS_PANEL_INSET, "flex flex-col gap-3 px-4 py-3")}>
@@ -196,14 +198,14 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-medium text-foreground">
-                    Authenticator app
+                    身份验证器
                   </span>
                   <StatusBadge enabled={status.enabled} />
                 </div>
                 <p className="mt-0.5 text-[11px] text-muted-foreground/70">
-                  {status.enabled
+                  {zh(status.enabled
                     ? `Enabled on ${formatEnrolledAt(status.enrolledAt)}. A 6-digit code is required at sign-in.`
-                    : "Add a second step to sign-in using an authenticator app (Google Authenticator, 1Password, Aegis, …)."}
+                    : "Add a second step to sign-in using an authenticator app (Google Authenticator, 1Password, Aegis, …).")}
                 </p>
               </div>
             </div>
@@ -216,7 +218,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                   disabled={isDemoMode}
                   className="rounded-lg border border-status-red/40 px-3 py-1.5 text-xs font-medium text-status-red transition-colors hover:bg-status-red/10 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {showDisable ? "Cancel" : "Disable"}
+                  {zh(showDisable ? "Cancel" : "Disable")}
                 </button>
               ) : (
                 <button
@@ -225,7 +227,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                   disabled={isDemoMode || startSetup.isPending}
                   className="rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {startSetup.isPending ? "Preparing…" : "Enable"}
+                  {zh(startSetup.isPending ? "Preparing…" : "Enable")}
                 </button>
               )}
             </div>
@@ -241,7 +243,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                 htmlFor="two-factor-disable-code"
                 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/80"
               >
-                Confirm with current code or backup code
+                使用当前验证码或备用验证码确认
               </label>
               <input
                 id="two-factor-disable-code"
@@ -262,10 +264,10 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                 disabled={disable.isPending || !disableCode.trim()}
                 className="self-end rounded-lg bg-status-red/85 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-status-red disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {disable.isPending ? "Disabling…" : "Disable 2FA"}
+                {zh(disable.isPending ? "Disabling…" : "Disable 2FA")}
               </button>
               <p className="text-[11px] text-muted-foreground/70">
-                You&apos;ll be signed out and need to sign in again.
+                此操作会退出登录，需要重新登录。
               </p>
             </div>
           ) : null}
@@ -280,7 +282,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             className="self-start inline-flex items-center gap-1 text-[11px] text-muted-foreground/80 hover:text-foreground"
           >
             <ArrowLeft className="size-3" />
-            Cancel
+            取消
           </button>
 
           <div className="flex flex-col gap-3 md:flex-row md:items-start">
@@ -293,11 +295,10 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             <div className="flex flex-col gap-3">
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  Scan with your authenticator app
+                  使用身份验证器扫描
                 </p>
                 <p className="mt-1 text-[11px] text-muted-foreground/80">
-                  Add a new account and scan this QR. Don&apos;t have a camera?
-                  Enter the key below manually.
+                  在身份验证器中添加账户并扫描二维码；也可以手动输入下方密钥。
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -308,7 +309,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                   type="button"
                   onClick={copySecret}
                   className="flex size-8 items-center justify-center rounded-lg border border-glass-border bg-background/55 text-muted-foreground transition-colors hover:bg-background/70 hover:text-foreground"
-                  aria-label="Copy secret"
+                  aria-label="复制密钥"
                 >
                   {secretCopied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
                 </button>
@@ -318,7 +319,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                 onClick={() => setStep("verify")}
                 className="self-start rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25"
               >
-                Continue
+                继续
               </button>
             </div>
           </div>
@@ -333,14 +334,14 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             className="self-start inline-flex items-center gap-1 text-[11px] text-muted-foreground/80 hover:text-foreground"
           >
             <ArrowLeft className="size-3" />
-            Back
+            返回
           </button>
           <div>
             <p className="text-sm font-medium text-foreground">
-              Enter the 6-digit code
+              请输入六位验证码
             </p>
             <p className="mt-1 text-[11px] text-muted-foreground/80">
-              Type the current code from your authenticator app to confirm.
+              输入身份验证器中的当前验证码以确认。
             </p>
           </div>
           <input
@@ -368,7 +369,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             disabled={verify.isPending || !verifyCode.trim()}
             className="self-end rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {verify.isPending ? "Verifying…" : "Verify and enable"}
+            {zh(verify.isPending ? "Verifying…" : "Verify and enable")}
           </button>
         </div>
       ) : null}
@@ -381,11 +382,10 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             </div>
             <div>
               <p className="text-sm font-medium text-foreground">
-                Save your backup codes
+                保存备用验证码
               </p>
               <p className="mt-1 text-[11px] text-muted-foreground/80">
-                These ten codes are the only way to sign in if you lose your
-                authenticator. Each works once. We can&apos;t show them again.
+                丢失身份验证器后，只能使用这十个备用验证码登录。每个只能使用一次，之后无法再次显示，请妥善保存。
               </p>
             </div>
           </div>
@@ -405,7 +405,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
               className="inline-flex items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-background/70"
             >
               <Copy className="size-3" />
-              Copy all
+              全部复制
             </button>
             <button
               type="button"
@@ -413,7 +413,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
               className="inline-flex items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-background/70"
             >
               <Download className="size-3" />
-              Download .txt
+              下载文本
             </button>
           </div>
 
@@ -424,7 +424,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
               onChange={(event) => setAcknowledgedBackup(event.target.checked)}
               className="mt-0.5 size-3.5 accent-primary"
             />
-            <span>I saved these codes somewhere safe.</span>
+            <span>我已将备用验证码妥善保存。</span>
           </label>
 
           <button
@@ -433,7 +433,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             disabled={!acknowledgedBackup}
             className="self-end rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Done
+            完成
           </button>
         </div>
       ) : null}
@@ -445,13 +445,13 @@ function StatusBadge({ enabled }: { enabled: boolean }) {
   if (enabled) {
     return (
       <span className="rounded-md bg-status-green/15 px-1.5 py-0.5 text-[11px] font-medium text-status-green">
-        Enabled
+        已启用
       </span>
     );
   }
   return (
     <span className="rounded-md bg-muted/40 px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
-      Disabled
+      已禁用
     </span>
   );
 }

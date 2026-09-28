@@ -1,3 +1,5 @@
+
+import { zh } from "@/lib/i18n/zh";
 import type { LucideIcon } from "@/components/icons/platform-icons";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -38,7 +40,7 @@ export function WidgetCard({
             </div>
           ) : null}
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-foreground/55">
-            {title}
+            {zh(title)}
           </h3>
         </header>
       ) : null}

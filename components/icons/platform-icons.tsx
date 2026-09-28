@@ -1,3 +1,5 @@
+
+import { zh } from "@/lib/i18n/zh";
 import type { CSSProperties, ImgHTMLAttributes, ReactElement, SVGProps } from "react";
 
 type KoraIconProps = SVGProps<SVGSVGElement> & {
@@ -30,7 +32,7 @@ function createKoraIcon(src: string, alt = ""): LucideIcon {
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
-        alt={iconAlt}
+        alt={zh(iconAlt)}
         aria-hidden={iconAlt ? undefined : true}
         draggable={false}
         className={className}

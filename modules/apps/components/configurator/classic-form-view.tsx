@@ -1,3 +1,5 @@
+
+import { zh } from "@/lib/i18n/zh";
 import { Toggle } from "@/components/ui/toggle";
 import { Check, Info } from "@/components/icons/platform-icons";
 
@@ -42,7 +44,7 @@ export function ClassicFormView({
       ) : null}
 
       <div className="space-y-3">
-        <Field label="Docker Image *">
+        <Field label="Docker 镜像 *">
           <Input
             ariaLabel="Docker Image"
             value={state.dockerImage}
@@ -52,7 +54,7 @@ export function ClassicFormView({
           />
         </Field>
 
-        <Field label="Title *">
+        <Field label="标题 *">
           <Input
             ariaLabel="Title"
             value={state.title}
@@ -62,14 +64,14 @@ export function ClassicFormView({
           />
         </Field>
 
-        <Field label="Icon URL">
+        <Field label="图标地址">
           <div className="flex items-center gap-2">
             <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-glass-border bg-secondary/30">
               {state.iconUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={state.iconUrl}
-                  alt={`${state.title || "App"} icon`}
+                  alt={zh(`${state.title || "App"} icon`)}
                   className="size-full object-cover"
                 />
               ) : (
@@ -85,7 +87,7 @@ export function ClassicFormView({
           </div>
         </Field>
 
-        <Field label="Web UI">
+        <Field label="Web 界面">
           <div className="grid grid-cols-1 gap-1.5 md:grid-cols-12">
             <div className="md:col-span-2">
               <Select
@@ -161,13 +163,11 @@ export function ClassicFormView({
             placeholder="https://myapp.example.com"
           />
           <p className="mt-1 text-xs text-muted-foreground">
-            Where the Open button sends you. Leave empty to use this server&apos;s
-            address. Set it when the app is published through a tunnel or reverse
-            proxy.
+            “打开”按钮使用的地址。留空时使用当前服务器地址；通过隧道或反向代理访问时可指定其他地址。
           </p>
         </Field>
 
-        <Field label="Network">
+        <Field label="网络">
           <Select
             ariaLabel="Network"
             value={state.network}
@@ -180,7 +180,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="Port"
+          label="端口"
           withAdd
           onAdd={() =>
             update({
@@ -223,7 +223,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="Volumes"
+          label="挂载卷"
           withAdd
           onAdd={() =>
             update({
@@ -267,7 +267,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="Environment Variables"
+          label="环境变量"
           withAdd
           onAdd={() =>
             update({
@@ -311,7 +311,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="Devices"
+          label="设备"
           withAdd
           onAdd={() => update({ devices: [...state.devices, ""] })}
         >
@@ -323,7 +323,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="Container Command"
+          label="容器启动命令"
           withAdd
           onAdd={() =>
             update({ containerCommands: [...state.containerCommands, ""] })
@@ -351,11 +351,11 @@ export function ClassicFormView({
                 state.privileged ? "bg-primary" : "bg-muted-foreground/50"
               }`}
             />
-            {state.privileged ? "Enabled" : "Disabled"}
+            {zh(state.privileged ? "Enabled" : "Disabled")}
           </Toggle>
         </Field>
 
-        <Field label="Restart Policy">
+        <Field label="重启策略">
           <Input
             ariaLabel="Restart Policy"
             value={state.restartPolicy}
@@ -364,7 +364,7 @@ export function ClassicFormView({
           />
         </Field>
 
-        <Field label="Container Capabilities (cap-add)">
+        <Field label="容器权限（cap-add）">
           <Input
             ariaLabel="Container Capabilities (cap-add)"
             value={state.capabilities}
@@ -373,7 +373,7 @@ export function ClassicFormView({
           />
         </Field>
 
-        <Field label="Container Hostname">
+        <Field label="容器主机名">
           <Input
             ariaLabel="Container Hostname"
             value={state.hostname}
@@ -401,14 +401,14 @@ function Field({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-foreground">{label}</label>
+        <label className="text-xs font-semibold text-foreground">{zh(label)}</label>
         {withAdd && (
           <button
             type="button"
             onClick={onAdd}
             className="cursor-pointer rounded-[var(--radius)] border border-glass-border bg-secondary/40 px-2.5 py-0.5 text-2xs font-medium text-foreground transition-colors hover:bg-secondary/60"
           >
-            + Add
+            + 添加
           </button>
         )}
       </div>
@@ -436,10 +436,10 @@ function Input({
     <div className="relative">
       <input
         type="text"
-        aria-label={ariaLabel}
+        aria-label={zh(ariaLabel)}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
+        placeholder={zh(placeholder)}
         readOnly={readOnly}
         className={`h-9 w-full rounded-lg border bg-secondary/35 px-2.5 pr-8 text-xs text-foreground placeholder:text-muted-foreground/70 focus:outline-none ${
           success
@@ -467,14 +467,14 @@ function Select({
 }) {
   return (
     <select
-      aria-label={ariaLabel}
+      aria-label={zh(ariaLabel)}
       value={value}
       onChange={(event) => onChange(event.target.value)}
       className="h-9 w-full rounded-lg border border-glass-border bg-secondary/35 px-2.5 text-xs text-foreground focus:border-primary/50 focus:outline-none"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
-          {option.label}
+          {zh(option.label)}
         </option>
       ))}
     </select>
@@ -485,7 +485,7 @@ function HintText() {
   return (
     <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
       <Info className="size-3.5" />
-      Click &quot;+&quot; to add one.
+      点击“+”添加。
     </p>
   );
 }
@@ -507,7 +507,7 @@ function PortEditor({
           onClick={onRemove}
           className="cursor-pointer text-2xs text-muted-foreground hover:text-status-red"
         >
-          Remove
+          移除
         </button>
       </div>
       <div className="grid grid-cols-1 gap-1.5 md:grid-cols-3">
@@ -516,14 +516,14 @@ function PortEditor({
           onChange={(value) =>
             onChange({ ...row, host: value.replace(/[^0-9]/g, "") })
           }
-          placeholder="Host"
+          placeholder="主机"
         />
         <Input
           value={row.container}
           onChange={(value) =>
             onChange({ ...row, container: value.replace(/[^0-9]/g, "") })
           }
-          placeholder="Container"
+          placeholder="容器"
         />
         <Select
           ariaLabel="Protocol"
@@ -558,19 +558,19 @@ function VolumeEditor({
           onClick={onRemove}
           className="cursor-pointer text-2xs text-muted-foreground hover:text-status-red"
         >
-          Remove
+          移除
         </button>
       </div>
       <div className="grid grid-cols-1 gap-1.5 md:grid-cols-2">
         <Input
           value={row.host}
           onChange={(value) => onChange({ ...row, host: value })}
-          placeholder="Host"
+          placeholder="主机"
         />
         <Input
           value={row.container}
           onChange={(value) => onChange({ ...row, container: value })}
-          placeholder="Container"
+          placeholder="容器"
         />
       </div>
     </div>
@@ -594,7 +594,7 @@ function EnvEditor({
           onClick={onRemove}
           className="cursor-pointer text-2xs text-muted-foreground hover:text-status-red"
         >
-          Remove
+          移除
         </button>
       </div>
       <div className="grid grid-cols-1 gap-1.5 md:grid-cols-2">
@@ -643,7 +643,7 @@ function StringListEditor({
               }
               className="cursor-pointer text-2xs text-muted-foreground hover:text-status-red"
             >
-              Remove
+              移除
             </button>
           </div>
           <Input
@@ -655,7 +655,7 @@ function StringListEditor({
                 ),
               )
             }
-            placeholder={placeholder}
+            placeholder={zh(placeholder)}
           />
         </div>
       ))}

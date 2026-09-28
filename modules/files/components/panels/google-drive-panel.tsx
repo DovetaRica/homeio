@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -124,14 +126,14 @@ export function GoogleDrivePanel({ connectionId, accountEmail }: Props) {
         <div className="flex shrink-0 items-center gap-1">
           <button
             onClick={() => setShowNewFolder((v) => !v)}
-            title="New folder"
+            title="新建文件夹"
             className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-background/50 hover:text-foreground"
           >
             <Plus className="size-4" />
           </button>
           <button
             onClick={() => uploadRef.current?.click()}
-            title="Upload files"
+            title="上传文件"
             disabled={uploadFiles.isPending}
             className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-background/50 hover:text-foreground disabled:opacity-40"
           >
@@ -163,7 +165,7 @@ export function GoogleDrivePanel({ connectionId, accountEmail }: Props) {
               if (e.key === "Enter") handleCreateFolder();
               if (e.key === "Escape") { setShowNewFolder(false); setNewFolderName(""); }
             }}
-            placeholder="Folder name"
+            placeholder="文件夹名"
             className="h-7 flex-1 rounded-md border border-glass-border/60 bg-background/40 px-2 text-[12px] text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/40"
           />
           <button
@@ -186,19 +188,19 @@ export function GoogleDrivePanel({ connectionId, accountEmail }: Props) {
           <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
             <Cloud className="size-10 text-muted-foreground/20" />
             <p className="text-sm text-status-red">
-              {browseQuery.error instanceof Error ? browseQuery.error.message : "Failed to load"}
+              {zh(browseQuery.error instanceof Error ? browseQuery.error.message : "Failed to load")}
             </p>
             <button
               onClick={() => void browseQuery.refetch()}
               className="rounded-md bg-background/50 px-3 py-1 text-[11px] text-muted-foreground hover:text-foreground"
             >
-              Retry
+              重试
             </button>
           </div>
         ) : entries.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
             <FolderOpen className="size-10 text-muted-foreground/20" />
-            <p className="text-sm text-muted-foreground">This folder is empty</p>
+            <p className="text-sm text-muted-foreground">此文件夹为空</p>
           </div>
         ) : (
           <div className="flex flex-col gap-0.5">
@@ -243,7 +245,7 @@ export function GoogleDrivePanel({ connectionId, accountEmail }: Props) {
                     <a
                       href={buildDriveDownloadUrl(connectionId, entry.id, entry.name, entry.mimeType)}
                       download={entry.name}
-                      title="Download"
+                      title="下载"
                       className="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-background/50 hover:text-foreground"
                     >
                       <Download className="size-3.5" />
@@ -254,7 +256,7 @@ export function GoogleDrivePanel({ connectionId, accountEmail }: Props) {
                       href={entry.webViewLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      title="Open in Google Drive"
+                      title="在 Google 云端硬盘中打开"
                       className="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-background/50 hover:text-sky-400"
                     >
                       <Cloud className="size-3.5" />
@@ -262,7 +264,7 @@ export function GoogleDrivePanel({ connectionId, accountEmail }: Props) {
                   )}
                   <button
                     onClick={() => setDeleteConfirm(entry)}
-                    title="Delete"
+                    title="删除"
                     className="flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground/60 transition-colors hover:bg-background/50 hover:text-status-red"
                   >
                     <Trash2 className="size-3.5" />
@@ -287,17 +289,17 @@ export function GoogleDrivePanel({ connectionId, accountEmail }: Props) {
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/60 backdrop-blur-sm">
           <div className="w-72 rounded-xl border border-glass-border bg-popover/96 p-5 shadow-xl shadow-black/30">
             <p className="text-[13px] font-medium text-foreground">
-              Delete &ldquo;{deleteConfirm.name}&rdquo;?
+              删除“{deleteConfirm.name}”？
             </p>
             <p className="mt-1 text-[11px] text-muted-foreground">
-              This will move the file to Google Drive Trash.
+              此操作会将文件移入 Google 云端硬盘回收站。
             </p>
             <div className="mt-4 flex justify-end gap-2">
               <button
                 onClick={() => setDeleteConfirm(null)}
                 className="rounded-md px-3 py-1.5 text-[11px] text-muted-foreground hover:text-foreground"
               >
-                Cancel
+                取消
               </button>
               <button
                 onClick={() => handleDelete(deleteConfirm)}
@@ -305,7 +307,7 @@ export function GoogleDrivePanel({ connectionId, accountEmail }: Props) {
                 className="flex items-center gap-1.5 rounded-md bg-status-red/15 px-3 py-1.5 text-[11px] font-medium text-status-red transition-colors hover:bg-status-red/25 disabled:opacity-40"
               >
                 {deleteFile.isPending && <Loader2 className="size-3 animate-spin" />}
-                Delete
+                删除
               </button>
             </div>
           </div>

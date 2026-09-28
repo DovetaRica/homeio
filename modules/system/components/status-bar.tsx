@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { BatteryFull, Bell, CloudSun, Tailscale } from "@/components/icons/platform-icons";
 import { BatteryPopover } from "@/modules/system/components/status-bar/battery-popover";
@@ -109,8 +111,8 @@ export function StatusBar({
             />
           </div>
           <span className="text-xs font-semibold tracking-tight text-foreground/90">
-            <span className="xl:hidden">{`Hi, ${toTitleCaseUsername(username)}`}</span>
-            <span className="hidden xl:inline">{`Welcome back, ${toTitleCaseUsername(username)}`}</span>
+            <span className="xl:hidden">{zh(`Hi, ${toTitleCaseUsername(username)}`)}</span>
+            <span className="hidden xl:inline">{zh(`Welcome back, ${toTitleCaseUsername(username)}`)}</span>
           </span>
         </div>
 
@@ -121,7 +123,7 @@ export function StatusBar({
             <button
               onClick={() => togglePopover("weather")}
               className="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-white/[0.07] transition-colors cursor-pointer"
-              aria-label="Weather"
+              aria-label="天气"
             >
               <CloudSun className="size-3.5 text-status-amber" />
               <span className="text-xs text-foreground font-medium">
@@ -139,7 +141,7 @@ export function StatusBar({
             <button
               onClick={() => togglePopover("wifi")}
               className="p-1.5 rounded-lg hover:bg-white/[0.07] transition-colors cursor-pointer"
-              aria-label="WiFi networks"
+              aria-label="无线网络"
             >
               {isEthernet ? (
                 <EthernetIcon className={wifiIconClassName} />
@@ -169,7 +171,7 @@ export function StatusBar({
             <button
               onClick={() => togglePopover("battery")}
               className="flex items-center gap-1 p-1.5 rounded-lg hover:bg-white/[0.07] transition-colors cursor-pointer"
-              aria-label="Battery status"
+              aria-label="电池状态"
             >
               <BatteryFull className="size-4 text-status-green" />
               <span className="text-xs text-muted-foreground font-medium">
@@ -188,7 +190,7 @@ export function StatusBar({
             <button
               onClick={() => togglePopover("tailscale")}
               className="p-1.5 rounded-lg hover:bg-white/[0.07] transition-colors cursor-pointer"
-              aria-label="Tailscale status"
+              aria-label="Tailscale 状态"
             >
               <Tailscale className="size-4 text-primary" />
             </button>
@@ -203,7 +205,7 @@ export function StatusBar({
             <button
               onClick={() => togglePopover("notifications")}
               className="relative p-1.5 rounded-lg hover:bg-white/[0.07] transition-colors cursor-pointer"
-              aria-label="Notifications"
+              aria-label="通知"
             >
               <Bell className="size-4 text-muted-foreground" />
               {unreadCount > 0 && (
@@ -248,13 +250,13 @@ export function StatusBar({
             <button
               onClick={() => togglePopover("date")}
               className="flex flex-row items-end rounded-lg px-1.5 gap-2 py-1 text-right transition-colors hover:bg-white/[0.07] cursor-pointer"
-              aria-label="Open date picker"
+              aria-label="打开日期面板"
             >
               <span className="hidden xl:text-xs xl:leading-tight xl:text-muted-foreground xl:block">
-                {now ? formatDate(now) : "---"}
+                {zh(now ? formatDate(now) : "---")}
               </span>
               <span className="text-xs font-medium text-foreground leading-tight">
-                {now ? formatTime(now) : "--:--"}
+                {zh(now ? formatTime(now) : "--:--")}
               </span>
             </button>
             {activePopover === "date" && (

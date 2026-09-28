@@ -62,8 +62,8 @@ export function AddNetworkShareDialog({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent showCloseButton={false} className="max-w-[34rem] gap-0 border-glass-border bg-popover/96 p-0 shadow-2xl shadow-black/45 backdrop-blur-2xl">
         <DialogHeader className="sr-only">
-          <DialogTitle>Add Network Share</DialogTitle>
-          <DialogDescription>Connect to an SMB share</DialogDescription>
+          <DialogTitle>添加网络共享</DialogTitle>
+          <DialogDescription>连接 SMB 共享</DialogDescription>
         </DialogHeader>
 
         {/* Window chrome title bar */}
@@ -73,7 +73,7 @@ export function AddNetworkShareDialog({
             <button
               onClick={onClose}
               className="group flex size-3 cursor-pointer items-center justify-center rounded-full bg-[#ff5f57] transition-all hover:brightness-110"
-              aria-label="Close"
+              aria-label="关闭"
             >
               <X className="size-[7px] text-[#6a0002] opacity-0 transition-opacity group-hover:opacity-100" />
             </button>
@@ -83,7 +83,7 @@ export function AddNetworkShareDialog({
 
           {/* Centered title */}
           <div className="flex flex-1 items-center justify-center">
-            <span className="text-xs font-medium text-foreground/80">Add Network Share</span>
+            <span className="text-xs font-medium text-foreground/80">添加网络共享</span>
           </div>
 
           {/* Right action — back button to balance */}
@@ -92,10 +92,10 @@ export function AddNetworkShareDialog({
               type="button"
               onClick={onClose}
               className="inline-flex h-6 items-center gap-1 rounded-md border border-glass-border bg-background/80 px-2 text-[11px] text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground"
-              aria-label="Back"
+              aria-label="返回"
             >
               <ArrowLeft className="size-3" />
-              Back
+              返回
             </button>
           </div>
         </div>
@@ -103,12 +103,12 @@ export function AddNetworkShareDialog({
         <div className="space-y-5 px-5 py-5">
           {/* Server */}
           <div>
-            <FieldLabel>Server</FieldLabel>
+            <FieldLabel>服务器</FieldLabel>
             <div className="flex gap-2">
               <Input
                 value={draft.host}
                 onChange={(event) => update("host", event.target.value)}
-                placeholder="Host or IP (e.g. nas.local, 192.168.1.100)"
+                placeholder="主机名或 IP（例如 nas.local、192.168.1.100）"
                 className="h-8 rounded-lg border-glass-border bg-background/55 px-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/40 focus-visible:ring-0"
               />
               <button
@@ -118,26 +118,26 @@ export function AddNetworkShareDialog({
                 className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <RefreshCw className="size-3" />
-                Scan
+                扫描
               </button>
             </div>
           </div>
 
           {/* Credentials */}
           <div>
-            <FieldLabel>Credentials</FieldLabel>
+            <FieldLabel>凭据</FieldLabel>
             <div className="grid grid-cols-2 gap-2">
               <Input
                 value={draft.username}
                 onChange={(event) => update("username", event.target.value)}
-                placeholder="Username"
+                placeholder="用户名"
                 className="h-8 rounded-lg border-glass-border bg-background/55 px-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/40 focus-visible:ring-0"
               />
               <Input
                 type="password"
                 value={draft.password}
                 onChange={(event) => update("password", event.target.value)}
-                placeholder="Password"
+                placeholder="密码"
                 className="h-8 rounded-lg border-glass-border bg-background/55 px-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/40 focus-visible:ring-0"
               />
             </div>
@@ -145,12 +145,12 @@ export function AddNetworkShareDialog({
 
           {/* Share */}
           <div>
-            <FieldLabel>Share</FieldLabel>
+            <FieldLabel>共享</FieldLabel>
             <div className="flex gap-2">
               <Input
                 value={draft.share}
                 onChange={(event) => update("share", event.target.value)}
-                placeholder="Share name (e.g. Media, Documents)"
+                placeholder="共享名称（例如 Media、Documents）"
                 className="h-8 rounded-lg border-glass-border bg-background/55 px-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/40 focus-visible:ring-0"
               />
               <button
@@ -164,7 +164,7 @@ export function AddNetworkShareDialog({
                 ) : (
                   <Search className="size-3" />
                 )}
-                Find
+                查找
               </button>
             </div>
 
@@ -191,7 +191,7 @@ export function AddNetworkShareDialog({
             onClick={onClose}
             className="h-8 rounded-lg border border-glass-border bg-background/55 px-3 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground"
           >
-            Cancel
+            取消
           </button>
           <button
             type="button"
@@ -200,7 +200,7 @@ export function AddNetworkShareDialog({
             className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary/20 px-3 text-xs font-medium text-primary transition-colors hover:bg-primary/30 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {createPending ? <Loader2 className="size-3 animate-spin" /> : <Plus className="size-3" />}
-            Add Share
+            添加共享
           </button>
         </div>
       </DialogContent>

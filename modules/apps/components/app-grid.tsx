@@ -46,7 +46,7 @@ export function AppGrid({
           <button
             onClick={controller.dismissActionError}
             className="mt-0.5 shrink-0 opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
-            aria-label="Dismiss error"
+            aria-label="关闭错误提示"
           >
             <X className="size-3" />
           </button>

@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import type { StoreAppDetail } from "@/lib/shared/contracts/apps";
 import type { AppActionTarget } from "@/modules/apps/components/app-grid";
@@ -436,7 +438,7 @@ export function AppConfiguratorPanel({
   return (
     <div className="flex h-full flex-col bg-card/90">
       <ConfiguratorHeader
-        title={title}
+        title={zh(title)}
         activeView={activeView}
         views={availableViews}
         onViewChange={setActiveView}
@@ -445,22 +447,21 @@ export function AppConfiguratorPanel({
 
       {shouldBlockOnTemplateLoading ? (
         <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-          Loading app configuration...
+          正在加载应用配置…
         </div>
       ) : (
         <>
           {context === "installed_edit" && composeQuery.isError ? (
             <div className="mx-3 mt-2 rounded-lg border border-status-red/40 bg-status-red/10 px-2 py-1 text-2xs text-status-red">
-              {String(composeQuery.error).includes("installed_compose_missing")
+              {zh(String(composeQuery.error).includes("installed_compose_missing")
                 ? "Installed compose file is unavailable for this app."
-                : "Unable to load compose source for this app."}
+                : "Unable to load compose source for this app.")}
             </div>
           ) : null}
 
           {context !== "custom_install" && !effectiveTemplate ? (
             <div className="mx-3 mt-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-2xs text-amber-200">
-              App template metadata is unavailable. You can still edit and
-              submit manually.
+              应用模板信息不可用，仍可手动编辑并提交。
             </div>
           ) : null}
 
@@ -498,11 +499,11 @@ export function AppConfiguratorPanel({
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs font-medium text-foreground">
-                {installingOperation.status === "success"
+                {zh(installingOperation.status === "success"
                   ? "Installation complete"
                   : installingOperation.status === "error"
                     ? "Installation failed"
-                    : installingOperation.step || "Installing…"}
+                    : installingOperation.step || "Installing…")}
               </span>
               <span className="text-2xs tabular-nums text-muted-foreground shrink-0">
                 {installingOperation.progressPercent}%
@@ -522,7 +523,7 @@ export function AppConfiguratorPanel({
             </div>
             {installingOperation.status === "success" ? (
               <span className="text-2xs text-status-green">
-                Installed successfully — closing window…
+                安装成功，正在关闭窗口…
               </span>
             ) : null}
           </div>
@@ -533,11 +534,11 @@ export function AppConfiguratorPanel({
                 <span className="truncate text-xs text-status-red">{saveError}</span>
               ) : context === "installed_edit" ? (
                 <span className="text-xs text-muted-foreground">
-                  {isSaving ? "Applying changes…" : "Edit and save to redeploy"}
+                  {zh(isSaving ? "Applying changes…" : "Edit and save to redeploy")}
                 </span>
               ) : (
                 <span className="text-xs text-muted-foreground">
-                  {didSave ? "Installation started" : "Configure settings before installing"}
+                  {zh(didSave ? "Installation started" : "Configure settings before installing")}
                 </span>
               )}
             </div>

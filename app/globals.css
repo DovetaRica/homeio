@@ -355,3 +355,6 @@
     will-change: opacity, box-shadow;
   }
 }
+
+/* Chinese UI: prefer installed CJK fonts without remote font dependencies. */
+html[lang="zh-CN"] body { font-family: var(--font-inter), "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif; }

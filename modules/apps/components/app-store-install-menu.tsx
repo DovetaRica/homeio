@@ -37,11 +37,11 @@ export function AppStoreInstallMenu({
       <button
         type="button"
         onClick={() => setIsOpen((value) => !value)}
-        aria-label="Install menu"
+        aria-label="安装菜单"
         className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary/15 text-primary rounded-md hover:bg-primary/25 transition-colors cursor-pointer"
       >
         <Plus className="size-3.5" />
-        Install
+        安装
       </button>
 
       {isOpen ? (
@@ -58,7 +58,7 @@ export function AppStoreInstallMenu({
             }}
             className="w-full text-left px-2.5 py-1.5 text-xs text-foreground hover:bg-secondary/50 rounded-md transition-colors cursor-pointer"
           >
-            Install Custom App
+            安装自定义应用
           </button>
           <button
             role="menuitem"
@@ -69,7 +69,7 @@ export function AppStoreInstallMenu({
             }}
             className="w-full text-left px-2.5 py-1.5 text-xs text-foreground hover:bg-secondary/50 rounded-md transition-colors cursor-pointer"
           >
-            Manage Sources
+            管理应用源
           </button>
         </div>
       ) : null}

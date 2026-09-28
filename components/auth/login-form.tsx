@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import Image from "next/image";
 import {
@@ -91,7 +93,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
 
   async function handleCredentialsSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(null);
+    setError(zh(null));
     setIsSubmitting(true);
 
     try {
@@ -146,7 +148,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
       router.refresh();
     } catch (submitError) {
       setError(
-        submitError instanceof Error ? submitError.message : "Login failed",
+        zh(submitError instanceof Error ? submitError.message : "Login failed"),
       );
     } finally {
       setIsSubmitting(false);
@@ -156,7 +158,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
   async function handleTotpSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (stage.kind !== "totp") return;
-    setError(null);
+    setError(zh(null));
     setIsSubmitting(true);
 
     try {
@@ -186,7 +188,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
       router.refresh();
     } catch (submitError) {
       setError(
-        submitError instanceof Error ? submitError.message : "Sign-in failed",
+        zh(submitError instanceof Error ? submitError.message : "Sign-in failed"),
       );
     } finally {
       setIsSubmitting(false);
@@ -196,7 +198,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
   function backToCredentials() {
     setStage({ kind: "credentials" });
     setTotpCode("");
-    setError(null);
+    setError(zh(null));
     setPassword("");
   }
 
@@ -204,7 +206,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
     if (stage.kind !== "totp") return;
     setStage({ ...stage, useBackupCode: !stage.useBackupCode });
     setTotpCode("");
-    setError(null);
+    setError(zh(null));
   }
 
   return (
@@ -220,27 +222,27 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
           />
         </div>
         <div className="system-pill-surface mt-2 px-3 py-1 text-[10px] tracking-[0.22em] text-foreground/54 uppercase">
-          Home server
+          家庭服务器
         </div>
       </div>
 
       <p className="text-[1.48rem] font-medium tracking-[-0.03em] text-foreground">
-        {stage.kind === "credentials" ? "Welcome back" : "Two-step verification"}
+        {zh(stage.kind === "credentials" ? "Welcome back" : "Two-step verification")}
       </p>
       <p className="mb-5 mt-1 text-[11px] tracking-[0.18em] text-muted-foreground/78 uppercase">
-        {stage.kind === "credentials"
+        {zh(stage.kind === "credentials"
           ? "Sign in to continue"
           : stage.useBackupCode
             ? "Enter a backup code"
-            : "Enter the code from your app"}
+            : "Enter the code from your app")}
       </p>
 
       {isDemoMode && stage.kind === "credentials" ? (
         <div className="mb-3 rounded-[var(--system-radius-control)] border border-white/10 bg-black/22 px-4 py-3 text-left text-xs text-foreground/70 shadow-[var(--system-shadow-surface)] backdrop-blur-2xl">
-          <p className="font-medium tracking-[0.02em] text-foreground/90">Demo mode</p>
+          <p className="font-medium tracking-[0.02em] text-foreground/90">演示模式</p>
           <p className="mt-0.5 leading-5">
-            Username: <span className="font-mono text-foreground/90">{DEMO_USERNAME}</span>
-            {" · "}Password: <span className="font-mono text-foreground/90">{DEMO_PASSWORD}</span>
+            用户名： <span className="font-mono text-foreground/90">{DEMO_USERNAME}</span>
+            {zh(" · ")}密码： <span className="font-mono text-foreground/90">{DEMO_PASSWORD}</span>
           </p>
         </div>
       ) : null}
@@ -248,10 +250,10 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
       {showRestoreBanner && stage.kind === "credentials" ? (
         <div className="mb-3 rounded-[var(--system-radius-control)] border border-yellow-500/18 bg-black/22 px-4 py-3 text-left text-xs text-yellow-300 shadow-[var(--system-shadow-surface)] backdrop-blur-2xl">
           <p className="font-medium tracking-[0.02em]">
-            Restore complete, session reset
+            还原完成，会话已重置
           </p>
           <p className="mt-1 leading-5 text-yellow-300/78">
-            Please sign in with the credentials that were active when this backup was taken.
+            请使用创建此备份时的账户和密码登录。
           </p>
         </div>
       ) : null}
@@ -272,7 +274,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
                   autoComplete="username"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
-                  placeholder="Username"
+                  placeholder="用户名"
                   className="h-10 w-full border-0 bg-transparent px-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground/52"
                   required
                   autoFocus
@@ -290,14 +292,14 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
                   autoComplete="current-password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  placeholder="Password"
+                  placeholder="密码"
                   className="h-10 w-full border-0 bg-transparent px-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground/52"
                   required
                 />
                 <button
                   type="button"
                   className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-[var(--system-radius-icon)] text-muted-foreground transition-colors hover:bg-white/[0.08] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                  aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+                  aria-label={zh(isPasswordVisible ? "Hide password" : "Show password")}
                   aria-pressed={isPasswordVisible}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() =>
@@ -319,7 +321,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
               <div className="system-error-capsule">
                 <span className="size-1.5 shrink-0 rounded-full bg-status-red shadow-[0_0_10px_rgba(239,68,68,0.45)]" />
                 <p className="text-xs tracking-[0.01em] text-status-red/92">
-                  {error}
+                  {zh(error)}
                 </p>
               </div>
             </div>
@@ -336,11 +338,11 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
             className="system-primary-action group flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span>
-              {isSubmitting
+              {zh(isSubmitting
                 ? "Signing in..."
                 : retryCountdown > 0
                   ? `Try again in ${retryCountdown}s`
-                  : "Sign in"}
+                  : "Sign in")}
             </span>
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
@@ -361,7 +363,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
                 autoComplete="one-time-code"
                 value={totpCode}
                 onChange={(event) => setTotpCode(event.target.value)}
-                placeholder={stage.useBackupCode ? "Backup code" : "123 456"}
+                placeholder={zh(stage.useBackupCode ? "Backup code" : "123 456")}
                 className="h-10 w-full border-0 bg-transparent px-1 text-[15px] tracking-[0.2em] text-foreground outline-none placeholder:text-muted-foreground/52"
                 autoFocus
                 required
@@ -374,7 +376,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
               <div className="system-error-capsule">
                 <span className="size-1.5 shrink-0 rounded-full bg-status-red shadow-[0_0_10px_rgba(239,68,68,0.45)]" />
                 <p className="text-xs tracking-[0.01em] text-status-red/92">
-                  {error}
+                  {zh(error)}
                 </p>
               </div>
             </div>
@@ -385,7 +387,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
             disabled={isSubmitting || !totpCode.trim()}
             className="system-primary-action group flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <span>{isSubmitting ? "Verifying..." : "Verify and sign in"}</span>
+            <span>{zh(isSubmitting ? "Verifying..." : "Verify and sign in")}</span>
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
 
@@ -396,14 +398,14 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
               className="inline-flex items-center gap-1 hover:text-foreground"
             >
               <ArrowLeft className="size-3" />
-              Back
+              返回
             </button>
             <button
               type="button"
               onClick={toggleBackupCode}
               className="hover:text-foreground"
             >
-              {stage.useBackupCode ? "Use authenticator code" : "Use backup code instead"}
+              {zh(stage.useBackupCode ? "Use authenticator code" : "Use backup code instead")}
             </button>
           </div>
         </form>

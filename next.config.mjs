@@ -6,6 +6,7 @@ const pkg = require("./package.json");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
+    cpus: 1, // Bound build concurrency on this production NAS.
     proxyClientMaxBodySize: "10gb",
     serverActions: {
       bodySizeLimit: "10gb",

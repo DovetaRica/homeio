@@ -1,5 +1,8 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
 
+
+import { zhCN } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { PopoverShell } from "@/modules/system/components/status-bar/popover-shell";
 
@@ -29,10 +32,10 @@ export function DatePickerPopover({
         <div className="mb-3 flex items-start justify-between gap-3 border-b border-border/50 pb-3">
           <div>
             <p className="text-2xs font-semibold uppercase tracking-[0.18em] text-muted-foreground/80">
-              Calendar
+              日历
             </p>
             <p className="mt-1 text-sm font-medium text-foreground">
-              {selectedDate.toLocaleDateString("en-US", {
+              {selectedDate.toLocaleDateString("zh-CN", {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
@@ -40,11 +43,12 @@ export function DatePickerPopover({
             </p>
           </div>
           <span className="rounded-full border border-border/60 bg-background/65 px-2.5 py-1 text-2xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/85">
-            {isToday ? "Today" : selectedDate.toLocaleDateString("en-US", { year: "numeric" })}
+            {zh(isToday ? "Today" : selectedDate.toLocaleDateString("zh-CN", { year: "numeric" }))}
           </span>
         </div>
         <Calendar
           mode="single"
+          locale={zhCN}
           navLayout="around"
           selected={selectedDate}
           onSelect={(date) => {
@@ -53,7 +57,7 @@ export function DatePickerPopover({
           className="w-full bg-transparent p-0"
           formatters={{
             formatWeekdayName: (date) =>
-              date.toLocaleDateString("en-US", { weekday: "short" }).slice(0, 2),
+              date.toLocaleDateString("zh-CN", { weekday: "short" }).replace("周", ""),
           }}
           classNames={{
             root: "w-full",

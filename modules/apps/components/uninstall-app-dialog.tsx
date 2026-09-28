@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { useEffect, useId, useState } from "react";
 import { Switch } from "@/components/ui/switch";
@@ -36,7 +38,7 @@ export function UninstallAppDialog({
         {/* Main row */}
         <div className="flex items-center gap-4 px-4 py-3">
           <p className="min-w-0 flex-1 truncate text-sm text-foreground/80">
-            Uninstall{" "}
+            卸载{zh(" ")}
             <span className="font-medium text-foreground">{appName ?? "app"}</span>?
           </p>
 
@@ -52,7 +54,7 @@ export function UninstallAppDialog({
               aria-label="Delete app data"
               className="data-[state=unchecked]:border-white/20"
             />
-            Delete data
+            删除数据
           </label>
 
           <div className="flex shrink-0 items-center gap-2">
@@ -62,7 +64,7 @@ export function UninstallAppDialog({
               disabled={isSubmitting}
               className="h-8 rounded-[var(--system-radius-control)] border border-glass-border/60 bg-white/5 px-3 text-xs font-medium text-foreground/70 transition-colors hover:bg-white/8 hover:text-foreground disabled:opacity-50"
             >
-              Cancel
+              取消
             </button>
             <button
               type="button"
@@ -70,7 +72,7 @@ export function UninstallAppDialog({
               disabled={isSubmitting || !appName}
               className="h-8 rounded-[var(--system-radius-control)] border border-status-red/20 bg-status-red/12 px-3 text-xs font-medium text-status-red transition-colors hover:bg-status-red/20 disabled:opacity-50"
             >
-              {isSubmitting ? "Uninstalling…" : "Uninstall"}
+              {zh(isSubmitting ? "Uninstalling…" : "Uninstall")}
             </button>
           </div>
         </div>
@@ -80,7 +82,7 @@ export function UninstallAppDialog({
           <div className="border-t border-glass-border/40 px-4 py-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-status-red/18 bg-black/26 px-3 py-1.5 backdrop-blur-xl">
               <span className="size-1.5 shrink-0 rounded-full bg-status-red shadow-[0_0_10px_rgba(239,68,68,0.45)]" />
-              <p className="text-xs tracking-[0.01em] text-status-red/92">{error}</p>
+              <p className="text-xs tracking-[0.01em] text-status-red/92">{zh(error)}</p>
             </div>
           </div>
         ) : null}

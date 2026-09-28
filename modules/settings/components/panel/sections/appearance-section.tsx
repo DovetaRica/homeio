@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { Slider } from "@/components/ui/slider";
 import type {
@@ -54,7 +56,7 @@ function SegmentedControl<T extends string>({
               : "text-muted-foreground hover:text-foreground",
           )}
         >
-          {opt.label}
+          {zh(opt.label)}
         </button>
       ))}
     </div>
@@ -72,7 +74,7 @@ function ControlRow({
 }) {
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
-      <span className="text-sm text-foreground">{label}</span>
+      <span className="text-sm text-foreground">{zh(label)}</span>
       {children}
     </div>
   );
@@ -150,7 +152,7 @@ export function AppearanceSection({
     <div className="flex flex-col gap-1">
 
       {/* ── Theme ── */}
-      <SectionDivider title="Theme" />
+      <SectionDivider title="主题" />
       <div
         data-testid="theme-scroller"
         className="-mx-1 flex gap-2 overflow-x-auto px-1 py-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-glass-border"
@@ -161,7 +163,7 @@ export function AppearanceSection({
             <button
               key={theme.value}
               type="button"
-              title={theme.name}
+              title={zh(theme.name)}
               onClick={() => onAppearanceChange({ theme: theme.value })}
               className={cn(
                 "flex w-44 shrink-0 flex-col gap-2 rounded-[calc(var(--radius)+0.375rem)] border p-2.5 text-left transition-all cursor-pointer",
@@ -187,7 +189,7 @@ export function AppearanceSection({
       </div>
 
       {/* ── Accent Color ── */}
-      <SectionDivider title="Accent Color" />
+      <SectionDivider title="强调色" />
       <div className={cn(SETTINGS_PANEL_INSET, "p-3")}>
         <div
           data-testid="accent-scroller"
@@ -200,7 +202,7 @@ export function AppearanceSection({
             return (
               <button
                 type="button"
-                title="Auto (from wallpaper)"
+                title="自动（跟随壁纸）"
                 onClick={() => onAppearanceChange({ accentColor: AUTO_ACCENT_VALUE })}
                 className={cn(
                   "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-all overflow-hidden",
@@ -221,7 +223,7 @@ export function AppearanceSection({
               <button
                 key={color.name}
                 type="button"
-                title={color.name}
+                title={zh(color.name)}
                 onClick={() => onAppearanceChange({ accentColor: color.value })}
                 className={cn(
                   "relative flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 transition-all",
@@ -237,14 +239,14 @@ export function AppearanceSection({
           })}
         </div>
         <p className="mt-2.5 text-[11px] text-muted-foreground/60">
-          {appearance.accentColor === AUTO_ACCENT_VALUE
+          {zh(appearance.accentColor === AUTO_ACCENT_VALUE
             ? "Auto — from wallpaper"
-            : (accentOptions.find((c) => c.value === appearance.accentColor)?.name ?? "Custom")}
+            : (accentOptions.find((c) => c.value === appearance.accentColor)?.name ?? "Custom"))}
         </p>
       </div>
 
       {/* ── Wallpaper ── */}
-      <SectionDivider title="Wallpaper" />
+      <SectionDivider title="壁纸" />
       <div
         data-testid="wallpaper-scroller"
         className="-mx-1 flex gap-2 overflow-x-auto px-1 py-2 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-glass-border"
@@ -255,7 +257,7 @@ export function AppearanceSection({
             <button
               key={wallpaper.id}
               type="button"
-              title={wallpaper.name}
+              title={zh(wallpaper.name)}
               // The desktop waits for the image before it fades, so warming it
               // on hover turns the click from "nothing happened" into instant.
               onMouseEnter={() => {
@@ -281,7 +283,7 @@ export function AppearanceSection({
       </div>
 
       {/* ── Shape ── */}
-      <SectionDivider title="Shape" />
+      <SectionDivider title="形状" />
       <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-3")}>
         <div className="flex items-center gap-3">
           {/* Live preview */}
@@ -293,7 +295,7 @@ export function AppearanceSection({
           <div className="flex flex-1 items-center gap-2">
             <div className="flex-1">
               <Slider
-                aria-label="Corner radius"
+                aria-label="圆角大小"
                 min={APPEARANCE_RADIUS_MIN}
                 max={APPEARANCE_RADIUS_MAX}
                 step={1}
@@ -318,7 +320,7 @@ export function AppearanceSection({
               <button
                 key={preset.name}
                 type="button"
-                aria-label={`Set ${preset.name} radius`}
+                aria-label={zh(`Set ${preset.name} radius`)}
                 onClick={() => onAppearanceChange({ radius: preset.value })}
                 className={cn(
                   "flex flex-1 items-center justify-center gap-1.5 rounded-lg border px-2 py-1.5 transition-all cursor-pointer",
@@ -341,10 +343,10 @@ export function AppearanceSection({
       </div>
 
       {/* ── Liquid Glass ── */}
-      <SectionDivider title="Liquid Glass" />
+      <SectionDivider title="液态玻璃" />
       <div className={cn(SETTINGS_PANEL_INSET, "p-4")}>
         <p className="mb-3 text-xs text-muted-foreground">
-          Choose the look of glass surfaces across the interface.
+          选择界面玻璃面板的外观。
         </p>
         <div className="grid grid-cols-2 gap-2.5">
           {(["clear", "tinted"] as const).map((style) => {
@@ -389,7 +391,7 @@ export function AppearanceSection({
                 </div>
                 <div className="flex items-center justify-between gap-2 px-0.5">
                   <span className={cn("text-xs font-medium", active ? "text-primary" : "text-muted-foreground")}>
-                    {style === "clear" ? "Clear" : "Tinted"}
+                    {zh(style === "clear" ? "Clear" : "Tinted")}
                   </span>
                   {active && (
                     <span className="inline-flex size-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
@@ -404,9 +406,9 @@ export function AppearanceSection({
       </div>
 
       {/* ── Display ── */}
-      <SectionDivider title="Display" />
+      <SectionDivider title="显示" />
       <div className="flex flex-col gap-1.5">
-        <ControlRow label="Icon size">
+        <ControlRow label="图标大小">
           <SegmentedControl
             value={appearance.iconSize}
             options={[
@@ -418,7 +420,7 @@ export function AppearanceSection({
           />
         </ControlRow>
 
-        <ControlRow label="Font size">
+        <ControlRow label="字号">
           <SegmentedControl
             value={appearance.fontSize}
             options={[
@@ -431,7 +433,7 @@ export function AppearanceSection({
           />
         </ControlRow>
 
-        <ControlRow label="Dock position">
+        <ControlRow label="启动栏位置">
           <SegmentedControl
             value={appearance.dockPosition}
             options={[
@@ -445,8 +447,8 @@ export function AppearanceSection({
 
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
-            label="Animations"
-            description="Enable smooth transitions and hover effects"
+            label="动画"
+            description="启用平滑过渡和悬停效果"
             enabled={appearance.animationsEnabled}
             onToggle={() => onAppearanceChange({ animationsEnabled: !appearance.animationsEnabled })}
           />

@@ -1,3 +1,5 @@
+
+import { zh } from "@/lib/i18n/zh";
 import type { QuickStatItem } from "@/modules/system/components/system-widgets/types";
 import { WidgetCard } from "@/modules/system/components/system-widgets/widget-card";
 
@@ -18,10 +20,10 @@ export function QuickStatsCard({ stats }: QuickStatsCardProps) {
               {item.value}
             </span>
             <span className="text-2xs leading-tight text-muted-foreground/80 uppercase tracking-wider">
-              {item.label}
+              {zh(item.label)}
             </span>
             <span className="text-2xs leading-tight text-muted-foreground/50 text-center px-1.5 w-full truncate">
-              {item.sub}
+              {zh(item.sub)}
             </span>
           </div>
         ))}

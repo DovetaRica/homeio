@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { Loader2, Star } from "@/components/icons/platform-icons";
 import { cn } from "@/lib/utils";
@@ -55,13 +57,13 @@ export function LoadMoreBanner({
   return (
     <div className="mt-4 flex items-center justify-center gap-3 py-2">
       <span className="text-xs text-muted-foreground">
-        Showing {shown} of {total} results
+        显示 {shown} / {total} 个结果
       </span>
       <button
         onClick={onLoadMore}
         className="rounded-lg bg-background/50 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-background/70"
       >
-        Load more
+        加载更多
       </button>
     </div>
   );
@@ -197,12 +199,12 @@ export function FileList({
   return (
     <div className="flex flex-col">
       <div className="flex items-center gap-3 border-b border-glass-border/60 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/50">
-        <span className="min-w-0 flex-1">Name</span>
-        {isTrashView && <span className="hidden w-48 text-right lg:block">Original Location</span>}
-        {isGlobalSearchActive && <span className="hidden w-48 text-right lg:block">Location</span>}
-        <span className="hidden w-20 text-right sm:block">Size</span>
+        <span className="min-w-0 flex-1">名称</span>
+        {isTrashView && <span className="hidden w-48 text-right lg:block">原始位置</span>}
+        {isGlobalSearchActive && <span className="hidden w-48 text-right lg:block">位置</span>}
+        <span className="hidden w-20 text-right sm:block">大小</span>
         <span className="hidden w-32 text-right md:block">
-          {isTrashView ? "Deleted" : "Modified"}
+          {zh(isTrashView ? "Deleted" : "Modified")}
         </span>
       </div>
 
@@ -243,25 +245,25 @@ export function FileList({
               className="hidden w-48 shrink-0 truncate text-right text-xs text-muted-foreground/60 lg:block"
               title={entry.path}
             >
-              {entry.path.includes("/")
+              {zh(entry.path.includes("/")
                 ? entry.path.slice(0, entry.path.lastIndexOf("/"))
-                : "/"}
+                : "/")}
             </span>
           )}
 
           <span className="hidden w-20 shrink-0 text-right text-xs text-muted-foreground/60 sm:block">
-            {entry.type === "folder" ? "—" : (entry.size ?? "0 B")}
+            {zh(entry.type === "folder" ? "—" : (entry.size ?? "0 B"))}
           </span>
           <span className="hidden w-32 shrink-0 text-right text-xs text-muted-foreground/60 md:block">
-            {isTrashView
+            {zh(isTrashView
               ? entry.trashDeletedAt
-                ? new Date(entry.trashDeletedAt).toLocaleDateString("en-US", {
+                ? new Date(entry.trashDeletedAt).toLocaleDateString("zh-CN", {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
                   })
                 : "—"
-              : entry.modified}
+              : entry.modified)}
           </span>
         </button>
       ))}

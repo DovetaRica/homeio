@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import type { FileEntry } from "@/modules/files/components/file-manager-presenters";
 import { FILES_MENU_SHELL } from "@/modules/files/components/file-manager-surface";
@@ -71,31 +73,31 @@ export function FileManagerContextMenu({
       style={{ left: x, top: y }}
       onClick={(e) => e.stopPropagation()}
     >
-      <MenuItem icon={<FolderOpen className="size-3.5" />} label="Open" onClick={() => { onOpen(); onClose(); }} />
-      <MenuItem icon={<Info className="size-3.5" />} label="Get Info" onClick={() => { onGetInfo(); onClose(); }} />
-      <MenuItem icon={<Link2 className="size-3.5" />} label="Copy Path" onClick={() => { onCopyPath(); onClose(); }} />
+      <MenuItem icon={<FolderOpen className="size-3.5" />} label="打开" onClick={() => { onOpen(); onClose(); }} />
+      <MenuItem icon={<Info className="size-3.5" />} label="查看信息" onClick={() => { onGetInfo(); onClose(); }} />
+      <MenuItem icon={<Link2 className="size-3.5" />} label="复制路径" onClick={() => { onCopyPath(); onClose(); }} />
       {!isTrashView && (
-        <MenuItem icon={<FileText className="size-3.5" />} label="Rename" onClick={() => { onRename(); onClose(); }} />
+        <MenuItem icon={<FileText className="size-3.5" />} label="重命名" onClick={() => { onRename(); onClose(); }} />
       )}
 
       <Divider />
 
-      <MenuItem icon={<Copy className="size-3.5" />} label="Copy" onClick={() => { onCopy(); onClose(); }} />
-      <MenuItem icon={<Scissors className="size-3.5" />} label="Cut" onClick={() => { onCut(); onClose(); }} />
-      <MenuItem icon={<ClipboardPaste className="size-3.5" />} label="Paste" disabled={pasteDisabled} onClick={() => { onPaste(); onClose(); }} />
+      <MenuItem icon={<Copy className="size-3.5" />} label="复制" onClick={() => { onCopy(); onClose(); }} />
+      <MenuItem icon={<Scissors className="size-3.5" />} label="剪切" onClick={() => { onCut(); onClose(); }} />
+      <MenuItem icon={<ClipboardPaste className="size-3.5" />} label="粘贴" disabled={pasteDisabled} onClick={() => { onPaste(); onClose(); }} />
 
       <Divider />
 
-      <MenuItem icon={<Star className="size-3.5 text-amber-400" />} label="Toggle Star" onClick={() => { onToggleStar(); onClose(); }} />
+      <MenuItem icon={<Star className="size-3.5 text-amber-400" />} label="切换星标" onClick={() => { onToggleStar(); onClose(); }} />
       <MenuItem
         icon={<Download className="size-3.5" />}
-        label={entry.type === "folder" ? "Download as Zip" : "Download"}
+        label={zh(entry.type === "folder" ? "Download as Zip" : "Download")}
         onClick={() => { onDownload(); onClose(); }}
       />
       {entry.type === "file" && entry.ext === "zip" && !isTrashView && (
         <MenuItem
           icon={<FileArchive className="size-3.5" />}
-          label="Unzip Here"
+          label="解压到此处"
           onClick={() => { onUnzip(); onClose(); }}
         />
       )}
@@ -104,7 +106,7 @@ export function FileManagerContextMenu({
         <>
           <MenuItem
             icon={<Users className="size-3.5 text-sky-400" />}
-            label={contextShareActive ? "Unshare Folder" : "Share Folder"}
+            label={zh(contextShareActive ? "Unshare Folder" : "Share Folder")}
             onClick={() => { onToggleShare(); onClose(); }}
           />
           <Divider />
@@ -113,11 +115,11 @@ export function FileManagerContextMenu({
 
       {isTrashView ? (
         <>
-          <MenuItem icon={<ArrowUp className="size-3.5" />} label="Restore" onClick={() => { onRestore(); onClose(); }} />
-          <MenuItem icon={<Trash2 className="size-3.5 text-status-red" />} label="Delete Permanently" danger onClick={() => { onDeletePermanently(); onClose(); }} />
+          <MenuItem icon={<ArrowUp className="size-3.5" />} label="还原" onClick={() => { onRestore(); onClose(); }} />
+          <MenuItem icon={<Trash2 className="size-3.5 text-status-red" />} label="永久删除" danger onClick={() => { onDeletePermanently(); onClose(); }} />
         </>
       ) : (
-        <MenuItem icon={<Trash2 className="size-3.5 text-status-red" />} label="Move to Trash" danger onClick={() => { onMoveToTrash(); onClose(); }} />
+        <MenuItem icon={<Trash2 className="size-3.5 text-status-red" />} label="移入回收站" danger onClick={() => { onMoveToTrash(); onClose(); }} />
       )}
     </div>
   );
@@ -146,10 +148,10 @@ export function FileManagerBackgroundContextMenu({
       style={{ left: x, top: y }}
       onClick={(e) => e.stopPropagation()}
     >
-      <MenuItem icon={<ClipboardPaste className="size-3.5" />} label="Paste" disabled={pasteDisabled} onClick={() => { onPaste(); onClose(); }} />
+      <MenuItem icon={<ClipboardPaste className="size-3.5" />} label="粘贴" disabled={pasteDisabled} onClick={() => { onPaste(); onClose(); }} />
       <Divider />
-      <MenuItem icon={<FolderOpen className="size-3.5" />} label="New Folder" onClick={() => { onNewFolder(); onClose(); }} />
-      <MenuItem icon={<FileText className="size-3.5" />} label="New File" onClick={() => { onNewFile(); onClose(); }} />
+      <MenuItem icon={<FolderOpen className="size-3.5" />} label="新建文件夹" onClick={() => { onNewFolder(); onClose(); }} />
+      <MenuItem icon={<FileText className="size-3.5" />} label="新建文件" onClick={() => { onNewFile(); onClose(); }} />
     </div>
   );
 }
@@ -185,7 +187,7 @@ function MenuItem({
       )}
     >
       {icon}
-      {label}
+      {zh(label)}
     </button>
   );
 }

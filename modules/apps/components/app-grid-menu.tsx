@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import type { AppItem } from "@/modules/apps/components/app-grid-presenters";
 import {
@@ -55,65 +57,65 @@ export function AppGridContextMenu({
     >
       <AppGridContextMenuItem
         icon={<ExternalLink className="size-3.5" />}
-        label="Open Dashboard"
+        label="打开应用页面"
         disabled={!hasDashboardUrl}
-        title={!hasDashboardUrl ? "No web port configured for this app." : undefined}
+        title={zh(!hasDashboardUrl ? "No web port configured for this app." : undefined)}
         onClick={() => onAction("open")}
       />
       {app.status === "running" || app.status === "partial" ? (
         <AppGridContextMenuItem
           icon={<Square className="size-3.5" />}
-          label="Stop Container"
+          label="停止容器"
           disabled={isBusy}
           onClick={() => onAction("stop")}
         />
       ) : (
         <AppGridContextMenuItem
           icon={<Play className="size-3.5" />}
-          label="Start Container"
+          label="启动容器"
           disabled={isBusy}
           onClick={() => onAction("start")}
         />
       )}
       <AppGridContextMenuItem
         icon={<RotateCcw className="size-3.5" />}
-        label="Restart Container"
+        label="重启容器"
         disabled={isBusy}
         onClick={() => onAction("restart")}
       />
       <AppGridContextMenuItem
         icon={<ScrollText className="size-3.5" />}
-        label="View Logs"
+        label="查看日志"
         onClick={() => onAction("logs")}
       />
       <AppGridContextMenuItem
         icon={<TerminalSquare className="size-3.5" />}
-        label="Open in Terminal"
+        label="在终端中打开"
         onClick={() => onAction("terminal")}
       />
       <div className="mx-2 my-1 h-px bg-border" />
       <AppGridContextMenuItem
         icon={<Settings2 className="size-3.5" />}
-        label="App Settings"
+        label="应用设置"
         onClick={() => onAction("settings")}
       />
       <AppGridContextMenuItem
         icon={<RefreshCw className="size-3.5" />}
-        label="Check Updates"
+        label="检查更新"
         disabled={isBusy}
         onClick={() => onAction("update")}
       />
       <AppGridContextMenuItem
         icon={<Copy className="size-3.5" />}
-        label="Copy URL"
+        label="复制链接"
         disabled={!hasDashboardUrl}
-        title={!hasDashboardUrl ? "No web port configured for this app." : undefined}
+        title={zh(!hasDashboardUrl ? "No web port configured for this app." : undefined)}
         onClick={() => onAction("copy-url")}
       />
       <div className="mx-2 my-1 h-px bg-border" />
       <AppGridContextMenuItem
         icon={<Trash2 className="size-3.5 text-status-red" />}
-        label="Remove App"
+        label="移除应用"
         danger
         disabled={isBusy}
         onClick={() => onAction("remove")}
@@ -148,7 +150,7 @@ function AppGridContextMenuItem({
       } disabled:cursor-not-allowed disabled:opacity-40`}
     >
       {icon}
-      {label}
+      {zh(label)}
     </button>
   );
 
@@ -158,7 +160,7 @@ function AppGridContextMenuItem({
         <TooltipTrigger asChild>
           <span className="block">{button}</span>
         </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={8}>{title}</TooltipContent>
+        <TooltipContent side="right" sideOffset={8}>{zh(title)}</TooltipContent>
       </Tooltip>
     );
   }

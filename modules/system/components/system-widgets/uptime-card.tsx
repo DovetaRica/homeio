@@ -8,7 +8,7 @@ type UptimeCardProps = {
 
 export function UptimeCard({ uptime }: UptimeCardProps) {
   return (
-    <WidgetCard title="Uptime" icon={CalendarClock}>
+    <WidgetCard title="运行时间" icon={CalendarClock}>
       <div className="flex items-baseline gap-1">
         <span className="text-2xl font-bold text-primary font-mono">{uptime.days}</span>
         <span className="text-xs text-muted-foreground mr-2">d</span>

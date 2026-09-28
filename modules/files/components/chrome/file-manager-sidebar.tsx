@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { Cloud, HardDrive, Plus } from "@/components/icons/platform-icons";
 import { OsIcon } from "@/components/icons/OsIcon";
@@ -96,14 +98,14 @@ export function FileManagerSidebar({
             <div key={section.title} className="mb-3">
               <div className="mb-1.5 flex items-center justify-between px-3">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/65">
-                  {section.title}
+                  {zh(section.title)}
                 </span>
                 {section.title === "Locations" && !isDemoMode && (
                   <div ref={addMenuRef} className="relative">
                     <button
                       onClick={() => setAddMenuOpen((v) => !v)}
-                      title="Add location"
-                      aria-label="Add location"
+                      title="添加位置"
+                      aria-label="添加位置"
                       className="flex h-5 w-5 items-center justify-center rounded-full text-muted-foreground/50 transition-colors hover:bg-background/60 hover:text-foreground"
                     >
                       <Plus className="size-3" />
@@ -119,7 +121,7 @@ export function FileManagerSidebar({
                             className="size-4 shrink-0 object-contain"
                             fallback={<HardDrive className="size-3.5 shrink-0 text-muted-foreground/60" />}
                           />
-                          Network Storage
+                          网络存储
                         </button>
                         <button
                           onClick={() => { setAddMenuOpen(false); onOpenUsbDialog(); }}
@@ -130,7 +132,7 @@ export function FileManagerSidebar({
                             className="size-4 shrink-0 object-contain"
                             fallback={<HardDrive className="size-3.5 shrink-0 text-amber-400/70" />}
                           />
-                          USB Drives
+                          USB 设备
                         </button>
                         {FEATURE_FLAGS.GOOGLE_DRIVE && (
                           <button
@@ -142,7 +144,7 @@ export function FileManagerSidebar({
                               className="size-4 shrink-0 object-contain"
                               fallback={<Cloud className="size-3.5 shrink-0 text-sky-400/70" />}
                             />
-                            Google Drive
+                            Google 云端硬盘
                           </button>
                         )}
                       </div>
@@ -168,7 +170,7 @@ export function FileManagerSidebar({
                       <span className={cn("size-5 shrink-0", isActive ? "text-primary" : "text-muted-foreground/70")}>
                         {item.icon}
                       </span>
-                      <span className="flex-1 truncate text-left text-[14px] font-medium leading-5">{item.name}</span>
+                      <span className="flex-1 truncate text-left text-[14px] font-medium leading-5">{section.title === "Favorites" ? zh(item.name) : item.name}</span>
                     </button>
                   );
                 })}
@@ -176,7 +178,7 @@ export function FileManagerSidebar({
                 {section.title === "Locations" && removableItems.length > 0 && (
                   <>
                     <div className="mb-1 mt-2.5 px-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/55">
-                      Removable
+                      可移动设备
                     </div>
                     {removableItems.map((item) => {
                       const isActive = item.isMounted && isPathActive(item.path, currentPath);
@@ -198,13 +200,13 @@ export function FileManagerSidebar({
                             </span>
                             <span className="flex-1 truncate text-left text-[14px] font-medium leading-5">{item.name}</span>
                             {!item.isMounted && (
-                              <span className="ml-auto shrink-0 text-[10px] text-muted-foreground/40">mount</span>
+                              <span className="ml-auto shrink-0 text-[10px] text-muted-foreground/40">挂载</span>
                             )}
                           </button>
                           {item.isMounted && (
                             <button
                               onClick={() => onEjectDrive(item.driveId)}
-                              title="Eject"
+                              title="弹出"
                               className="rounded-md p-1 text-muted-foreground/40 transition-colors hover:bg-background/50 hover:text-foreground"
                             >
                               <EjectIcon className="size-3.5" />
@@ -237,7 +239,7 @@ export function FileManagerSidebar({
               className="size-5 shrink-0 object-contain"
               fallback={<Users className={cn("size-4 shrink-0", isSharedView ? "text-primary" : "text-sky-400/70")} />}
             />
-            <span className="text-[14px] font-medium leading-5">Shared</span>
+            <span className="text-[14px] font-medium leading-5">共享</span>
           </button>
           <button
             onClick={() => onNavigateToPath(["Trash"])}
@@ -253,12 +255,12 @@ export function FileManagerSidebar({
               className="size-5 shrink-0 object-contain"
               fallback={<Trash2 className={cn("size-4 shrink-0", isTrashView ? "text-primary" : "text-status-red/60")} />}
             />
-            <span className="text-[14px] font-medium leading-5">Trash</span>
+            <span className="text-[14px] font-medium leading-5">回收站</span>
           </button>
         </div>
 
         <div className="mb-1.5 flex items-center justify-between">
-          <span className="text-[12px] font-medium text-muted-foreground/75">Storage</span>
+          <span className="text-[12px] font-medium text-muted-foreground/75">存储</span>
           <span className="text-[12px] text-muted-foreground/60">{storageUsageText}</span>
         </div>
         <div className="h-1 overflow-hidden rounded-full bg-background/65">

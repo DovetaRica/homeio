@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   ShoppingBag   as AppStore24Regular,
@@ -78,7 +80,7 @@ export function Dock({
           boxShadow: "var(--system-shadow-dock), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.07)",
         }}
         onMouseLeave={() => setHoveredIndex(null)}
-        aria-label="Quick launch dock"
+        aria-label="快捷启动栏"
       >
         {dockItemDefs.map((item, index) => {
           const scale = animationsEnabled ? getScale(index) : 1;
@@ -108,12 +110,12 @@ export function Dock({
                         : "none",
                     }}
                     className="relative size-11 rounded-2xl overflow-hidden cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-                    aria-label={item.name}
+                    aria-label={zh(item.name)}
                     aria-pressed={isFocused}
                   >
                     <OsIcon
                       src={osSrc}
-                      alt={item.name}
+                      alt={zh(item.name)}
                       className={`size-full rounded-2xl object-contain transition-[box-shadow] duration-150 ${
                         isFocused
                           ? "shadow-[0_0_0_2px_hsl(var(--primary)/0.5),0_2px_8px_rgba(0,0,0,0.3)]"
@@ -126,7 +128,7 @@ export function Dock({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side={isVertical ? (position === "left" ? "right" : "left") : "top"} sideOffset={8}>
-                  {item.name}
+                  {zh(item.name)}
                 </TooltipContent>
               </Tooltip>
               {/* Always rendered to reserve space — invisible when not running */}

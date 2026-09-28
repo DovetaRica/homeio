@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { cn } from "@/lib/utils";
 import { FILES_BADGE_SURFACE } from "@/modules/files/components/file-manager-surface";
@@ -36,23 +38,23 @@ export function FileManagerStatusBar({
       <span className="flex items-center gap-3">
         <span>
           {folderCount > 0 && `${folderCount} folder${folderCount > 1 ? "s" : ""}`}
-          {folderCount > 0 && fileCount > 0 ? ", " : ""}
+          {zh(folderCount > 0 && fileCount > 0 ? ", " : "")}
           {fileCount > 0 && `${fileCount} file${fileCount > 1 ? "s" : ""}`}
         </span>
         {selectedFilesCount > 1 && (
           <span className="flex items-center gap-1.5 text-primary">
-            <span>{selectedFilesCount} selected</span>
+            <span>{selectedFilesCount} 已选择</span>
             {!isTrashView && !isStarredView && (
               <button
                 onClick={onTrashSelected}
-                title="Move selected to Trash"
+                title="将所选项目移入回收站"
                 className={cn(
                   "flex items-center gap-1 px-1.5 py-0.5 text-status-red transition-colors hover:bg-status-red/15",
                   FILES_BADGE_SURFACE,
                 )}
               >
                 <Trash2 className="size-3" />
-                <span>Trash selected</span>
+                <span>移入回收站</span>
               </button>
             )}
           </span>
@@ -61,16 +63,16 @@ export function FileManagerStatusBar({
 
       <div className="flex items-center gap-3">
         {statusNotice && (
-          <span className="max-w-72 truncate text-status-amber">{statusNotice}</span>
+          <span className="max-w-72 truncate text-status-amber">{zh(statusNotice)}</span>
         )}
         {clipboardName && clipboardOperation && (
           <span className="max-w-56 truncate text-muted-foreground/60">
-            {clipboardOperation === "copy" ? "Clipboard" : "Cut"}: {clipboardName}
+            {zh(clipboardOperation === "copy" ? "Clipboard" : "Cut")}: {clipboardName}
           </span>
         )}
         <span className="font-mono text-muted-foreground/50">
           {rootLabel}
-          {currentPathForDisplay.length > 0 ? `/${currentPathForDisplay.join("/")}` : ""}
+          {zh(currentPathForDisplay.length > 0 ? `/${currentPathForDisplay.join("/")}` : "")}
         </span>
       </div>
     </div>

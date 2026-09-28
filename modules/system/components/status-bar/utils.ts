@@ -1,13 +1,13 @@
 export function formatTime(date: Date) {
-  return date.toLocaleTimeString("en-US", {
+  return date.toLocaleTimeString("zh-CN", {
     hour: "numeric",
     minute: "2-digit",
-    hour12: true,
+    hour12: false,
   });
 }
 
 export function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", {
+  return date.toLocaleDateString("zh-CN", {
     weekday: "short",
     month: "short",
     day: "numeric",

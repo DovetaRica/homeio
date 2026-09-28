@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { useMemo, useState } from "react";
 import { PopoverShell } from "@/modules/system/components/status-bar/popover-shell";
@@ -107,11 +109,11 @@ export function WifiPopover({ metrics, networkStatus, isDemoMode = false, onClos
             />
           )}
           <span className="text-sm font-semibold text-foreground">
-            {isEthernet ? "Ethernet" : "Wi-Fi"}
+            {zh(isEthernet ? "Ethernet" : "Wi-Fi")}
           </span>
         </div>
         <span className="text-xs text-muted-foreground">
-          {status.connected ? "Connected" : "Disconnected"}
+          {zh(status.connected ? "Connected" : "Disconnected")}
         </span>
       </div>
 
@@ -127,16 +129,16 @@ export function WifiPopover({ metrics, networkStatus, isDemoMode = false, onClos
               )}
               <div className="min-w-0">
                 <p className="text-sm text-foreground truncate">
-                  {isEthernet
+                  {zh(isEthernet
                     ? (status.iface ?? "Ethernet")
-                    : (status.ssid ?? "No active Wi-Fi network")}
+                    : (status.ssid ?? "No active Wi-Fi network"))}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {isEthernet
+                  {zh(isEthernet
                     ? "Wired connection"
                     : status.iface
                       ? `Interface ${status.iface}`
-                      : "Interface unavailable"}
+                      : "Interface unavailable")}
                 </p>
               </div>
               {status.connected && (
@@ -147,14 +149,14 @@ export function WifiPopover({ metrics, networkStatus, isDemoMode = false, onClos
               {!isDemoMode && <span className="truncate">IPv4: {status.ipv4 ?? "--"}</span>}
               {!isEthernet && (
                 <span className="truncate">
-                  Signal: {status.signalPercent ?? "--"}%
+                  信号： {status.signalPercent ?? "--"}%
                 </span>
               )}
               <span className="truncate">
-                Download: {metrics?.wifi.downloadMbps ?? "--"} Mbps
+                下载： {metrics?.wifi.downloadMbps ?? "--"} Mbps
               </span>
               <span className="truncate">
-                Upload: {metrics?.wifi.uploadMbps ?? "--"} Mbps
+                上传： {metrics?.wifi.uploadMbps ?? "--"} Mbps
               </span>
             </div>
             {!isEthernet && (
@@ -165,18 +167,18 @@ export function WifiPopover({ metrics, networkStatus, isDemoMode = false, onClos
                   disabled={!status.connected || isDisconnecting}
                   className="text-xs px-2.5 py-1.5 rounded-md border border-glass-border text-foreground disabled:opacity-50 disabled:cursor-not-allowed hover:bg-secondary/50 transition-colors"
                 >
-                  {isDisconnecting ? "Disconnecting..." : "Disconnect"}
+                  {zh(isDisconnecting ? "Disconnecting..." : "Disconnect")}
                 </button>
               </div>
             )}
           </>
         ) : (
           <p className="text-xs text-muted-foreground">
-            Loading network details...
+            正在加载网络详情…
           </p>
         )}
         {actionError ? (
-          <p className="text-xs text-status-red mt-2">{actionError.message}</p>
+          <p className="text-xs text-status-red mt-2">{zh(actionError.message)}</p>
         ) : null}
       </div>
 
@@ -184,7 +186,7 @@ export function WifiPopover({ metrics, networkStatus, isDemoMode = false, onClos
       {!isEthernet && (
         <div className="py-1 max-h-64 overflow-y-auto">
           <p className="px-3 pt-1 pb-1 text-xs text-muted-foreground uppercase tracking-wider">
-            Nearby Networks
+            附近的网络
           </p>
           {hasNetworks ? (
             networks.map((network, idx) => (
@@ -203,7 +205,7 @@ export function WifiPopover({ metrics, networkStatus, isDemoMode = false, onClos
                     ) : null}
                   </div>
                   <span className="text-xs text-muted-foreground">
-                    Ch {network.channel ?? "--"} ·{" "}
+                    信道 {network.channel ?? "--"} ·{zh(" ")}
                     {network.signalPercent ?? "--"}%
                   </span>
                 </div>
@@ -215,17 +217,17 @@ export function WifiPopover({ metrics, networkStatus, isDemoMode = false, onClos
                   disabled={isConnecting && pendingSsid === network.ssid}
                   className="text-2xs px-2 py-1 rounded-md border border-glass-border text-foreground hover:bg-secondary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isConnecting && pendingSsid === network.ssid
+                  {zh(isConnecting && pendingSsid === network.ssid
                     ? "Connecting..."
                     : status.ssid === network.ssid && status.connected
                       ? "Connected"
-                      : "Connect"}
+                      : "Connect")}
                 </button>
               </div>
             ))
           ) : (
             <div className="px-3 py-5 text-center text-xs text-muted-foreground">
-              No Wi-Fi scan data available
+              没有无线网络扫描数据
             </div>
           )}
         </div>

@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { useState } from "react";
 
@@ -18,7 +20,7 @@ export function OsIcon({ src, alt = "", className, fallback }: OsIconProps) {
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={src}
-      alt={alt}
+      alt={zh(alt)}
       className={className}
       onError={() => setFailed(true)}
       draggable={false}

@@ -1,3 +1,5 @@
+
+import { zh } from "@/lib/i18n/zh";
 import type { ResourceWidgetItem } from "@/modules/system/components/system-widgets/types";
 import { ProgressBar } from "@/modules/system/components/system-widgets/progress-bar";
 
@@ -15,7 +17,7 @@ export function ResourceItem({
           <div className="flex size-4 items-center justify-center rounded-md bg-white/[0.07]">
             <Icon className="size-2.5 text-muted-foreground/70" />
           </div>
-          <span className="text-xs text-muted-foreground">{label}</span>
+          <span className="text-xs text-muted-foreground">{zh(label)}</span>
         </div>
         <span className="text-xs font-mono font-medium text-foreground">{value}</span>
       </div>

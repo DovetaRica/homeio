@@ -9,7 +9,7 @@ type ResourcesCardProps = {
 
 export function ResourcesCard({ items }: ResourcesCardProps) {
   return (
-    <WidgetCard title="Resources" icon={Activity}>
+    <WidgetCard title="资源" icon={Activity}>
       <div className="flex flex-col gap-4">
         {items.map((item) => (
           <ResourceItem key={item.label} {...item} />

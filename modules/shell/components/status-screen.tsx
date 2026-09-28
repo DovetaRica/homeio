@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import Image from "next/image";
 import { type ReactNode } from "react";
@@ -37,12 +39,12 @@ export function StatusScreen({
               />
             </div>
             <div className="system-pill-surface mt-2.5 px-3 py-1 text-[10px] tracking-[0.24em] text-foreground/58 uppercase">
-              {failed ? "Error" : "Home server"}
+              {zh(failed ? "Error" : "Home server")}
             </div>
           </div>
 
           <p className="text-[1.48rem] font-medium tracking-[-0.03em] text-foreground">
-            {title}
+            {zh(title)}
           </p>
           <p className="mb-5 mt-1 text-sm leading-6 text-muted-foreground/78">
             {body}

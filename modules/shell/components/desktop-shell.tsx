@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   Activity,
@@ -166,11 +168,11 @@ function DesktopShellInner() {
     clearPersistedPowerActionCompletion(window.localStorage);
 
     if (completion.action === "update") {
-      toast.success("Homeio update completed.");
+      toast.success(zh("Homeio update completed."));
       return;
     }
 
-    toast.success("System action completed.");
+    toast.success(zh("System action completed."));
   }, [rebootRecovery.isActive, rebootRecovery.isHydrated]);
 
   useEffect(() => {
@@ -423,7 +425,7 @@ function DesktopShellInner() {
       return;
 
     if (id === "terminal" && currentUser?.isDemoMode) {
-      toast.info("Terminal is disabled in demo mode.");
+      toast.info(zh("Terminal is disabled in demo mode."));
       return;
     }
 
@@ -703,9 +705,9 @@ function DesktopShellInner() {
           <div className="fixed top-14 right-5 z-50 hidden xl:flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-3 py-1.5 backdrop-blur-md shadow-lg shadow-black/20">
             <span className="size-1.5 rounded-full bg-primary animate-pulse" />
             <span className="text-xs font-semibold text-primary tracking-tight">
-              Demo
+              演示
             </span>
-            <span className="text-xs text-foreground/50">· read-only</span>
+            <span className="text-xs text-foreground/50">· 只读</span>
           </div>
         )}
 
@@ -757,7 +759,7 @@ function DesktopShellInner() {
         {/* Windows */}
         {openWindows.includes("files") && (
           <Window
-            title="Files"
+            title="文件"
             icon={<FolderOpen className="size-4 text-sky-400" />}
             onClose={() => closeWindow("files")}
             onMinimize={() => minimizeWindow("files")}
@@ -776,7 +778,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("settings") && (
           <Window
-            title="Settings"
+            title="设置"
             icon={<Settings className="size-4 text-muted-foreground" />}
             onClose={() => closeWindow("settings")}
             onMinimize={() => minimizeWindow("settings")}
@@ -803,7 +805,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("monitor") && (
           <Window
-            title="Monitor"
+            title="监控"
             icon={<Activity className="size-4 text-primary" />}
             onClose={() => closeWindow("monitor")}
             onMinimize={() => minimizeWindow("monitor")}
@@ -822,7 +824,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("notifications") && (
           <Window
-            title="Notifications"
+            title="通知"
             icon={<Bell className="size-4 text-primary" />}
             onClose={() => closeWindow("notifications")}
             onMinimize={() => minimizeWindow("notifications")}
@@ -841,7 +843,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("app-store") && (
           <Window
-            title="App Store"
+            title="应用商店"
             icon={<ShoppingBag className="size-4 text-sky-400" />}
             onClose={() => closeWindow("app-store")}
             onMinimize={() => minimizeWindow("app-store")}
@@ -863,7 +865,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("custom-install") && (
           <Window
-            title="Install Custom App"
+            title="安装自定义应用"
             icon={<Package className="size-4 text-primary" />}
             onClose={() => closeWindow("custom-install")}
             onMinimize={() => minimizeWindow("custom-install")}
@@ -885,7 +887,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("app-settings") && appSettingsTarget && (
           <Window
-            title={`${appSettingsTarget.appName} Settings`}
+            title={zh(`${appSettingsTarget.appName} Settings`)}
             icon={<Settings className="size-4 text-primary" />}
             onClose={() => {
               closeWindow("app-settings");
@@ -915,7 +917,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("terminal") && (
           <Window
-            title={terminalMode === "logs" ? "Container Logs" : "Terminal"}
+            title={zh(terminalMode === "logs" ? "Container Logs" : "Terminal")}
             icon={<TerminalSquare className="size-4 text-emerald-400" />}
             onClose={() => closeWindow("terminal")}
             onMinimize={() => minimizeWindow("terminal")}
@@ -937,7 +939,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("disk-manager") && (
           <Window
-            title="Disk Manager"
+            title="磁盘管理"
             icon={<HardDrive className="size-4 text-amber-400" />}
             onClose={() => closeWindow("disk-manager")}
             onMinimize={() => minimizeWindow("disk-manager")}
@@ -959,7 +961,7 @@ function DesktopShellInner() {
           <button
             onClick={() => { setIsSettingsSearchOpen(true); setSettingsSearchQuery(""); }}
             className="system-pill-surface flex cursor-pointer items-center gap-1.5 px-2.5 py-1 text-foreground/30 transition-colors hover:text-foreground/55"
-            aria-label="Open command palette"
+            aria-label="打开命令面板"
           >
             <Search className="size-2.5 shrink-0" />
             <span className="font-mono text-[9px] tracking-widest">⌘K</span>

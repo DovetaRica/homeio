@@ -1,4 +1,5 @@
 'use client'
+import { zh } from "@/lib/i18n/zh";
 
 import * as React from 'react'
 import { Command as CommandPrimitive } from 'cmdk'
@@ -45,8 +46,8 @@ function CommandDialog({
   return (
     <Dialog {...props}>
       <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
+        <DialogTitle>{zh(title)}</DialogTitle>
+        <DialogDescription>{zh(description)}</DialogDescription>
       </DialogHeader>
       <DialogContent
         className={cn('overflow-hidden p-0', className)}

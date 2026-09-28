@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { useState } from "react";
 
@@ -77,13 +79,13 @@ export function CustomInstallForm({
   return (
     <div className="flex flex-col h-full overflow-y-auto p-5">
       <p className="text-xs text-muted-foreground mb-4">
-        Add an app using docker compose or docker run, then install it through the same store operation pipeline.
+        使用 Docker Compose 或 Docker Run 定义应用，再通过应用商店流程安装。
       </p>
 
       <form className="space-y-4" onSubmit={(event) => void handleSubmit(event)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-            App Name
+            应用名称
             <input
               required
               value={name}
@@ -94,7 +96,7 @@ export function CustomInstallForm({
           </label>
 
           <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-            Source Type
+            来源类型
             <select
               value={sourceType}
               onChange={(event) => {
@@ -110,7 +112,7 @@ export function CustomInstallForm({
           </label>
 
           <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-            Icon URL
+            图标地址
             <input
               value={iconUrl}
               onChange={(event) => setIconUrl(event.target.value)}
@@ -120,7 +122,7 @@ export function CustomInstallForm({
           </label>
 
           <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-            Web UI Port
+            Web 界面端口
             <input
               type="number"
               inputMode="numeric"
@@ -132,12 +134,12 @@ export function CustomInstallForm({
               className="px-3 py-2 text-sm bg-glass border border-glass-border rounded-md text-foreground outline-none focus:border-primary/50"
             />
             {!isWebUiPortValid ? (
-              <span className="text-2xs text-status-red">Port must be between 1024 and 65535.</span>
+              <span className="text-2xs text-status-red">端口必须在 1024～65535 之间。</span>
             ) : null}
           </label>
 
           <label className="flex flex-col gap-1 text-xs text-muted-foreground md:col-span-2">
-            Repository URL (optional)
+            仓库地址（可选）
             <input
               value={repositoryUrl}
               onChange={(event) => setRepositoryUrl(event.target.value)}
@@ -148,7 +150,7 @@ export function CustomInstallForm({
         </div>
 
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-          {sourceType === "docker-compose" ? "Docker Compose" : "Docker Run"}
+          {zh(sourceType === "docker-compose" ? "Docker Compose" : "Docker Run")}
           <textarea
             required
             rows={10}
@@ -158,7 +160,7 @@ export function CustomInstallForm({
           />
         </label>
 
-        {error ? <p className="text-xs text-status-red">{error}</p> : null}
+        {error ? <p className="text-xs text-status-red">{zh(error)}</p> : null}
 
         <div className="flex justify-end gap-2 pt-1">
           <button
@@ -166,14 +168,14 @@ export function CustomInstallForm({
             onClick={onCancel}
             className="px-3 py-1.5 text-xs font-medium rounded-md border border-glass-border text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
-            Cancel
+            取消
           </button>
           <button
             type="submit"
             disabled={isSubmitting || !isValid}
             className="px-3 py-1.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:brightness-110 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "Installing..." : "Install Custom App"}
+            {zh(isSubmitting ? "Installing..." : "Install Custom App")}
           </button>
         </div>
       </form>

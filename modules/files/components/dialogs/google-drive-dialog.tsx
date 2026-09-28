@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   Dialog,
@@ -55,8 +57,8 @@ export function GoogleDriveDialog({ isOpen, onClose }: GoogleDriveDialogProps) {
         className="max-w-[min(96vw,36rem)] gap-0 overflow-hidden rounded-[calc(var(--radius)+0.75rem)] border-glass-border bg-popover/96 p-0 shadow-2xl shadow-black/45 backdrop-blur-2xl"
       >
         <DialogHeader className="sr-only">
-          <DialogTitle>Google Drive</DialogTitle>
-          <DialogDescription>Connect and manage Google Drive accounts.</DialogDescription>
+          <DialogTitle>Google 云端硬盘</DialogTitle>
+          <DialogDescription>连接和管理 Google 云端硬盘账户。</DialogDescription>
         </DialogHeader>
 
         {/* Window chrome title bar */}
@@ -66,7 +68,7 @@ export function GoogleDriveDialog({ isOpen, onClose }: GoogleDriveDialogProps) {
             <button
               onClick={onClose}
               className="group flex size-3 cursor-pointer items-center justify-center rounded-full bg-[#ff5f57] transition-all hover:brightness-110"
-              aria-label="Close"
+              aria-label="关闭"
             >
               <X className="size-[7px] text-[#6a0002] opacity-0 transition-opacity group-hover:opacity-100" />
             </button>
@@ -77,7 +79,7 @@ export function GoogleDriveDialog({ isOpen, onClose }: GoogleDriveDialogProps) {
           {/* Centered title */}
           <div className="flex flex-1 items-center justify-center gap-1.5">
             <Cloud className="size-3.5 text-sky-400" />
-            <span className="text-xs font-medium text-foreground/80">Google Drive</span>
+            <span className="text-xs font-medium text-foreground/80">Google 云端硬盘</span>
           </div>
 
           {/* Right gutter — balances traffic lights */}
@@ -92,21 +94,21 @@ export function GoogleDriveDialog({ isOpen, onClose }: GoogleDriveDialogProps) {
             </div>
           ) : !isConfigured ? (
             <div className="rounded-lg border border-glass-border/60 bg-background/40 p-4 text-sm text-muted-foreground">
-              <p className="font-medium text-foreground">Google Drive not configured</p>
+              <p className="font-medium text-foreground">尚未配置 Google 云端硬盘</p>
               <p className="mt-1">
-                Add <code className="rounded bg-background/60 px-1 py-0.5 text-xs font-mono">GOOGLE_CLIENT_ID</code>{" "}
-                and{" "}
-                <code className="rounded bg-background/60 px-1 py-0.5 text-xs font-mono">GOOGLE_CLIENT_SECRET</code>{" "}
-                to your environment variables.
+                添加 <code className="rounded bg-background/60 px-1 py-0.5 text-xs font-mono">GOOGLE_CLIENT_ID</code>{zh(" ")}
+                和{zh(" ")}
+                <code className="rounded bg-background/60 px-1 py-0.5 text-xs font-mono">GOOGLE_CLIENT_SECRET</code>{zh(" ")}
+                添加到环境变量中。
               </p>
             </div>
           ) : connections.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-4 py-8 text-center">
               <Cloud className="size-12 text-muted-foreground/30" />
               <div>
-                <p className="font-medium text-foreground">No accounts connected</p>
+                <p className="font-medium text-foreground">尚未连接账户</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Connect a Google account to access your Drive files.
+                  连接 Google 账户以访问云端硬盘文件。
                 </p>
               </div>
             </div>
@@ -127,7 +129,7 @@ export function GoogleDriveDialog({ isOpen, onClose }: GoogleDriveDialogProps) {
                     type="button"
                     onClick={() => removeConnection.mutate(conn.id)}
                     disabled={removeConnection.isPending}
-                    title="Disconnect"
+                    title="断开连接"
                     className="shrink-0 rounded-md p-1.5 text-muted-foreground/60 transition-colors hover:bg-background/50 hover:text-status-red disabled:opacity-40"
                   >
                     <Trash2 className="size-4" />
@@ -147,14 +149,14 @@ export function GoogleDriveDialog({ isOpen, onClose }: GoogleDriveDialogProps) {
               className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-sky-500/15 px-4 text-sm font-medium text-sky-400 transition-colors hover:bg-sky-500/25"
             >
               <Cloud className="size-4" />
-              Connect Google Account
+              连接 Google 账户
             </button>
           </div>
         )}
 
         {connectionsQuery.error && isConfigured ? (
           <div className="border-t border-glass-border bg-status-red/8 px-5 py-3 text-xs text-status-red">
-            {connectionsQuery.error instanceof Error ? connectionsQuery.error.message : "Unknown error"}
+            {zh(connectionsQuery.error instanceof Error ? connectionsQuery.error.message : "Unknown error")}
           </div>
         ) : null}
       </DialogContent>

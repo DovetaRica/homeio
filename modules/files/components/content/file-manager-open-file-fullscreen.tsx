@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { Download, Minimize2, RotateCw, ZoomIn, ZoomOut } from "@/components/icons/platform-icons";
 import { getFileIcon, type FileEntry } from "@/modules/files/components/file-manager-presenters";
@@ -54,7 +56,7 @@ export function OpenFileFullscreen({
         <button
           onClick={() => setZoom((z) => Math.max(z - ZOOM_STEP, ZOOM_MIN))}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="Zoom out"
+          aria-label="缩小"
         >
           <ZoomOut className="size-4" />
         </button>
@@ -67,14 +69,14 @@ export function OpenFileFullscreen({
         <button
           onClick={() => setZoom((z) => Math.min(z + ZOOM_STEP, ZOOM_MAX))}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="Zoom in"
+          aria-label="放大"
         >
           <ZoomIn className="size-4" />
         </button>
         <button
           onClick={() => setRotation((r) => (r + 90) % 360)}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="Rotate 90 degrees"
+          aria-label="旋转 90 度"
         >
           <RotateCw className="size-4" />
         </button>
@@ -82,14 +84,14 @@ export function OpenFileFullscreen({
           href={openFileAssetUrl}
           download={openFile.entry.name}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="Download"
+          aria-label="下载"
         >
           <Download className="size-4" />
         </a>
         <button
           onClick={onCollapse}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="Exit full screen"
+          aria-label="退出全屏"
         >
           <Minimize2 className="size-4" />
         </button>

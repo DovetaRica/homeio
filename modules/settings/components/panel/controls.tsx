@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   AlertTriangle,
@@ -63,7 +65,7 @@ export function useControlAvailability(
 
 export function ControlDisabledHint({ text }: { text?: string }) {
   if (!text) return null;
-  return <span className="text-xs text-status-amber">{text}</span>;
+  return <span className="text-xs text-status-amber">{zh(text)}</span>;
 }
 
 export function Toggle({
@@ -86,9 +88,9 @@ export function Toggle({
   return (
     <div className="flex items-center justify-between py-3">
       <div className="flex flex-col gap-0.5">
-        <span className="text-sm text-foreground">{label}</span>
+        <span className="text-sm text-foreground">{zh(label)}</span>
         {description ? (
-          <span className="text-xs text-muted-foreground">{description}</span>
+          <span className="text-xs text-muted-foreground">{zh(description)}</span>
         ) : null}
         <ControlDisabledHint text={availability.disabledReason} />
       </div>
@@ -96,7 +98,7 @@ export function Toggle({
         type="button"
         role="switch"
         aria-checked={enabled}
-        aria-label={`Toggle ${label}`}
+        aria-label={zh(`Toggle ${label}`)}
         onClick={availability.disabled ? undefined : onToggle}
         disabled={availability.disabled}
         className={`relative inline-flex h-5 w-10 shrink-0 items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
@@ -147,10 +149,10 @@ export function SettingsInput({
   return (
     <div className="flex flex-col gap-1.5 py-2">
       <label className="text-xs font-medium text-muted-foreground">
-        {label}
+        {zh(label)}
       </label>
       {description ? (
-        <span className="text-xs text-muted-foreground/70">{description}</span>
+        <span className="text-xs text-muted-foreground/70">{zh(description)}</span>
       ) : null}
       <ControlDisabledHint text={availability.disabledReason} />
       <div className="flex items-center gap-2">
@@ -158,7 +160,7 @@ export function SettingsInput({
           <input
             type={isPassword && !showPassword ? "password" : "text"}
             value={value}
-            placeholder={placeholder}
+            placeholder={zh(placeholder)}
             readOnly={isReadOnly}
             disabled={availability.disabled}
             onChange={(event) => {
@@ -233,10 +235,10 @@ export function SettingsSelect({
   return (
     <div className="flex flex-col gap-1.5 py-2">
       <label className="text-xs font-medium text-muted-foreground">
-        {label}
+        {zh(label)}
       </label>
       {description ? (
-        <span className="text-xs text-muted-foreground/70">{description}</span>
+        <span className="text-xs text-muted-foreground/70">{zh(description)}</span>
       ) : null}
       <ControlDisabledHint text={availability.disabledReason} />
       <select
@@ -252,7 +254,7 @@ export function SettingsSelect({
       >
         {options.map((option) => (
           <option key={option} value={option}>
-            {option}
+            {zh(option)}
           </option>
         ))}
       </select>
@@ -264,7 +266,7 @@ export function SectionDivider({ title }: { title: string }) {
   return (
     <div className="flex items-center gap-3 pt-5 pb-2">
       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
-        {title}
+        {zh(title)}
       </span>
       <div className="flex-1 h-px bg-glass-border" />
     </div>
@@ -291,7 +293,7 @@ export function InfoBanner({
       ) : (
         <Info className="size-4 shrink-0 mt-0.5" />
       )}
-      <span className="leading-relaxed">{text}</span>
+      <span className="leading-relaxed">{zh(text)}</span>
     </div>
   );
 }
@@ -312,7 +314,7 @@ export function StorageBar({
   return (
     <div className="py-2">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-xs text-foreground">{label}</span>
+        <span className="text-xs text-foreground">{zh(label)}</span>
         <span className="text-xs text-muted-foreground">{detail}</span>
       </div>
       <div className="h-2 overflow-hidden rounded-[var(--radius)] bg-background/65">

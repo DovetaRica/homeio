@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import Image from "next/image";
 import type { StoreAppSummary } from "@/lib/shared/contracts/apps";
@@ -122,8 +124,8 @@ export function CommandPalette({
     <CommandDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Search Homeio"
-      description="Jump to settings, apps, and desktop tools."
+      title="搜索 Homeio"
+      description="快速打开设置、应用和桌面工具。"
       className="overflow-hidden border border-white/[0.09] bg-black/60 p-0 shadow-[var(--system-shadow-floating)] [backdrop-filter:blur(40px)_saturate(160%)] [border-radius:var(--system-radius-floating)] max-w-[min(92vw,44rem)]"
       showCloseButton={false}
     >
@@ -133,7 +135,7 @@ export function CommandPalette({
           <Search className="size-6 text-foreground/72" />
         </div>
         <div className="system-pill-surface mt-3 px-3 py-1 text-[10px] tracking-[0.22em] text-foreground/55 uppercase">
-          Command Palette
+          命令面板
         </div>
         <div className="mt-3 w-full [&_[data-slot=command-input-wrapper]]:h-10 [&_[data-slot=command-input-wrapper]]:border-0 [&_[data-slot=command-input-wrapper]]:px-0">
           <div className="system-soft-surface bg-black/22 px-3 shadow-[var(--system-shadow-dock)]">
@@ -141,7 +143,7 @@ export function CommandPalette({
               autoFocus
               value={query}
               onValueChange={onQueryChange}
-              placeholder="Search settings, apps, and tools…"
+              placeholder="搜索设置、应用和工具…"
               className="text-[15px] text-foreground placeholder:text-muted-foreground/50"
             />
           </div>
@@ -156,9 +158,9 @@ export function CommandPalette({
       <CommandList className="max-h-[26rem]">
         <CommandEmpty>
           <div className="py-8 text-center">
-            <p className="text-sm font-medium text-foreground">No matches found</p>
+            <p className="text-sm font-medium text-foreground">没有匹配项</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Try a settings section, app name, or desktop tool.
+              尝试搜索设置项、应用名称或桌面工具。
             </p>
           </div>
         </CommandEmpty>
@@ -175,15 +177,15 @@ export function CommandPalette({
                   {renderRecentActionIcon(action)}
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-medium text-foreground">
-                      {action.title}
+                      {zh(action.title)}
                     </div>
                     <div className="truncate text-xs text-muted-foreground">
-                      {action.subtitle}
+                      {zh(action.subtitle)}
                     </div>
                   </div>
                   <CommandShortcut className="flex items-center gap-1 tracking-normal">
                     <Clock className="size-3.5" />
-                    <span>Recent</span>
+                    <span>最近</span>
                   </CommandShortcut>
                 </CommandItem>
               ))}
@@ -196,23 +198,23 @@ export function CommandPalette({
         <CommandGroup heading="Quick Actions">
           <CommandItem onSelect={() => onOpenWindow("settings")}>
             <Settings className="size-4 text-primary" />
-            <span>Open Settings</span>
-            <CommandShortcut>System</CommandShortcut>
+            <span>打开设置</span>
+            <CommandShortcut>系统</CommandShortcut>
           </CommandItem>
           <CommandItem onSelect={() => onOpenWindow("app-store")}>
             <ShoppingBag className="size-4 text-sky-400" />
-            <span>Open App Store</span>
-            <CommandShortcut>Apps</CommandShortcut>
+            <span>打开应用商店</span>
+            <CommandShortcut>应用</CommandShortcut>
           </CommandItem>
           <CommandItem onSelect={() => onOpenWindow("files")}>
             <FolderOpen className="size-4 text-primary" />
-            <span>Open Files</span>
+            <span>打开文件</span>
             <CommandShortcut>/DATA</CommandShortcut>
           </CommandItem>
           <CommandItem onSelect={() => onOpenWindow("terminal")}>
             <TerminalSquare className="size-4 text-emerald-400" />
-            <span>Open Terminal</span>
-            <CommandShortcut>Shell</CommandShortcut>
+            <span>打开终端</span>
+            <CommandShortcut>终端</CommandShortcut>
           </CommandItem>
         </CommandGroup>
 
@@ -225,8 +227,8 @@ export function CommandPalette({
               onSelect={() => onOpenSettingsSection(section.id)}
             >
               <Settings className="size-4 text-primary" />
-              <span>{section.label}</span>
-              <CommandShortcut>Settings</CommandShortcut>
+              <span>{zh(section.label)}</span>
+              <CommandShortcut>设置</CommandShortcut>
             </CommandItem>
           ))}
         </CommandGroup>
@@ -236,13 +238,13 @@ export function CommandPalette({
         <CommandGroup heading="App Store">
           {storeCatalogQuery.isLoading && normalizedQuery ? (
             <div className="px-2 py-3 text-xs text-muted-foreground">
-              Searching apps...
+              正在搜索应用…
             </div>
           ) : null}
 
           {!storeCatalogQuery.isLoading && appResults.length === 0 && normalizedQuery ? (
             <div className="px-2 py-3 text-xs text-muted-foreground">
-              No App Store apps match “{normalizedQuery}”.
+              应用商店中没有匹配“{normalizedQuery}”.
             </div>
           ) : null}
 
@@ -266,17 +268,17 @@ export function CommandPalette({
                   </span>
                   {app.updateAvailable ? (
                     <span className="rounded-md bg-primary/12 px-1.5 py-0.5 text-2xs font-semibold uppercase tracking-[0.16em] text-primary">
-                      Update
+                      更新
                     </span>
                   ) : null}
                 </div>
                 <p className="truncate text-xs text-muted-foreground">
-                  {app.description}
+                  {zh(app.description)}
                 </p>
               </div>
               <CommandShortcut className="flex items-center gap-1 tracking-normal">
                 <Sparkles className="size-3.5" />
-                <span>App Store</span>
+                <span>应用商店</span>
               </CommandShortcut>
             </CommandItem>
           ))}

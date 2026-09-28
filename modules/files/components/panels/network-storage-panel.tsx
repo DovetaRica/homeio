@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   Globe,
@@ -158,7 +160,7 @@ export function NetworkStoragePanel({
             ) : (
               <RefreshCw className="size-3.5" />
             )}
-            Rescan
+            重新扫描
           </button>
           <button
             onClick={() => {
@@ -169,7 +171,7 @@ export function NetworkStoragePanel({
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Plus className="size-3.5" />
-            Add share
+            添加共享
           </button>
         </div>
       </div>
@@ -180,9 +182,9 @@ export function NetworkStoragePanel({
           shares.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-3 py-20 text-center text-muted-foreground">
               <HardDrive className="size-10 opacity-20" />
-              <p className="text-sm">No configured shares</p>
+              <p className="text-sm">没有已配置的共享</p>
               <p className="text-xs opacity-60">
-                {`Click 'Add share' to connect an SMB/NAS share.`}
+                {zh(`Click 'Add share' to connect an SMB/NAS share.`)}
               </p>
             </div>
           ) : (
@@ -207,7 +209,7 @@ export function NetworkStoragePanel({
                       </span>
                       {share.isMounted && (
                         <span className="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
-                          Mounted
+                          已挂载
                         </span>
                       )}
                     </div>
@@ -222,7 +224,7 @@ export function NetworkStoragePanel({
                         disabled={isBusy}
                         className="rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-400 transition-colors hover:bg-amber-500/25 disabled:opacity-40"
                       >
-                        Unmount
+                        卸载挂载
                       </button>
                     ) : (
                       <button
@@ -230,7 +232,7 @@ export function NetworkStoragePanel({
                         disabled={isBusy}
                         className="rounded-lg bg-sky-500/15 px-3 py-1.5 text-xs font-medium text-sky-400 transition-colors hover:bg-sky-500/25 disabled:opacity-40"
                       >
-                        Mount
+                        挂载
                       </button>
                     )}
                     <button
@@ -248,9 +250,9 @@ export function NetworkStoragePanel({
         ) : discoveredServers.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-20 text-center text-muted-foreground">
             <Globe className="size-10 opacity-20" />
-            <p className="text-sm">No servers discovered</p>
+            <p className="text-sm">未发现服务器</p>
             <p className="text-xs opacity-60">
-              {`Click "Rescan" to scan your network.`}
+              {zh(`Click "Rescan" to scan your network.`)}
             </p>
           </div>
         ) : (
@@ -267,7 +269,7 @@ export function NetworkStoragePanel({
                   <span className="text-sm font-medium text-foreground">
                     {server}
                   </span>
-                  <p className="text-xs text-muted-foreground">SMB server</p>
+                  <p className="text-xs text-muted-foreground">SMB 服务器</p>
                 </div>
                 <button
                   onClick={() => {
@@ -276,7 +278,7 @@ export function NetworkStoragePanel({
                   }}
                   className="shrink-0 rounded-lg bg-sky-500/15 px-3 py-1.5 text-xs font-medium text-sky-400 transition-colors hover:bg-sky-500/25"
                 >
-                  Use
+                  使用
                 </button>
               </li>
             ))}
@@ -286,7 +288,7 @@ export function NetworkStoragePanel({
 
       {error && (
         <div className="shrink-0 border-t border-glass-border bg-status-red/8 px-5 py-3 text-xs text-status-red">
-          {error}
+          {zh(error)}
         </div>
       )}
 

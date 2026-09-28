@@ -10,7 +10,7 @@ const _geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Homeio",
+  title: "Homeio · 中文版",
   description:
     "Your home server dashboard - manage all your self-hosted services in one place.",
   icons: {
@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning={true}>
+    <html lang="zh-CN" className="dark" suppressHydrationWarning={true}>
       <body
         className={`${_inter.variable} ${_geistMono.variable} font-sans antialiased`}
       >

@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { SectionDivider, Toggle } from "@/modules/settings/components/panel/controls";
 import { SETTINGS_PANEL_INSET } from "@/modules/settings/components/panel/surface";
@@ -26,9 +28,9 @@ function ThresholdRow({
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
       <div className="min-w-0">
-        <div className="text-sm text-foreground">{label}</div>
+        <div className="text-sm text-foreground">{zh(label)}</div>
         {description && (
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{description}</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{zh(description)}</div>
         )}
       </div>
       <div className="flex shrink-0 items-center gap-1.5">
@@ -48,7 +50,7 @@ function ThresholdRow({
 export function NotificationsSection({ draft, onChange }: NotificationsSectionProps) {
   return (
     <div className="flex flex-col gap-1">
-      <SectionDivider title="Alert Types" />
+      <SectionDivider title="提醒类型" />
       <div className="flex flex-col gap-1.5">
         {[
           {
@@ -69,8 +71,8 @@ export function NotificationsSection({ draft, onChange }: NotificationsSectionPr
         ].map(({ label, description, key }) => (
           <div key={key} className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
             <Toggle
-              label={label}
-              description={description}
+              label={zh(label)}
+              description={zh(description)}
               enabled={draft[key]}
               onToggle={() => onChange({ [key]: !draft[key] })}
             />
@@ -79,42 +81,42 @@ export function NotificationsSection({ draft, onChange }: NotificationsSectionPr
 
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
-            label="Security events"
-            description="Failed logins, firewall blocks, certificate expiry"
+            label="安全事件"
+            description="登录失败、防火墙拦截和证书到期"
             enabled={draft.securityEventsEnabled}
             onToggle={() => undefined}
             disabled
-            disabledReason="Coming soon"
+            disabledReason="即将提供"
           />
         </div>
       </div>
 
-      <SectionDivider title="Thresholds" />
+      <SectionDivider title="阈值" />
       <div className="flex flex-col gap-1.5">
         <ThresholdRow
-          label="CPU usage"
-          description="Alert when CPU exceeds this level"
+          label="处理器使用率"
+          description="处理器使用率超过此值时提醒"
           value={draft.cpuAlertThresholdPercent}
           unit="%"
           onChange={(v) => onChange({ cpuAlertThresholdPercent: v })}
         />
         <ThresholdRow
-          label="Memory usage"
-          description="Alert when RAM exceeds this level"
+          label="内存使用率"
+          description="内存使用率超过此值时提醒"
           value={draft.memoryAlertThresholdPercent}
           unit="%"
           onChange={(v) => onChange({ memoryAlertThresholdPercent: v })}
         />
         <ThresholdRow
-          label="Disk space"
-          description="Alert when disk usage exceeds this level"
+          label="磁盘空间"
+          description="磁盘使用率超过此值时提醒"
           value={draft.diskAlertThresholdPercent}
           unit="%"
           onChange={(v) => onChange({ diskAlertThresholdPercent: v })}
         />
         <ThresholdRow
-          label="Temperature"
-          description="Alert when CPU temperature exceeds this level"
+          label="温度"
+          description="处理器温度超过此值时提醒"
           value={draft.temperatureAlertThresholdCelsius}
           unit="°C"
           onChange={(v) => onChange({ temperatureAlertThresholdCelsius: v })}

@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { MonitorSpeaker, Music, Pause, Play } from "@/components/icons/platform-icons";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -42,7 +44,7 @@ export function PreviewBody({
   if (isViewerLoading) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        Loading file...
+        正在加载文件…
       </div>
     );
   }
@@ -111,9 +113,9 @@ export function PreviewBody({
   if (openFileViewer?.mode === "too_large") {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-1 p-6 text-center">
-        <p className="text-sm text-muted-foreground">This file is too large to open in the editor.</p>
+        <p className="text-sm text-muted-foreground">文件过大，无法在编辑器中打开。</p>
         <p className="text-xs text-muted-foreground/60">
-          {formatBytesCompact(openFileViewer.sizeBytes)} — editor limit is 2 MB
+          {formatBytesCompact(openFileViewer.sizeBytes)} — 编辑器上限为 2 MB
         </p>
       </div>
     );
@@ -121,7 +123,7 @@ export function PreviewBody({
 
   return (
     <div className="flex h-full items-center justify-center p-6 text-center text-sm text-muted-foreground">
-      This file type is not supported for in-app preview.
+      应用内预览不支持此文件类型。
     </div>
   );
 }
@@ -192,7 +194,7 @@ function AudioPlayer({ src, fileName }: { src: string; fileName: string }) {
           <div className="min-w-0 space-y-5 sm:space-y-6">
             <div className="space-y-2 text-center sm:text-left">
               <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-muted-foreground/80">
-                Audio Preview
+                音频预览
               </p>
               <h3 className="truncate text-xl font-semibold text-foreground sm:text-2xl" title={fileName}>
                 {fileName}
@@ -201,12 +203,12 @@ function AudioPlayer({ src, fileName }: { src: string; fileName: string }) {
                 <span className="rounded-full border border-glass-border bg-background/60 px-2 py-0.5">
                   {formatTime(duration)}
                 </span>
-                <span>{audioError ? "Unavailable" : isPlaying ? "Now playing" : "Ready to play"}</span>
+                <span>{zh(audioError ? "Unavailable" : isPlaying ? "Now playing" : "Ready to play")}</span>
               </div>
             </div>
 
             {audioError ? (
-              <p className="text-sm text-status-red">Failed to load audio file.</p>
+              <p className="text-sm text-status-red">无法加载音频文件。</p>
             ) : null}
 
             <div className="space-y-3">
@@ -216,7 +218,7 @@ function AudioPlayer({ src, fileName }: { src: string; fileName: string }) {
               </div>
               <div className="rounded-2xl border border-glass-border/70 bg-background/58 px-4 py-4 shadow-sm">
                 <Slider
-                  aria-label="Audio progress"
+                  aria-label="播放进度"
                   min={0}
                   max={duration || 1}
                   step={0.1}
@@ -235,7 +237,7 @@ function AudioPlayer({ src, fileName }: { src: string; fileName: string }) {
               <button
                 onClick={togglePlay}
                 className="inline-flex size-14 shrink-0 items-center justify-center self-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.03] hover:brightness-110 active:scale-95 sm:self-auto"
-                aria-label={isPlaying ? "Pause" : "Play"}
+                aria-label={zh(isPlaying ? "Pause" : "Play")}
               >
                 {isPlaying ? <Pause className="size-5" /> : <Play className="ml-0.5 size-5" />}
               </button>
@@ -262,7 +264,7 @@ function AudioPlayer({ src, fileName }: { src: string; fileName: string }) {
                         {Math.round(volume * 100)}%
                       </span>
                       <Slider
-                        aria-label="Audio volume"
+                        aria-label="音量"
                         orientation="vertical"
                         min={0}
                         max={1}

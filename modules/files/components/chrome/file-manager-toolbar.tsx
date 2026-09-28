@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   ArrowUp,
@@ -91,14 +93,14 @@ export function FileManagerToolbar({
       <button
         onClick={onNavigateUp}
         disabled={!canNavigateUp}
-        aria-label="Go up one level"
+        aria-label="返回上一级"
         className={cn(iconBtn, iconBtnIdle, "disabled:cursor-not-allowed disabled:opacity-30")}
       >
         <ArrowUp className="size-3.5" />
       </button>
 
       {/* Breadcrumb */}
-      <nav className="flex min-w-0 flex-1 items-center gap-0.5" aria-label="File path">
+      <nav className="flex min-w-0 flex-1 items-center gap-0.5" aria-label="文件路径">
         <button
           onClick={() => onNavigateToPath([])}
           className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground"
@@ -125,8 +127,8 @@ export function FileManagerToolbar({
           <button
             onClick={() => uploadInputRef.current?.click()}
             disabled={uploadFilesPending}
-            aria-label="Upload files"
-            title={uploadFilesPending ? "Upload in progress" : "Upload files"}
+            aria-label="上传文件"
+            title={zh(uploadFilesPending ? "Upload in progress" : "Upload files")}
             className={cn(iconBtn, iconBtnIdle, "disabled:cursor-not-allowed disabled:opacity-45")}
           >
             {uploadFilesPending ? (
@@ -160,7 +162,7 @@ export function FileManagerToolbar({
             type="text"
             value={searchQuery}
             onChange={(e) => onSearchQueryChange(e.target.value)}
-            placeholder={globalSearch ? "Search everywhere…" : "Search…"}
+            placeholder={zh(globalSearch ? "Search everywhere…" : "Search…")}
             className={cn(
               "h-7 w-full rounded-lg border pl-7 pr-2 text-xs text-foreground placeholder:text-muted-foreground/50 outline-none transition-all",
               globalSearch
@@ -171,7 +173,7 @@ export function FileManagerToolbar({
         </div>
         <button
           onClick={onToggleGlobalSearch}
-          title={globalSearch ? "Switch to local search" : "Search everywhere"}
+          title={zh(globalSearch ? "Switch to local search" : "Search everywhere")}
           className={cn(
             iconBtn,
             globalSearch ? "bg-primary/15 text-primary hover:bg-primary/20" : iconBtnIdle,
@@ -187,30 +189,30 @@ export function FileManagerToolbar({
           <button
             onClick={onEmptyTrash}
             disabled={isEmptyingTrash || emptyTrashPending || currentEntriesCount === 0}
-            title="Permanently delete all items in Trash"
+            title="永久删除回收站中的所有项目"
             className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-status-red transition-colors hover:bg-status-red/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Trash2 className="size-3.5" />
-            <span className="hidden xl:inline">Empty Trash</span>
+            <span className="hidden xl:inline">清空回收站</span>
           </button>
         )}
         <button
           onClick={onToggleIncludeHidden}
-          title={includeHidden ? "Hide hidden files" : "Show hidden files"}
+          title={zh(includeHidden ? "Hide hidden files" : "Show hidden files")}
           className={cn(iconBtn, iconBtnIdle)}
         >
           {includeHidden ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
         </button>
         <button
           onClick={onCycleSortBy}
-          title={`Sort by: ${sortBy} (click to change)`}
+          title={zh(`Sort by: ${sortBy} (click to change)`)}
           className="rounded-lg px-2 py-1 text-xs capitalize text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground"
         >
           <span className="hidden xl:inline">{sortBy}</span>
         </button>
         <button
           onClick={onToggleSortDir}
-          title={sortDir === "asc" ? "Ascending — click to reverse" : "Descending — click to reverse"}
+          title={zh(sortDir === "asc" ? "Ascending — click to reverse" : "Descending — click to reverse")}
           className={cn(iconBtn, iconBtnIdle)}
         >
           {sortDir === "asc" ? <SortAsc className="size-3.5" /> : <SortDesc className="size-3.5" />}
@@ -221,7 +223,7 @@ export function FileManagerToolbar({
       <div className="flex shrink-0 items-center rounded-lg border border-glass-border/60 bg-background/40 p-0.5">
         <button
           onClick={() => onSetViewMode("grid")}
-          aria-label="Grid view"
+          aria-label="网格视图"
           className={cn(
             "rounded-md p-1 transition-colors",
             viewMode === "grid" ? "bg-primary/15 text-primary" : iconBtnIdle,
@@ -231,7 +233,7 @@ export function FileManagerToolbar({
         </button>
         <button
           onClick={() => onSetViewMode("list")}
-          aria-label="List view"
+          aria-label="列表视图"
           className={cn(
             "rounded-md p-1 transition-colors",
             viewMode === "list" ? "bg-primary/15 text-primary" : iconBtnIdle,

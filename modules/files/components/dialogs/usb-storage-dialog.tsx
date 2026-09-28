@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   Dialog,
@@ -35,8 +37,8 @@ export function UsbStorageDialog({ isOpen, onClose, onNavigateToUsb }: UsbStorag
         className="max-w-[min(96vw,60rem)] gap-0 overflow-hidden rounded-[calc(var(--radius)+0.75rem)] border-glass-border bg-popover/96 p-0 shadow-2xl shadow-black/45 backdrop-blur-2xl"
       >
         <DialogHeader className="sr-only">
-          <DialogTitle>USB & Removable Storage</DialogTitle>
-          <DialogDescription>Manage removable drives connected to your server.</DialogDescription>
+          <DialogTitle>USB 与可移动存储</DialogTitle>
+          <DialogDescription>管理连接到服务器的可移动设备。</DialogDescription>
         </DialogHeader>
 
         {/* Window chrome title bar */}
@@ -46,7 +48,7 @@ export function UsbStorageDialog({ isOpen, onClose, onNavigateToUsb }: UsbStorag
             <button
               onClick={onClose}
               className="group flex size-3 cursor-pointer items-center justify-center rounded-full bg-[#ff5f57] transition-all hover:brightness-110"
-              aria-label="Close"
+              aria-label="关闭"
             >
               <X className="size-[7px] text-[#6a0002] opacity-0 transition-opacity group-hover:opacity-100" />
             </button>
@@ -56,7 +58,7 @@ export function UsbStorageDialog({ isOpen, onClose, onNavigateToUsb }: UsbStorag
 
           {/* Centered title */}
           <div className="flex flex-1 items-center justify-center">
-            <span className="text-xs font-medium text-foreground/80">USB & Removable Storage</span>
+            <span className="text-xs font-medium text-foreground/80">USB 与可移动存储</span>
           </div>
 
           {/* Right actions */}
@@ -68,7 +70,7 @@ export function UsbStorageDialog({ isOpen, onClose, onNavigateToUsb }: UsbStorag
               className="inline-flex h-6 items-center gap-1 rounded-md border border-glass-border bg-background/80 px-2 text-[11px] text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
               <RefreshCw className="size-3" />
-              Rescan
+              重新扫描
             </button>
           </div>
         </div>
@@ -78,13 +80,13 @@ export function UsbStorageDialog({ isOpen, onClose, onNavigateToUsb }: UsbStorag
           {drives.length === 0 ? (
             <div className="flex min-h-52 flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground">
               <HardDrive className="size-8 opacity-25" />
-              <span>No removable drives detected.</span>
-              <span className="text-xs opacity-60">Plug in a USB drive and click Rescan.</span>
+              <span>未检测到可移动设备。</span>
+              <span className="text-xs opacity-60">插入 USB 设备后点击“重新扫描”。</span>
             </div>
           ) : (
             <div className="flex flex-col gap-1.5">
               <p className="mb-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/50">
-                Detected drives
+                检测到的设备
               </p>
               {drives.map((drive) => (
                 <div
@@ -104,11 +106,11 @@ export function UsbStorageDialog({ isOpen, onClose, onNavigateToUsb }: UsbStorag
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="truncate text-sm font-medium text-foreground">
-                        {drive.label}
+                        {zh(drive.label)}
                       </span>
                       {drive.isMounted && (
                         <span className="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[10px] font-medium text-emerald-400">
-                          Mounted
+                          已挂载
                         </span>
                       )}
                     </div>
@@ -145,12 +147,12 @@ export function UsbStorageDialog({ isOpen, onClose, onNavigateToUsb }: UsbStorag
                           onClick={() => { unmount(drive.id); }}
                           className="rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-400 transition-colors hover:bg-amber-500/25"
                         >
-                          Unmount
+                          卸载挂载
                         </button>
                         <button
                           type="button"
                           onClick={() => { eject(drive.id); onClose(); }}
-                          title="Eject"
+                          title="弹出"
                           className="flex size-7 items-center justify-center rounded-lg text-muted-foreground/40 transition-colors hover:bg-background/50 hover:text-foreground"
                         >
                           <EjectIcon className="size-3.5" />
@@ -162,7 +164,7 @@ export function UsbStorageDialog({ isOpen, onClose, onNavigateToUsb }: UsbStorag
                         onClick={() => { mount(drive.id); }}
                         className="rounded-lg bg-sky-500/15 px-3 py-1.5 text-xs font-medium text-sky-400 transition-colors hover:bg-sky-500/25"
                       >
-                        Mount
+                        挂载
                       </button>
                     )}
                   </div>

@@ -1,4 +1,5 @@
 'use client'
+import { zh } from "@/lib/i18n/zh";
 
 import { useToast } from '@/hooks/use-toast'
 import {
@@ -19,9 +20,9 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
+              {title && <ToastTitle>{zh(title)}</ToastTitle>}
               {description && (
-                <ToastDescription>{description}</ToastDescription>
+                <ToastDescription>{zh(description)}</ToastDescription>
               )}
             </div>
             {action}

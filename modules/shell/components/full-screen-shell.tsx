@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { cn } from "@/lib/utils";
 import { useResolvedWallpaper } from "@/modules/shell/hooks/useResolvedWallpaper";
@@ -64,22 +66,22 @@ export function FullScreenShell({
           >
             <div className="system-floating-surface inline-flex min-w-[18rem] flex-col items-center bg-black/14 px-8 py-5 shadow-[0_24px_60px_rgba(0,0,0,0.24)]">
               <p className="text-6xl font-semibold tracking-[-0.08em] text-foreground/96 tabular-nums sm:text-7xl">
-                {now
-                  ? now.toLocaleTimeString("en-US", {
+                {zh(now
+                  ? now.toLocaleTimeString("zh-CN", {
                       hour: "2-digit",
                       minute: "2-digit",
                     })
-                  : "--:--"}
+                  : "--:--")}
               </p>
               <p className="mt-2 text-sm tracking-[0.2em] text-foreground/52 uppercase sm:text-base">
-                {now
-                  ? now.toLocaleDateString("en-US", {
+                {zh(now
+                  ? now.toLocaleDateString("zh-CN", {
                       weekday: "long",
                       month: "long",
                       day: "numeric",
                       year: "numeric",
                     })
-                  : "\u00a0"}
+                  : "\u00a0")}
               </p>
             </div>
           </div>

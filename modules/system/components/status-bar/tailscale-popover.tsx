@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, Tailscale, X } from "@/components/icons/platform-icons";
@@ -69,9 +71,9 @@ export function TailscalePopover({ onClose }: TailscalePopoverProps) {
             />
           </div>
           <div>
-            <p className="text-sm font-semibold text-foreground">{title}</p>
+            <p className="text-sm font-semibold text-foreground">{zh(title)}</p>
             <p className="text-xs text-muted-foreground">
-              {configured ? "Credentials configured" : "Credentials not configured"}
+              {zh(configured ? "Credentials configured" : "Credentials not configured")}
             </p>
           </div>
         </div>
@@ -79,12 +81,12 @@ export function TailscalePopover({ onClose }: TailscalePopoverProps) {
         <div className="space-y-2.5">
           <StatusRow label="Tailnet" value={config?.tailnet || "--"} />
           <StatusRow
-            label="Service"
+            label="服务"
             value={isLoading ? "Checking..." : installed ? "Installed" : "Not installed"}
             ok={installed}
           />
           <StatusRow
-            label="Connection"
+            label="连接"
             value={isLoading ? "Checking..." : connected ? "Connected" : "Disconnected"}
             ok={connected}
           />
@@ -93,15 +95,15 @@ export function TailscalePopover({ onClose }: TailscalePopoverProps) {
             value={status?.tunAvailable ? "Available" : "Missing"}
             ok={status?.tunAvailable}
           />
-          <StatusRow label="State" value={status?.backendState ?? "--"} />
-          <StatusRow label="Machine" value={status?.hostname ?? "--"} />
+          <StatusRow label="状态" value={status?.backendState ?? "--"} />
+          <StatusRow label="主机" value={status?.hostname ?? "--"} />
           <StatusRow label="DNS" value={status?.dnsName ?? "--"} />
           <StatusRow label="IP" value={status?.tailscaleIps[0] ?? "--"} />
         </div>
 
         {missingTun && (
           <div className="mt-4 rounded-lg border border-status-amber/25 bg-status-amber/10 px-3 py-2 text-xs text-status-amber">
-            Proxmox LXC must expose dev/net/tun before Tailscale can start.
+            Proxmox LXC 必须提供 dev/net/tun 设备才能启动 Tailscale。
           </div>
         )}
 
@@ -113,7 +115,7 @@ export function TailscalePopover({ onClose }: TailscalePopoverProps) {
 
         {!installed && (
           <div className="mt-3 rounded-lg bg-secondary/30 px-3 py-2 text-xs text-muted-foreground">
-            Install support will use the official Tailscale Linux installer and then connect this server to your tailnet.
+            将使用官方 Tailscale Linux 安装器，并把服务器加入你的网络。
           </div>
         )}
       </div>
@@ -124,7 +126,7 @@ export function TailscalePopover({ onClose }: TailscalePopoverProps) {
 function StatusRow({ label, value, ok }: { label: string; value: string; ok?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-xs text-muted-foreground/70">{label}</span>
+      <span className="text-xs text-muted-foreground/70">{zh(label)}</span>
       <span className="flex min-w-0 items-center gap-1.5 text-right font-mono text-xs text-foreground/80">
         {typeof ok === "boolean" && (
           ok ? (

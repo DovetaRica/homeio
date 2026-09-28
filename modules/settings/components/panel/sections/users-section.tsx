@@ -27,7 +27,7 @@ export function UsersSection({
         variant="info"
       />
 
-      <SectionDivider title="User Accounts" />
+      <SectionDivider title="用户账户" />
       <div className={cn(SETTINGS_PANEL_INSET, "overflow-hidden")}>
         <div className="flex items-center gap-3 px-4 py-3">
           <div
@@ -40,30 +40,30 @@ export function UsersSection({
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-foreground">{username}</span>
               <span className="rounded-md bg-primary/15 px-1.5 py-0.5 text-[11px] font-medium text-primary">
-                Admin
+                管理员
               </span>
             </div>
-            <div className="text-[11px] text-muted-foreground/70">Local account · Current session</div>
+            <div className="text-[11px] text-muted-foreground/70">本地账户 · 当前会话</div>
           </div>
         </div>
       </div>
 
       <TwoFactorCard status={twoFactor} isDemoMode={isDemoMode} />
 
-      <SectionDivider title="Access" />
+      <SectionDivider title="访问" />
       <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
         <div className="min-w-0">
-          <div className="text-sm text-foreground">Add user</div>
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">Multi-user support is coming soon</div>
+          <div className="text-sm text-foreground">添加用户</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">多用户支持尚未开放</div>
         </div>
         <button
           disabled
           className="inline-flex items-center gap-1.5 rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Plus className="size-3" />
-          Add User
+          添加用户
           <span className="rounded bg-primary/20 px-1 py-px text-[10px] font-semibold uppercase tracking-wide">
-            Soon
+            暂未开放
           </span>
         </button>
       </div>

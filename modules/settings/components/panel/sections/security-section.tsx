@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
   InfoBanner,
@@ -36,9 +38,9 @@ function PreferenceRow({
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
       <div className="min-w-0">
-        <div className="text-sm text-foreground">{label}</div>
+        <div className="text-sm text-foreground">{zh(label)}</div>
         {description && (
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{description}</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{zh(description)}</div>
         )}
       </div>
       {children}
@@ -62,9 +64,9 @@ export function SecuritySection({
             <Lock className="size-4 text-muted-foreground" />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">Security settings are locked</p>
+            <p className="text-sm font-medium text-foreground">安全设置已锁定</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Firewall and intrusion prevention controls are disabled in demo mode.
+              演示模式下无法修改防火墙和入侵防护设置。
             </p>
           </div>
         </div>
@@ -79,11 +81,11 @@ export function SecuritySection({
       )}
 
       {/* ── Firewall ── */}
-      <SectionDivider title="Firewall" />
+      <SectionDivider title="防火墙" />
       <div className="flex flex-col gap-1.5">
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
-            label="UFW Firewall"
+            label="UFW 防火墙"
             description="Uncomplicated Firewall for managing inbound and outbound rules"
             enabled={draft.firewallEnabled}
             onToggle={() => onChange({ firewallEnabled: !draft.firewallEnabled })}
@@ -91,7 +93,7 @@ export function SecuritySection({
           />
         </div>
 
-        <PreferenceRow label="Default incoming policy" description="Action for unsolicited inbound connections">
+        <PreferenceRow label="默认入站策略" description="Action for unsolicited inbound connections">
           <select
             value={draft.firewallIncomingPolicy}
             onChange={(e) => onChange({ firewallIncomingPolicy: e.target.value as SystemSecurityPolicy })}
@@ -104,7 +106,7 @@ export function SecuritySection({
           </select>
         </PreferenceRow>
 
-        <PreferenceRow label="Default outgoing policy" description="Action for unsolicited outbound connections">
+        <PreferenceRow label="默认出站策略" description="Action for unsolicited outbound connections">
           <select
             value={draft.firewallOutgoingPolicy}
             onChange={(e) => onChange({ firewallOutgoingPolicy: e.target.value as SystemSecurityPolicy })}
@@ -119,7 +121,7 @@ export function SecuritySection({
       </div>
 
       {/* ── Intrusion Prevention ── */}
-      <SectionDivider title="Intrusion Prevention" />
+      <SectionDivider title="入侵防护" />
       <div className="flex flex-col gap-1.5">
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
@@ -131,7 +133,7 @@ export function SecuritySection({
           />
         </div>
 
-        <PreferenceRow label="Max retries" description="Failed attempts before banning an IP">
+        <PreferenceRow label="最大重试次数" description="Failed attempts before banning an IP">
           <input
             value={draft.fail2banMaxRetries}
             onChange={(e) => onChange({ fail2banMaxRetries: e.target.value })}
@@ -142,7 +144,7 @@ export function SecuritySection({
           />
         </PreferenceRow>
 
-        <PreferenceRow label="Ban duration" description="Seconds to keep the IP blocked (3600 = 1 hr)">
+        <PreferenceRow label="封禁时长" description="Seconds to keep the IP blocked (3600 = 1 hr)">
           <input
             value={draft.fail2banBanDurationSeconds}
             onChange={(e) => onChange({ fail2banBanDurationSeconds: e.target.value })}

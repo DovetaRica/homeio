@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import {
     Dialog,
@@ -92,9 +94,9 @@ export function AppStoreSourcesDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl border-glass-border bg-card/95 backdrop-blur-xl">
         <DialogHeader>
-          <DialogTitle>Store Sources</DialogTitle>
+          <DialogTitle>应用源</DialogTitle>
           <DialogDescription>
-            Add ZIP-based CasaOS app stores on top of the official catalog.
+            在官方目录之外添加 ZIP 格式的 CasaOS 应用源。
           </DialogDescription>
         </DialogHeader>
 
@@ -103,14 +105,14 @@ export function AppStoreSourcesDialog({
             <div className="rounded-2xl border border-glass-border bg-glass/30 p-3">
               {error ? (
                 <div className="rounded-lg border border-status-red/30 bg-status-red/10 px-3 py-2 text-xs text-status-red">
-                  {error}
+                  {zh(error)}
                 </div>
               ) : null}
 
               {isLoading ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Loader2 className="size-4 animate-spin" />
-                  Loading sources...
+                  正在加载应用源…
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -133,7 +135,7 @@ export function AppStoreSourcesDialog({
                               </span>
                               {!source.enabled ? (
                                 <span className="rounded-[var(--radius)] border border-glass-border px-2 py-0.5 text-2xs uppercase tracking-[0.18em] text-status-yellow">
-                                  disabled
+                                  已禁用
                                 </span>
                               ) : null}
                             </div>
@@ -150,7 +152,7 @@ export function AppStoreSourcesDialog({
                             ) : null}
                             {source.suppressedAppIds.length > 0 ? (
                               <p className="mt-2 text-xs text-status-yellow">
-                                Suppressed conflicts:{" "}
+                                已忽略的冲突：{zh(" ")}
                                 {source.suppressedAppIds.join(", ")}
                               </p>
                             ) : null}
@@ -168,7 +170,7 @@ export function AppStoreSourcesDialog({
                               disabled={source.kind === "official" || isPending}
                               className="rounded-md border border-glass-border px-2.5 py-1 text-xs text-foreground transition-colors hover:bg-secondary/50 disabled:opacity-50"
                             >
-                              {source.enabled ? "Disable" : "Enable"}
+                              {zh(source.enabled ? "Disable" : "Enable")}
                             </button>
                             <button
                               type="button"
@@ -179,7 +181,7 @@ export function AppStoreSourcesDialog({
                               <RefreshCw
                                 className={`size-3 ${isPending ? "animate-spin" : ""}`}
                               />
-                              Refresh
+                              刷新
                             </button>
                             {source.kind === "remote" ? (
                               <button
@@ -189,7 +191,7 @@ export function AppStoreSourcesDialog({
                                 className="inline-flex items-center gap-1 rounded-md border border-status-red/25 px-2.5 py-1 text-xs text-status-red transition-colors hover:bg-status-red/10 disabled:opacity-50"
                               >
                                 <Trash2 className="size-3" />
-                                Remove
+                                移除
                               </button>
                             ) : null}
                           </div>
@@ -203,11 +205,9 @@ export function AppStoreSourcesDialog({
           </div>
 
           <div className="rounded-2xl border border-glass-border bg-glass/30 p-4">
-            <p className="text-sm font-semibold text-foreground">Add Source</p>
+            <p className="text-sm font-semibold text-foreground">添加应用源</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Paste an HTTPS ZIP URL for a CasaOS-style App Store archive.
-              Homeio is fully compatible with CasaOS app stores — browse
-              community stores at{" "}
+              粘贴 CasaOS 应用目录的 HTTPS ZIP 地址。Homeio 兼容 CasaOS 应用源，社区目录见{zh(" ")}
               <a
                 href="https://awesome.casaos.io/content/3rd-party-app-stores/list.html"
                 target="_blank"
@@ -226,7 +226,7 @@ export function AppStoreSourcesDialog({
                     className="text-xs text-muted-foreground"
                     htmlFor="store-source-url"
                   >
-                    ZIP URL
+                    ZIP 地址
                   </label>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -238,8 +238,7 @@ export function AppStoreSourcesDialog({
                       side="top"
                       className="max-w-[18rem] text-xs"
                     >
-                      Any CasaOS-compatible app store ZIP works here. Find
-                      community stores at{" "}
+                      支持兼容 CasaOS 的应用目录 ZIP 文件。社区目录见{zh(" ")}
                       <span className="font-medium text-foreground">
                         awesome.casaos.io/content/3rd-party-app-stores/list.html
                       </span>
@@ -261,13 +260,13 @@ export function AppStoreSourcesDialog({
                   className="text-xs text-muted-foreground"
                   htmlFor="store-source-name"
                 >
-                  Name
+                  名称
                 </label>
                 <input
                   id="store-source-name"
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  placeholder="Optional display name"
+                  placeholder="显示名称（可选）"
                   className="h-10 w-full rounded-lg border border-glass-border bg-background/40 px-3 text-sm text-foreground outline-none"
                 />
               </div>
@@ -283,7 +282,7 @@ export function AppStoreSourcesDialog({
                 disabled={addPending || !url.trim()}
                 className="inline-flex h-10 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:brightness-110 disabled:opacity-60"
               >
-                {addPending ? "Adding Source..." : "Add Source"}
+                {zh(addPending ? "Adding Source..." : "Add Source")}
               </button>
             </form>
           </div>

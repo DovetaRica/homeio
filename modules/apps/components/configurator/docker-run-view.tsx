@@ -1,3 +1,5 @@
+
+import { zh } from "@/lib/i18n/zh";
 import type { DockerRunState } from "@/modules/apps/components/configurator/configurator-mapper";
 
 type DockerRunViewProps = {
@@ -13,16 +15,15 @@ export function DockerRunView({ state, onChange }: DockerRunViewProps) {
   return (
     <section className="flex-1 overflow-y-auto px-4 py-3">
       <p className="mb-3 text-2xs text-muted-foreground">
-        Docker Run is available for custom installs only. Paste a full <code>docker run ...</code>{" "}
-        command here; <code>docker pull ...</code> is not supported in this tab. Web UI
-        metadata is derived from the published ports in the command.
+        Docker Run 仅用于自定义安装，请粘贴完整的 <code>docker run ...</code>{zh(" ")}
+        命令； <code>docker pull ...</code> 不适用于此页，Web 界面信息由命令中的发布端口推断。
       </p>
 
       <div className="space-y-3">
         <label className="flex flex-col gap-1 text-2xs text-muted-foreground">
-          App Name
+          应用名称
           <input
-            aria-label="App Name"
+            aria-label="应用名称"
             required
             value={state.name}
             onChange={(event) => update({ name: event.target.value })}
@@ -32,9 +33,9 @@ export function DockerRunView({ state, onChange }: DockerRunViewProps) {
         </label>
 
         <label className="flex flex-col gap-1 text-2xs text-muted-foreground">
-          Icon URL
+          图标地址
           <input
-            aria-label="Icon URL"
+            aria-label="图标地址"
             value={state.iconUrl}
             onChange={(event) => update({ iconUrl: event.target.value })}
             placeholder="https://..."
@@ -43,9 +44,9 @@ export function DockerRunView({ state, onChange }: DockerRunViewProps) {
         </label>
 
         <label className="flex flex-col gap-1 text-2xs text-muted-foreground">
-          Repository URL (optional)
+          仓库地址（可选）
           <input
-            aria-label="Repository URL"
+            aria-label="仓库地址"
             value={state.repositoryUrl}
             onChange={(event) => update({ repositoryUrl: event.target.value })}
             placeholder="https://github.com/owner/repo"
@@ -54,7 +55,7 @@ export function DockerRunView({ state, onChange }: DockerRunViewProps) {
         </label>
 
         <label className="flex flex-col gap-1 text-2xs text-muted-foreground">
-          Docker Run Command
+          Docker Run 命令
           <textarea
             aria-label="Docker Run"
             required

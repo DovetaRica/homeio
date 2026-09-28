@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { InfoBanner, SectionDivider } from "@/modules/settings/components/panel/controls";
 import { SETTINGS_PANEL_INSET } from "@/modules/settings/components/panel/surface";
@@ -16,7 +18,7 @@ function StatCard({ label, value, valueClass }: { label: string; value: number |
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex flex-col items-center justify-center gap-1 py-3")}>
       <span className={cn("text-2xl font-bold tabular-nums", valueClass ?? "text-foreground")}>{value}</span>
-      <span className="text-[11px] text-muted-foreground">{label}</span>
+      <span className="text-[11px] text-muted-foreground">{zh(label)}</span>
     </div>
   );
 }
@@ -24,7 +26,7 @@ function StatCard({ label, value, valueClass }: { label: string; value: number |
 function InfoRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-4 py-2.5">
-      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-xs text-muted-foreground">{zh(label)}</span>
       <span className={cn("text-xs font-medium text-foreground", mono && "font-mono")}>{value}</span>
     </div>
   );
@@ -48,16 +50,16 @@ function MaintenanceRow({
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
       <div className="min-w-0">
-        <div className="text-sm text-foreground">{label}</div>
-        <div className="mt-0.5 text-[11px] text-muted-foreground/70">{description}</div>
+        <div className="text-sm text-foreground">{zh(label)}</div>
+        <div className="mt-0.5 text-[11px] text-muted-foreground/70">{zh(description)}</div>
       </div>
       <button
         onClick={onClick}
         disabled={disabled || pending}
-        title={disabledReason}
+        title={zh(disabledReason)}
         className="shrink-0 rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {pending ? "Running…" : "Run"}
+        {zh(pending ? "Running…" : "Run")}
       </button>
     </div>
   );
@@ -73,20 +75,20 @@ export function DockerSection({ data, capabilities, onPruneImages, onPruneVolume
       {/* ── Engine Status ── */}
       <SectionDivider title="Engine" />
       <div className="grid grid-cols-3 gap-2">
-        <StatCard label="Containers" value={data.total} />
-        <StatCard label="Running" value={data.running} valueClass="text-status-green" />
-        <StatCard label="Images" value={data.images} />
+        <StatCard label="容器" value={data.total} />
+        <StatCard label="运行中" value={data.running} valueClass="text-status-green" />
+        <StatCard label="镜像" value={data.images} />
       </div>
 
       <div className={cn(SETTINGS_PANEL_INSET, "mt-1.5 divide-y divide-glass-border/50 px-4")}>
-        <InfoRow label="Docker version" value={data.engineVersion} mono />
-        <InfoRow label="Compose version" value={data.composeVersion} mono />
-        <InfoRow label="Storage driver" value={data.storageDriver} />
-        <InfoRow label="Cgroup driver" value={data.cgroupDriver} />
+        <InfoRow label="Docker 版本" value={data.engineVersion} mono />
+        <InfoRow label="Compose 版本" value={data.composeVersion} mono />
+        <InfoRow label="存储驱动" value={data.storageDriver} />
+        <InfoRow label="Cgroup 驱动" value={data.cgroupDriver} />
       </div>
 
       {/* ── Maintenance ── */}
-      <SectionDivider title="Maintenance" />
+      <SectionDivider title="维护" />
       {data.pruneImages.error && <InfoBanner text={data.pruneImages.error} variant="warning" />}
       {data.pruneVolumes.error && <InfoBanner text={data.pruneVolumes.error} variant="warning" />}
 
@@ -96,7 +98,7 @@ export function DockerSection({ data, capabilities, onPruneImages, onPruneVolume
           description="Removes dangling and unreferenced images"
           pending={data.pruneImages.isPending}
           disabled={capabilities.pruneImages.disabled}
-          disabledReason={capabilities.pruneImages.disabledReason}
+          disabledReason={zh(capabilities.pruneImages.disabledReason)}
           onClick={() => void onPruneImages()}
         />
         <MaintenanceRow
@@ -104,7 +106,7 @@ export function DockerSection({ data, capabilities, onPruneImages, onPruneVolume
           description="Removes volumes not attached to any container"
           pending={data.pruneVolumes.isPending}
           disabled={capabilities.pruneVolumes.disabled}
-          disabledReason={capabilities.pruneVolumes.disabledReason}
+          disabledReason={zh(capabilities.pruneVolumes.disabledReason)}
           onClick={() => void onPruneVolumes()}
         />
       </div>

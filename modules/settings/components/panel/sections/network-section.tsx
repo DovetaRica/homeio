@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { InfoBanner, SectionDivider } from "@/modules/settings/components/panel/controls";
 import { SETTINGS_PANEL_INSET } from "@/modules/settings/components/panel/surface";
@@ -12,7 +14,7 @@ type NetworkSectionProps = {
 function InfoRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-4 py-2.5">
-      <span className="text-xs text-muted-foreground">{label}</span>
+      <span className="text-xs text-muted-foreground">{zh(label)}</span>
       <span className={cn("truncate text-right text-xs font-medium text-foreground", mono && "font-mono")}>
         {value}
       </span>
@@ -29,7 +31,7 @@ export function NetworkSection({ data }: NetworkSectionProps) {
         <InfoBanner text={data.warning} variant={data.unavailable ? "warning" : "info"} />
       )}
 
-      <SectionDivider title="Interface" />
+      <SectionDivider title="网络接口" />
       <div className={cn(SETTINGS_PANEL_INSET, "overflow-hidden")}>
         {/* Status header */}
         <div className="flex items-center justify-between px-4 py-3">
@@ -40,11 +42,11 @@ export function NetworkSection({ data }: NetworkSectionProps) {
             )} />
             <span className="text-sm font-medium text-foreground">{data.iface}</span>
             <span className="text-xs text-muted-foreground">
-              {data.connected ? "Connected" : "Disconnected"}
+              {zh(data.connected ? "Connected" : "Disconnected")}
             </span>
           </div>
           <span className="font-mono text-xs text-muted-foreground">
-            {isEthernet ? "Ethernet" : `Signal ${data.signalPercent}`}
+            {zh(isEthernet ? "Ethernet" : `Signal ${data.signalPercent}`)}
           </span>
         </div>
 
@@ -52,14 +54,14 @@ export function NetworkSection({ data }: NetworkSectionProps) {
         <div className="divide-y divide-glass-border/50 border-t border-glass-border/50 px-4">
           <InfoRow label="IPv4 Address" value={data.ipv4} mono />
           {isEthernet ? (
-            <InfoRow label="Connection type" value="Wired Ethernet" />
+            <InfoRow label="连接类型" value="Wired Ethernet" />
           ) : (
             <>
               <InfoRow label="SSID" value={data.ssid} mono />
-              <InfoRow label="Nearby networks" value={String(data.wifiCount)} />
+              <InfoRow label="附近的网络" value={String(data.wifiCount)} />
               {data.topSsids.length > 0 && (
                 <div className="py-2.5">
-                  <span className="text-xs text-muted-foreground">Nearby SSIDs</span>
+                  <span className="text-xs text-muted-foreground">附近的无线网络</span>
                   <div className="mt-1 flex flex-wrap gap-1.5">
                     {data.topSsids.map((ssid) => (
                       <span
@@ -77,10 +79,10 @@ export function NetworkSection({ data }: NetworkSectionProps) {
         </div>
       </div>
 
-      <SectionDivider title="Advanced" />
+      <SectionDivider title="高级" />
       <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-3")}>
         <p className="text-xs text-muted-foreground">
-          Gateway, DNS, DHCP, IPv6, MTU, and Wake-on-LAN configuration is coming in a future update.
+          网关、DNS、DHCP、IPv6、MTU 和网络唤醒设置将在未来版本提供。
         </p>
       </div>
     </div>

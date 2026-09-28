@@ -1,4 +1,6 @@
 "use client";
+import { zh } from "@/lib/i18n/zh";
+
 
 import { PopoverShell } from "@/modules/system/components/status-bar/popover-shell";
 import type { BatteryPopoverProps } from "@/modules/system/components/status-bar/types";
@@ -40,18 +42,18 @@ export function BatteryPopover({ battery, onClose }: BatteryPopoverProps) {
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground">
-              Battery Status
+              电池状态
             </p>
-            <p className="text-xs text-muted-foreground">{statusLabel}</p>
+            <p className="text-xs text-muted-foreground">{zh(statusLabel)}</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <div>
             <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-muted-foreground">Charge Level</span>
+              <span className="text-muted-foreground">电量</span>
               <span className="text-foreground font-medium">
-                {batteryPercent === null ? "--" : `${batteryPercent}%`}
+                {zh(batteryPercent === null ? "--" : `${batteryPercent}%`)}
               </span>
             </div>
             <div className="h-2 rounded-[var(--radius)] bg-muted overflow-hidden">
@@ -73,27 +75,27 @@ export function BatteryPopover({ battery, onClose }: BatteryPopoverProps) {
           <div className="grid grid-cols-2 gap-3 pt-1">
             <div className="flex flex-col gap-0.5">
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                AC Power
+                交流电源
               </span>
               <span className="text-sm font-medium text-foreground">
-                {typeof acConnected === "boolean"
+                {zh(typeof acConnected === "boolean"
                   ? acConnected
                     ? "Connected"
                     : "Disconnected"
-                  : "--"}
+                  : "--")}
               </span>
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                Cycle Count
+                循环次数
               </span>
               <span className="text-sm font-medium text-foreground">
-                {typeof cycleCount === "number" ? cycleCount : "--"}
+                {zh(typeof cycleCount === "number" ? cycleCount : "--")}
               </span>
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                Design / Max
+                设计容量 / 最大容量
               </span>
               <span className="text-sm font-medium text-foreground">
                 {capacityRatio}
@@ -101,7 +103,7 @@ export function BatteryPopover({ battery, onClose }: BatteryPopoverProps) {
             </div>
             <div className="flex flex-col gap-0.5">
               <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                Manufacturer
+                制造商
               </span>
               <span className="text-sm font-medium text-foreground">
                 {manufacturer ?? "--"}

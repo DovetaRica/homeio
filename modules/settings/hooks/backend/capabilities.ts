@@ -16,8 +16,8 @@ export function createSettingsCapabilities() {
         disabledReason: undefined,
       },
       language: {
-        disabled: false,
-        disabledReason: undefined,
+        disabled: true,
+        disabledReason: "当前部署为简体中文定制版",
       },
     },
     network: {

@@ -26,14 +26,14 @@ export default function GoogleDriveConnectedClient({
       <div className="text-center">
         {success ? (
           <>
-            <p className="text-lg font-semibold">Google Drive connected!</p>
-            <p className="mt-1 text-sm text-muted-foreground">You can close this window.</p>
+            <p className="text-lg font-semibold">Google 云端硬盘已连接！</p>
+            <p className="mt-1 text-sm text-muted-foreground">现在可以关闭此窗口。</p>
           </>
         ) : (
           <>
-            <p className="text-lg font-semibold text-destructive">Connection failed</p>
+            <p className="text-lg font-semibold text-destructive">连接失败</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              {error ?? "Unknown error"}. You can close this window.
+              {error ?? "Unknown error"}。现在可以关闭此窗口。
             </p>
           </>
         )}
