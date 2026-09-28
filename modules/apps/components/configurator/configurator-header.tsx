@@ -1,5 +1,6 @@
 
-import { zh } from "@/lib/i18n/zh";
+import { useI18n } from "@/i18n/use-i18n";
+
 import { X } from "@/components/icons/platform-icons";
 
 import type { ConfiguratorView } from "@/modules/apps/components/configurator/configurator-mapper";
@@ -25,10 +26,11 @@ export function ConfiguratorHeader({
   onViewChange,
   onClose,
 }: ConfiguratorHeaderProps) {
+  const intl = useI18n();
   return (
     <header className="flex items-center justify-between border-b border-glass-border px-4 py-3">
       <div className="min-w-0">
-        <h3 className="truncate text-lg font-semibold text-foreground">{zh(title)}</h3>
+        <h3 className="truncate text-lg font-semibold text-foreground">{intl.text(title)}</h3>
         <div className="mt-2 flex items-center gap-1.5">
           {views.map((view) => (
             <button
@@ -52,7 +54,7 @@ export function ConfiguratorHeader({
           onClick={onClose}
           className="rounded-lg border border-glass-border p-1.5 text-muted-foreground transition-colors hover:bg-secondary/45 hover:text-foreground"
           aria-label="Close configurator"
-          title="关闭"
+          title={intl.t("ui.close")}
         >
           <X className="size-4" />
         </button>

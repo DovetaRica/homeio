@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   ArrowDown,
   Download,
@@ -63,6 +64,7 @@ function formatTimestamp(iso: string): string {
 let lineIdCounter = 0;
 
 export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
+  const intl = useI18n();
   const [lines, setLines] = useState<LogLine[]>([]);
   const [search, setSearch] = useState("");
   const [autoScroll, setAutoScroll] = useState(true);
@@ -205,14 +207,14 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
         className="flex flex-col gap-0 p-0 w-[92vw] sm:w-[92vw] sm:max-w-5xl h-[82vh] bg-popover/96 border-glass-border backdrop-blur-2xl overflow-hidden shadow-2xl shadow-black/45"
       >
         <VisuallyHidden>
-          <DialogTitle>{target?.appName ?? "App"} — 日志</DialogTitle>
+          <DialogTitle>{target?.appName ?? "App"} {intl.t("ui.logs2")}</DialogTitle>
         </VisuallyHidden>
         {/* Header */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-glass-border/60 shrink-0">
           <ScrollText className="size-4 text-muted-foreground shrink-0" />
           <div className="flex-1 min-w-0">
             <span className="text-sm font-semibold text-foreground truncate">
-              {target?.appName ?? "App"} — 日志
+              {target?.appName ?? "App"} {intl.t("ui.logs2")}
             </span>
           </div>
 
@@ -223,7 +225,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
             <Search className="size-3 text-muted-foreground pointer-events-none shrink-0" />
             <input
               type="text"
-              placeholder="筛选日志…"
+              placeholder={intl.t("ui.filterLogs")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="bg-transparent pl-2 pr-1 text-xs text-foreground placeholder:text-muted-foreground/60 focus:outline-none w-40"
@@ -240,7 +242,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
               )}
             >
               <ArrowDown className="size-3" />
-              继续
+              {intl.t("ui.continue")}
             </button>
           )}
 
@@ -248,7 +250,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
           <button
             onClick={downloadLogs}
             disabled={lines.length === 0}
-            title="下载日志"
+            title={intl.t("ui.downloadLogs")}
             className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <Download className="size-3.5" />
@@ -273,14 +275,14 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
                       : "bg-muted-foreground/40",
               )}
             />
-            <span className="tabular-nums">{lines.length} 行</span>
+            <span className="tabular-nums">{lines.length} {intl.t("ui.lines")}</span>
           </div>
 
           {/* Close */}
           <button
             onClick={onClose}
             className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors cursor-pointer"
-            aria-label="关闭"
+            aria-label={intl.t("ui.close")}
           >
             <X className="size-4" />
           </button>
@@ -299,7 +301,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
               )}
             >
               <RefreshCw className="size-3" />
-              重新连接
+              {intl.t("ui.reconnect")}
             </button>
           </div>
         )}
@@ -312,7 +314,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
         >
           {filteredLines.length === 0 && !streamError ? (
             <p className="text-xs text-muted-foreground/50 mt-4 text-center">
-              {zh(search.trim() ? "No matching log lines." : "Waiting for logs…")}
+              {intl.text(search.trim() ? "No matching log lines." : "Waiting for logs…")}
             </p>
           ) : (
             <div className="space-y-px">
@@ -355,7 +357,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
                           : "text-green-100/80",
                     )}
                   >
-                    {zh(line.message)}
+                    {intl.text(line.message)}
                   </span>
                 </div>
               ))}
@@ -368,7 +370,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
         {streamEnded && (
           <div className="flex items-center gap-3 px-4 py-2 border-t border-glass-border/60 shrink-0">
             <span className="text-xs text-muted-foreground/60 flex-1">
-              日志流已结束：容器已停止或已到达日志末尾。
+              {intl.t("ui.streamEndedContainerStoppedOrLogTailReached")}
             </span>
             <button
               onClick={handleReconnect}
@@ -378,7 +380,7 @@ export function AppLogsDialog({ target, onClose }: AppLogsDialogProps) {
               )}
             >
               <RefreshCw className="size-3" />
-              重新连接
+              {intl.t("ui.reconnect")}
             </button>
           </div>
         )}

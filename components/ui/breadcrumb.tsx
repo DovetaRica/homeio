@@ -1,3 +1,5 @@
+
+import { useI18n } from "@/i18n/use-i18n";
 import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { ChevronRight, MoreHorizontal } from '@/components/icons/platform-icons'
@@ -84,6 +86,7 @@ function BreadcrumbEllipsis({
   className,
   ...props
 }: React.ComponentProps<'span'>) {
+  const intl = useI18n();
   return (
     <span
       data-slot="breadcrumb-ellipsis"
@@ -93,7 +96,7 @@ function BreadcrumbEllipsis({
       {...props}
     >
       <MoreHorizontal className="size-4" />
-      <span className="sr-only">更多</span>
+      <span className="sr-only">{intl.t("ui.more")}</span>
     </span>
   )
 }

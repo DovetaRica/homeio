@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { FolderOpen, Loader2, Upload } from "@/components/icons/platform-icons";
 import {
   Empty,
@@ -104,6 +105,7 @@ export function FileManagerFileArea({
   totalEntriesCount,
   viewMode,
 }: FileManagerFileAreaProps) {
+  const intl = useI18n();
   return (
     <div
       className="relative flex-1 overflow-y-auto p-3"
@@ -115,11 +117,11 @@ export function FileManagerFileArea({
       {isDragOver && !isTrashView && !isStarredView ? (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-primary/60 bg-primary/5 pointer-events-none">
           <Upload className="mb-2 size-8 text-primary/70" />
-          <span className="text-sm font-medium text-primary/80">拖放文件以上传</span>
+          <span className="text-sm font-medium text-primary/80">{intl.t("ui.dropFilesToUpload")}</span>
         </div>
       ) : null}
 
-      {renderBrowserState({
+      {renderBrowserState(intl, {
         directoryErrorMessage,
         directoryIsError,
         directoryIsLoading,
@@ -164,7 +166,7 @@ export function FileManagerFileArea({
   );
 }
 
-function renderBrowserState({
+function renderBrowserState(intl: ReturnType<typeof useI18n>, {
   directoryErrorMessage,
   directoryIsError,
   directoryIsLoading,
@@ -216,7 +218,7 @@ function renderBrowserState({
         </EmptyMedia>
         <EmptyHeader>
           <EmptyTitle className="text-sm font-normal text-muted-foreground">
-            正在加载文件…
+            {intl.t("ui.loadingFiles")}
           </EmptyTitle>
         </EmptyHeader>
       </Empty>
@@ -250,7 +252,7 @@ function renderBrowserState({
         </EmptyMedia>
         <EmptyHeader>
           <EmptyTitle className="text-sm font-normal text-muted-foreground">
-            {zh(isGlobalSearchActive
+            {intl.text(isGlobalSearchActive
               ? globalSearchIsFetching
                 ? "Searching..."
                 : "No results found"

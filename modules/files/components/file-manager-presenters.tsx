@@ -93,7 +93,7 @@ export function toUiFileEntry(entry: FileListEntry): FileEntry {
     sizeBytes: entry.sizeBytes,
     modified: Number.isNaN(modifiedDate.getTime())
       ? "--"
-      : modifiedDate.toLocaleDateString("zh-CN", {
+      : modifiedDate.toLocaleDateString("en", {
           month: "short",
           day: "numeric",
           year: "numeric",

@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { useEffect } from "react";
 
 type GoogleDriveConnectedClientProps = {
@@ -11,6 +13,7 @@ export default function GoogleDriveConnectedClient({
   error,
   success,
 }: GoogleDriveConnectedClientProps) {
+  const intl = useI18n();
   useEffect(() => {
     if (window.opener) {
       window.opener.postMessage(
@@ -26,14 +29,14 @@ export default function GoogleDriveConnectedClient({
       <div className="text-center">
         {success ? (
           <>
-            <p className="text-lg font-semibold">Google 云端硬盘已连接！</p>
-            <p className="mt-1 text-sm text-muted-foreground">现在可以关闭此窗口。</p>
+            <p className="text-lg font-semibold">{intl.t("ui.googleDriveConnected")}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{intl.t("ui.youCanCloseThisWindow")}</p>
           </>
         ) : (
           <>
-            <p className="text-lg font-semibold text-destructive">连接失败</p>
+            <p className="text-lg font-semibold text-destructive">{intl.t("ui.connectionFailed")}</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              {error ?? "Unknown error"}。现在可以关闭此窗口。
+              {error ?? "Unknown error"}{intl.t("ui.youCanCloseThisWindow2")}
             </p>
           </>
         )}

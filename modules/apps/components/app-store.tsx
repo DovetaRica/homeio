@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import type { StoreAppDetail, StoreAppSummary } from "@/lib/shared/contracts/apps";
@@ -105,10 +106,10 @@ function StoreLogo({ logoUrl, alt, className }: { logoUrl: string | null; alt: s
   if (logoUrl && !failed) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={logoUrl} alt={zh(alt)} className={className} onError={() => setFailed(true)} />
+      <img src={logoUrl} alt={alt} className={className} onError={() => setFailed(true)} />
     );
   }
-  return <Package className={cn(className, "text-muted-foreground/50")} aria-label={zh(alt)} />;
+  return <Package className={cn(className, "text-muted-foreground/50")} aria-label={alt} />;
 }
 
 function AppStatusDot({ app, operation }: { app: StoreAppSummary; operation?: AppOperationState }) {
@@ -169,10 +170,11 @@ function CategorySidebar({
   selectedCategory: string | null;
   onSelect: (category: string | null) => void;
 }) {
+  const intl = useI18n();
   return (
     <aside className={cn("m-2 flex w-48 shrink-0 flex-col overflow-y-auto px-2 py-3", STORE_PANEL_SHELL)}>
       <div className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/50">
-        分类
+        {intl.t("ui.categories")}
       </div>
       <div className="flex flex-col gap-0.5">
         <button
@@ -183,14 +185,14 @@ function CategorySidebar({
             selectedCategory === null ? "bg-primary/15 text-foreground" : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
           )}
         >
-          <span>全部应用</span>
+          <span>{intl.t("ui.allApps")}</span>
         </button>
         {categories.map((cat) => (
           <button
             key={cat.id}
             type="button"
             onClick={() => onSelect(cat.name)}
-            title={zh(cat.description)}
+            title={intl.text(cat.description)}
             className={cn(
               "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-[13px] font-medium transition-colors",
               selectedCategory === cat.name ? "bg-primary/15 text-foreground" : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
@@ -220,13 +222,14 @@ function FeaturedStrip({
   apps: StoreAppSummary[];
   onSelect: (id: string) => void;
 }) {
+  const intl = useI18n();
   if (apps.length === 0) return null;
 
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 px-0.5">
         {icon}
-        <span className="text-sm font-semibold text-foreground">{zh(title)}</span>
+        <span className="text-sm font-semibold text-foreground">{intl.text(title)}</span>
         <span className={cn(STORE_BADGE_SURFACE, "ml-auto px-2 py-0.5 text-2xs text-muted-foreground")}>
           {apps.length}
         </span>
@@ -244,7 +247,7 @@ function FeaturedStrip({
           >
             <div className="flex items-center gap-2.5">
               <div className={cn(STORE_PANEL_INSET, "flex size-9 shrink-0 items-center justify-center overflow-hidden")}>
-                <StoreLogo logoUrl={app.logoUrl} alt={zh(app.name)} className="size-5 object-contain" />
+                <StoreLogo logoUrl={app.logoUrl} alt={app.name} className="size-5 object-contain" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
@@ -256,7 +259,7 @@ function FeaturedStrip({
                 )}
               </div>
             </div>
-            <p className="line-clamp-2 text-2xs leading-4 text-muted-foreground/80">{zh(app.description)}</p>
+            <p className="line-clamp-2 text-2xs leading-4 text-muted-foreground/80">{intl.text(app.description)}</p>
           </button>
         ))}
       </div>
@@ -275,6 +278,7 @@ function CatalogRow({
   operation?: AppOperationState;
   onClick: () => void;
 }) {
+  const intl = useI18n();
   const busy = isOperationBusy(operation);
 
   return (
@@ -289,7 +293,7 @@ function CatalogRow({
     >
       {/* Logo */}
       <div className={cn(STORE_PANEL_INSET, "flex size-11 shrink-0 items-center justify-center overflow-hidden")}>
-        <StoreLogo logoUrl={app.logoUrl} alt={zh(app.name)} className="size-6 object-contain" />
+        <StoreLogo logoUrl={app.logoUrl} alt={app.name} className="size-6 object-contain" />
       </div>
 
       {/* Info */}
@@ -303,7 +307,7 @@ function CatalogRow({
             </span>
           )}
         </div>
-        <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground/70">{zh(app.description)}</p>
+        <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground/70">{intl.text(app.description)}</p>
 
         {operation && !["error", "success"].includes(operation.status) ? (
           <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-muted">
@@ -332,20 +336,20 @@ function CatalogRow({
       {/* Status label */}
       <div className="shrink-0 text-right">
         {operation?.status === "error" ? (
-          <span className="text-2xs font-medium text-status-red">失败</span>
+          <span className="text-2xs font-medium text-status-red">{intl.t("ui.failed")}</span>
         ) : operation?.status === "success" ? (
-          <span className="text-2xs font-medium text-status-green">完成</span>
+          <span className="text-2xs font-medium text-status-green">{intl.t("ui.done")}</span>
         ) : busy ? (
           <Loader2 className="size-3.5 animate-spin text-primary" />
         ) : app.status === "installed" ? (
           <span className={cn("text-2xs font-medium", app.updateAvailable ? "text-primary" : "text-status-green")}>
-            {zh(app.updateAvailable ? "Update" : "Installed")}
+            {intl.text(app.updateAvailable ? "Update" : "Installed")}
           </span>
         ) : app.status === "error" ? (
-          <span className="text-2xs font-medium text-status-red">错误</span>
+          <span className="text-2xs font-medium text-status-red">{intl.t("ui.error")}</span>
         ) : (
           <span className="text-2xs text-muted-foreground/40 transition-colors group-hover:text-muted-foreground">
-            获取 →
+            {intl.t("ui.get")}
           </span>
         )}
       </div>
@@ -356,9 +360,10 @@ function CatalogRow({
 // ── Detail panel ──────────────────────────────────────────────────────────────
 
 function DetailInfoRow({ label, children }: { label: string; children: ReactNode }) {
+  const intl = useI18n();
   return (
     <div className="flex items-start justify-between gap-4 py-2.5">
-      <span className="shrink-0 text-xs text-muted-foreground">{zh(label)}</span>
+      <span className="shrink-0 text-xs text-muted-foreground">{intl.text(label)}</span>
       <div className="min-w-0 text-right text-xs font-medium text-foreground">{children}</div>
     </div>
   );
@@ -393,6 +398,7 @@ function AppStoreDetailPanel({
   onRemoveCustom: () => void;
   removingCustom: boolean;
 }) {
+  const intl = useI18n();
   const busy = isOperationBusy(operation);
 
   return (
@@ -404,17 +410,17 @@ function AppStoreDetailPanel({
           className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
         >
           <ChevronLeft className="size-3.5" />
-          返回应用商店
+          {intl.t("ui.backToStore")}
         </button>
       </div>
 
       {!app || isLoading ? (
         <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-          正在加载…
+          {intl.t("ui.loading2")}
         </div>
       ) : !detail ? (
         <div className="flex flex-1 items-center justify-center text-sm text-status-red">
-          应用详情不可用。
+          {intl.t("ui.appDetailsUnavailable")}
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto">
@@ -424,7 +430,7 @@ function AppStoreDetailPanel({
             <div className="flex items-start gap-4">
               {/* Logo */}
               <div className={cn(STORE_PANEL_INSET, "flex size-16 shrink-0 items-center justify-center overflow-hidden")}>
-                <StoreLogo logoUrl={detail.logoUrl} alt={zh(detail.name)} className="size-9 object-contain" />
+                <StoreLogo logoUrl={detail.logoUrl} alt={detail.name} className="size-9 object-contain" />
               </div>
 
               {/* Name + badges + progress */}
@@ -438,7 +444,7 @@ function AppStoreDetailPanel({
                     </span>
                   ) : app.status === "installed" ? (
                     <span className={cn("text-xs font-medium", app.updateAvailable ? "text-primary" : "text-status-green")}>
-                      {zh(app.updateAvailable ? "Update available" : "Installed")}
+                      {intl.text(app.updateAvailable ? "Update available" : "Installed")}
                     </span>
                   ) : null}
                   <SourceBadge sourceName={detail.sourceName} sourceKind={detail.sourceKind} />
@@ -453,7 +459,7 @@ function AppStoreDetailPanel({
                     <div className="h-1 overflow-hidden rounded-full bg-muted">
                       <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${Math.max(2, operation.progressPercent)}%` }} />
                     </div>
-                    {operation.message && <p className="text-2xs text-status-red">{zh(operation.message)}</p>}
+                    {operation.message && <p className="text-2xs text-status-red">{intl.text(operation.message)}</p>}
                   </div>
                 )}
               </div>
@@ -468,7 +474,7 @@ function AppStoreDetailPanel({
                     disabled={busy}
                     className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    <Download className="size-3.5" /> 安装
+                    <Download className="size-3.5" /> {intl.t("ui.install")}
                   </button>
                 ) : detail.updateAvailable ? (
                   <UpdateInfoTooltip app={detail}>
@@ -477,7 +483,7 @@ function AppStoreDetailPanel({
                       disabled={busy}
                       className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      <ArrowUpCircle className="size-3.5" /> 更新
+                      <ArrowUpCircle className="size-3.5" /> {intl.t("ui.update")}
                     </button>
                   </UpdateInfoTooltip>
                 ) : resolveStoreDetailUrl(detail) ? (
@@ -487,7 +493,7 @@ function AppStoreDetailPanel({
                     rel="noreferrer"
                     className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition-all hover:brightness-110"
                   >
-                    <ExternalLink className="size-3.5" /> 打开
+                    <ExternalLink className="size-3.5" /> {intl.t("ui.open")}
                   </a>
                 ) : null}
 
@@ -496,7 +502,7 @@ function AppStoreDetailPanel({
                   disabled={busy}
                   className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  <Wrench className="size-3.5" /> 自定义
+                  <Wrench className="size-3.5" /> {intl.t("ui.custom")}
                 </button>
 
                 {detail.sourceKind === "custom" && detail.status === "not_installed" && (
@@ -506,7 +512,7 @@ function AppStoreDetailPanel({
                     className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-status-red/30 bg-status-red/8 px-3 py-2 text-xs font-medium text-status-red transition-colors hover:bg-status-red/15 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <Trash2 className="size-3.5" />
-                    {zh(removingCustom ? "Removing…" : "Remove")}
+                    {intl.text(removingCustom ? "Removing…" : "Remove")}
                   </button>
                 )}
 
@@ -516,7 +522,7 @@ function AppStoreDetailPanel({
                     disabled={busy}
                     className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-status-red/30 bg-status-red/8 px-3 py-2 text-xs font-medium text-status-red transition-colors hover:bg-status-red/15 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    <Trash2 className="size-3.5" /> 卸载
+                    <Trash2 className="size-3.5" /> {intl.t("ui.uninstall")}
                   </button>
                 )}
               </div>
@@ -531,7 +537,7 @@ function AppStoreDetailPanel({
             {detail.screenshots.length > 0 && (
               <div className="space-y-2">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/50">
-                  截图
+                  {intl.t("ui.screenshots")}
                 </p>
                 <div className="flex gap-2.5 overflow-x-auto pb-1">
                   {detail.screenshots.slice(0, 4).map((src, i) => (
@@ -540,7 +546,7 @@ function AppStoreDetailPanel({
                       className={cn(STORE_PANEL_INSET, "min-w-[min(100%,18rem)] overflow-hidden sm:min-w-[20rem]")}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={src} alt={zh(`${detail.name} screenshot ${i + 1}`)} className="h-44 w-full object-cover sm:h-48" />
+                      <img src={src} alt={intl.t('dynamic.appScreenshot', {value0: detail.name, value1: i + 1})} className="h-44 w-full object-cover sm:h-48" />
                     </div>
                   ))}
                 </div>
@@ -549,16 +555,16 @@ function AppStoreDetailPanel({
 
             {/* Metadata */}
             <div className={cn(STORE_PANEL_INSET, "divide-y divide-glass-border/40 px-4")}>
-              <DetailInfoRow label="平台">{detail.platform}</DetailInfoRow>
+              <DetailInfoRow label={intl.t("ui.platform")}>{detail.platform}</DetailInfoRow>
               {detail.webUiPort && (
-                <DetailInfoRow label="Web 界面端口">
+                <DetailInfoRow label={intl.t("ui.webUiPort")}>
                   <span className="font-mono">{detail.webUiPort}</span>
                 </DetailInfoRow>
               )}
-              <DetailInfoRow label="来源">
+              <DetailInfoRow label={intl.t("ui.source")}>
                 <SourceBadge sourceName={detail.sourceName} sourceKind={detail.sourceKind} />
               </DetailInfoRow>
-              <DetailInfoRow label="仓库">
+              <DetailInfoRow label={intl.t("ui.repository")}>
                 {detail.repositoryUrl.startsWith("http") ? (
                   <a href={detail.repositoryUrl} target="_blank" rel="noreferrer" className="break-all text-primary hover:underline">
                     {detail.repositoryUrl}
@@ -585,6 +591,7 @@ export function AppStore({
   onOpenCustomInstall: () => void;
   launchRequest?: { nonce: number; search?: string; appId?: string } | null;
 }) {
+  const intl = useI18n();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search.trim(), 250);
   const [filter, setFilter] = useState<"all" | "installed">("all");
@@ -833,7 +840,7 @@ export function AppStore({
                 filter === f ? "bg-primary/15 text-primary" : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
               )}
             >
-              {zh(f === "all" ? "All Apps" : `Installed (${installedCount})`)}
+              {intl.text(f === "all" ? "All Apps" : `Installed (${installedCount})`)}
             </button>
           ))}
         </div>
@@ -852,7 +859,7 @@ export function AppStore({
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="搜索应用…"
+            placeholder={intl.t("ui.searchApps")}
             className="w-full rounded-lg border border-glass-border bg-background/55 py-1.5 pl-8 pr-3 text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-primary/40"
           />
         </div>
@@ -890,16 +897,16 @@ export function AppStore({
 
           {catalogQuery.isLoading ? (
             <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              正在加载应用目录…
+              {intl.t("ui.loadingCatalog")}
             </div>
           ) : catalogQuery.isError ? (
             <div className="flex h-full items-center justify-center text-sm text-status-red">
-              无法加载应用目录。
+              {intl.t("ui.unableToLoadAppCatalog")}
             </div>
           ) : apps.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-2 text-muted-foreground">
               <Search className="size-8 opacity-30" />
-              <span className="text-sm">未找到应用</span>
+              <span className="text-sm">{intl.t("ui.appNotFound")}</span>
             </div>
           ) : (
             <div className="space-y-6">
@@ -907,7 +914,7 @@ export function AppStore({
               {shouldShowStrips && (
                 <>
                   <FeaturedStrip
-                    title="精选"
+                    title={intl.t("ui.featured")}
                     icon={<Star className="size-4 text-primary" />}
                     apps={featuredApps}
                     onSelect={setSelectedAppId}
@@ -928,7 +935,7 @@ export function AppStore({
                     <h2 className="text-sm font-semibold text-foreground">
                       {selectedCategory ?? (filter === "installed" ? "Installed Apps" : "Catalog")}
                     </h2>
-                    <p className="text-xs text-muted-foreground/70">{apps.length} 个应用</p>
+                    <p className="text-xs text-muted-foreground/70">{apps.length} {intl.t("ui.apps2")}</p>
                   </div>
                 </div>
 
@@ -951,7 +958,7 @@ export function AppStore({
                       onClick={() => setVisibleCatalogCount((c) => Math.min(c + STORE_PAGE_SIZE, apps.length))}
                       className="rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-secondary/40 hover:text-foreground"
                     >
-                      加载更多应用
+                      {intl.t("ui.loadMoreApps")}
                     </button>
                   </div>
                 )}

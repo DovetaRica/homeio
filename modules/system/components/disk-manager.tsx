@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { useState } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -65,6 +66,7 @@ const MEDIA_BADGE: Record<string, { label: string; color: string }> = {
 // ─── sub-components ───────────────────────────────────────────────────────────
 
 function DiskCard({ disk, selected, onClick }: { disk: DiskDevice; selected: boolean; onClick: () => void }) {
+  const intl = useI18n();
   const badge = MEDIA_BADGE[disk.mediaType] ?? MEDIA_BADGE.unknown!;
   return (
     <button
@@ -84,7 +86,7 @@ function DiskCard({ disk, selected, onClick }: { disk: DiskDevice; selected: boo
         <p className="truncate pl-5 text-[11px] text-muted-foreground/70">{disk.model}</p>
       )}
       <div className="flex items-center gap-2 pl-5">
-        <span className={cn("text-[11px] font-medium", badge.color)}>{zh(badge.label)}</span>
+        <span className={cn("text-[11px] font-medium", badge.color)}>{intl.text(badge.label)}</span>
         <span className="text-[11px] text-muted-foreground/60">{formatBytes(disk.sizeBytes)}</span>
         <span className="text-[11px] text-muted-foreground/40">{disk.partitions.length}p</span>
       </div>
@@ -93,6 +95,7 @@ function DiskCard({ disk, selected, onClick }: { disk: DiskDevice; selected: boo
 }
 
 function PartitionBar({ partitions, totalBytes }: { partitions: DiskPartition[]; totalBytes: number | null }) {
+  const intl = useI18n();
   if (!totalBytes || totalBytes === 0) return null;
 
   const sized = partitions.filter((p) => p.sizeBytes !== null && p.sizeBytes > 0);
@@ -107,7 +110,7 @@ function PartitionBar({ partitions, totalBytes }: { partitions: DiskPartition[];
         return (
           <div
             key={p.name}
-            title={zh(`${p.device} — ${p.fstype ?? "unformatted"} — ${formatBytes(p.sizeBytes)}`)}
+            title={intl.t('dynamic.partitionSummary', {value0: p.device, value1: p.fstype ?? "unformatted", value2: formatBytes(p.sizeBytes)})}
             className={cn("h-full transition-all", fsColor(p.fstype))}
             style={{ width: `${pct}%` }}
           />
@@ -116,7 +119,7 @@ function PartitionBar({ partitions, totalBytes }: { partitions: DiskPartition[];
       {freePct > 0.5 && (
         <div
           className="h-full flex-1 bg-background/50"
-          title={zh(`Unallocated — ${formatBytes(freeBytes)}`)}
+          title={intl.t('dynamic.unallocatedSize', {value0: formatBytes(freeBytes)})}
         />
       )}
     </div>
@@ -141,6 +144,7 @@ function ConfirmBanner({
   onCancel: () => void;
   isPending: boolean;
 }) {
+  const intl = useI18n();
   const messages: Record<ConfirmState["type"], string> = {
     format: `Format ${state.type === "format" ? state.device : ""} as ${state.type === "format" ? state.filesystem : ""}? All data will be lost.`,
     delete: `Delete partition ${state.type === "delete" ? state.device : ""}? This cannot be undone.`,
@@ -158,7 +162,7 @@ function ConfirmBanner({
           className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
         >
           <DismissRegular className="size-3.5" />
-          取消
+          {intl.t("ui.cancel")}
         </button>
         <button
           onClick={onConfirm}
@@ -166,7 +170,7 @@ function ConfirmBanner({
           className="flex items-center gap-1.5 rounded-lg bg-status-red/20 px-3 py-1.5 text-[12px] font-medium text-status-red transition-colors hover:bg-status-red/30 disabled:opacity-50"
         >
           <CheckmarkRegular className="size-3.5" />
-          {zh(isPending ? "Working…" : "Confirm")}
+          {intl.text(isPending ? "Working…" : "Confirm")}
         </button>
       </div>
     </div>
@@ -186,15 +190,16 @@ function MountForm({
   onCancel: () => void;
   isPending: boolean;
 }) {
+  const intl = useI18n();
   const safeName = device.replace(/[^a-zA-Z0-9]/g, "_").replace(/^_+/, "");
   const [mountPoint, setMountPoint] = useState(`/mnt/${safeName}`);
   const [addToFstab, setAddToFstab] = useState(false);
 
   return (
     <div className={cn(PANEL_INSET, "flex flex-col gap-3 p-3")}>
-      <p className="text-[12px] font-medium text-foreground">挂载 {device}</p>
+      <p className="text-[12px] font-medium text-foreground">{intl.t("ui.mount")} {device}</p>
       <div className="flex flex-col gap-1.5">
-        <label className="text-[11px] text-muted-foreground">挂载点</label>
+        <label className="text-[11px] text-muted-foreground">{intl.t("ui.mountPoint")}</label>
         <input
           value={mountPoint}
           onChange={(e) => setMountPoint(e.target.value)}
@@ -209,21 +214,21 @@ function MountForm({
           onChange={(e) => setAddToFstab(e.target.checked)}
           className="rounded"
         />
-        开机自动挂载（写入 /etc/fstab）
+        {intl.t("ui.autoMountAtBootAddToEtcFstab")}
       </label>
       <div className="flex items-center justify-end gap-1.5">
         <button
           onClick={onCancel}
           className="rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
         >
-          取消
+          {intl.t("ui.cancel")}
         </button>
         <button
           onClick={() => onMount(mountPoint, addToFstab)}
           disabled={isPending || !mountPoint.startsWith("/")}
           className="rounded-lg bg-primary/20 px-3 py-1.5 text-[12px] font-medium text-primary transition-colors hover:bg-primary/30 disabled:opacity-50"
         >
-          {zh(isPending ? "Mounting…" : "Mount")}
+          {intl.text(isPending ? "Mounting…" : "Mount")}
         </button>
       </div>
     </div>
@@ -241,15 +246,16 @@ function FormatForm({
   onFormat: (filesystem: DiskFilesystem, label: string) => void;
   onCancel: () => void;
 }) {
+  const intl = useI18n();
   const [filesystem, setFilesystem] = useState<DiskFilesystem>("ext4");
   const [label, setLabel] = useState("");
 
   return (
     <div className={cn(PANEL_INSET, "flex flex-col gap-3 p-3")}>
-      <p className="text-[12px] font-medium text-foreground">格式化 {device}</p>
+      <p className="text-[12px] font-medium text-foreground">{intl.t("ui.format")} {device}</p>
       <div className="flex gap-3">
         <div className="flex flex-1 flex-col gap-1.5">
-          <label className="text-[11px] text-muted-foreground">文件系统</label>
+          <label className="text-[11px] text-muted-foreground">{intl.t("ui.filesystem")}</label>
           <select
             value={filesystem}
             onChange={(e) => setFilesystem(e.target.value as DiskFilesystem)}
@@ -261,7 +267,7 @@ function FormatForm({
           </select>
         </div>
         <div className="flex flex-1 flex-col gap-1.5">
-          <label className="text-[11px] text-muted-foreground">标签（可选）</label>
+          <label className="text-[11px] text-muted-foreground">{intl.t("ui.labelOptional")}</label>
           <input
             value={label}
             onChange={(e) => setLabel(e.target.value)}
@@ -275,13 +281,13 @@ function FormatForm({
           onClick={onCancel}
           className="rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
         >
-          取消
+          {intl.t("ui.cancel")}
         </button>
         <button
           onClick={() => onFormat(filesystem, label)}
           className="rounded-lg bg-status-amber/20 px-3 py-1.5 text-[12px] font-medium text-status-amber transition-colors hover:bg-status-amber/30"
         >
-          继续 →
+          {intl.t("ui.continue2")}
         </button>
       </div>
     </div>
@@ -301,44 +307,45 @@ function CreatePartitionForm({
   onCancel: () => void;
   isPending: boolean;
 }) {
+  const intl = useI18n();
   const [start, setStart] = useState("1MiB");
   const [end, setEnd] = useState("100%");
 
   return (
     <div className={cn(PANEL_INSET, "flex flex-col gap-3 p-3")}>
-      <p className="text-[12px] font-medium text-foreground">创建分区于 {disk}</p>
+      <p className="text-[12px] font-medium text-foreground">{intl.t("ui.newPartitionOn")} {disk}</p>
       <div className="flex gap-3">
         {[
           { label: "Start", value: start, setter: setStart, placeholder: "1MiB or 0%" },
           { label: "End", value: end, setter: setEnd, placeholder: "100% or 50GiB" },
         ].map(({ label, value, setter, placeholder }) => (
           <div key={label} className="flex flex-1 flex-col gap-1.5">
-            <label className="text-[11px] text-muted-foreground">{zh(label)}</label>
+            <label className="text-[11px] text-muted-foreground">{intl.text(label)}</label>
             <input
               value={value}
               onChange={(e) => setter(e.target.value)}
-              placeholder={zh(placeholder)}
+              placeholder={intl.text(placeholder)}
               className="rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-[12px] font-mono text-foreground outline-none focus:border-primary/40"
             />
           </div>
         ))}
       </div>
       <p className="text-[11px] text-muted-foreground/60">
-        可使用百分比（如 0%、100%）或容量单位（如 1MiB、50GiB）。
+        {intl.t("ui.useForProportionalEG0100OrSizeUnits1mib50gib")}
       </p>
       <div className="flex items-center justify-end gap-1.5">
         <button
           onClick={onCancel}
           className="rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground"
         >
-          取消
+          {intl.t("ui.cancel")}
         </button>
         <button
           onClick={() => onCreate(start, end)}
           disabled={isPending}
           className="rounded-lg bg-primary/20 px-3 py-1.5 text-[12px] font-medium text-primary transition-colors hover:bg-primary/30 disabled:opacity-50"
         >
-          {zh(isPending ? "Creating…" : "Create")}
+          {intl.text(isPending ? "Creating…" : "Create")}
         </button>
       </div>
     </div>
@@ -360,6 +367,7 @@ function PartitionRow({
   onUnmount: () => void;
   onDelete: () => void;
 }) {
+  const intl = useI18n();
   const isMounted = Boolean(partition.mountpoint);
 
   return (
@@ -376,7 +384,7 @@ function PartitionRow({
       <div className="flex items-center gap-1">
         <button
           onClick={onFormat}
-          title="格式化"
+          title={intl.t("ui.format")}
           className="rounded-md p-1 text-muted-foreground/50 transition-colors hover:bg-background/60 hover:text-status-amber"
         >
           <ArrowSyncRegular className="size-3.5" />
@@ -384,7 +392,7 @@ function PartitionRow({
         {isMounted ? (
           <button
             onClick={onUnmount}
-            title="卸载挂载"
+            title={intl.t("ui.unmount")}
             className="rounded-md p-1 text-muted-foreground/50 transition-colors hover:bg-background/60 hover:text-foreground"
           >
             <ArrowUploadRegular className="size-3.5" />
@@ -392,7 +400,7 @@ function PartitionRow({
         ) : (
           <button
             onClick={onMount}
-            title="挂载"
+            title={intl.t("ui.mount")}
             className="rounded-md p-1 text-muted-foreground/50 transition-colors hover:bg-background/60 hover:text-primary"
           >
             <ArrowDownloadRegular className="size-3.5" />
@@ -400,7 +408,7 @@ function PartitionRow({
         )}
         <button
           onClick={onDelete}
-          title="删除分区"
+          title={intl.t("ui.deletePartition")}
           className="rounded-md p-1 text-muted-foreground/50 transition-colors hover:bg-background/60 hover:text-status-red"
         >
           <DeleteRegular className="size-3.5" />
@@ -419,6 +427,7 @@ type ActiveForm =
   | null;
 
 function DiskDetail({ disk }: { disk: DiskDevice }) {
+  const intl = useI18n();
   const [activeForm, setActiveForm] = useState<ActiveForm>(null);
   const [confirmState, setConfirmState] = useState<ConfirmState | null>(null);
   const [pendingFormat, setPendingFormat] = useState<{ filesystem: DiskFilesystem; label: string } | null>(null);
@@ -447,16 +456,16 @@ function DiskDetail({ disk }: { disk: DiskDevice }) {
           filesystem: confirmState.filesystem,
           label: confirmState.label || undefined,
         });
-        toast.success(zh(`Formatted ${confirmState.device} as ${confirmState.filesystem}`));
+        toast.success(intl.t('dynamic.formattedDevice', {value0: confirmState.device, value1: confirmState.filesystem}));
       } else if (confirmState.type === "delete") {
         await deletePartitionMutation.mutateAsync({ device: confirmState.device });
-        toast.success(zh(`Deleted partition ${confirmState.device}`));
+        toast.success(intl.t('dynamic.deletedPartition', {value0: confirmState.device}));
       } else if (confirmState.type === "wipe") {
         await wipeMutation.mutateAsync({ disk: confirmState.disk });
-        toast.success(zh(`Wiped disk ${confirmState.disk}`));
+        toast.success(intl.t('dynamic.wipedDisk', {value0: confirmState.disk}));
       }
     } catch (e) {
-      toast.error(zh(e instanceof Error ? e.message : "Action failed"));
+      toast.error(intl.text(e instanceof Error ? e.message : "Action failed"));
     } finally {
       setConfirmState(null);
       setPendingFormat(null);
@@ -475,29 +484,29 @@ function DiskDetail({ disk }: { disk: DiskDevice }) {
     if (activeForm?.type !== "mount") return;
     try {
       await mountMutation.mutateAsync({ device: activeForm.device, mountPoint, addToFstab });
-      toast.success(zh(`Mounted ${activeForm.device} at ${mountPoint}`));
+      toast.success(intl.t('dynamic.mountedDevice', {value0: activeForm.device, value1: mountPoint}));
       setActiveForm(null);
     } catch (e) {
-      toast.error(zh(e instanceof Error ? e.message : "Mount failed"));
+      toast.error(intl.text(e instanceof Error ? e.message : "Mount failed"));
     }
   }
 
   async function handleUnmount(device: string) {
     try {
       await unmountMutation.mutateAsync({ device });
-      toast.success(zh(`Unmounted ${device}`));
+      toast.success(intl.t('dynamic.unmountedDevice', {value0: device}));
     } catch (e) {
-      toast.error(zh(e instanceof Error ? e.message : "Unmount failed"));
+      toast.error(intl.text(e instanceof Error ? e.message : "Unmount failed"));
     }
   }
 
   async function handleCreatePartition(start: string, end: string) {
     try {
       await createPartitionMutation.mutateAsync({ disk: disk.device, start, end });
-      toast.success(zh("Partition created"));
+      toast.success(intl.t("ui.partitionCreated"));
       setActiveForm(null);
     } catch (e) {
-      toast.error(zh(e instanceof Error ? e.message : "Create failed"));
+      toast.error(intl.text(e instanceof Error ? e.message : "Create failed"));
     }
   }
 
@@ -529,16 +538,16 @@ function DiskDetail({ disk }: { disk: DiskDevice }) {
       {/* Partition table */}
       <div className={cn(PANEL_INSET, "overflow-hidden")}>
         <div className="grid grid-cols-[1.4fr_0.9fr_0.8fr_1.2fr_auto] gap-3 border-b border-glass-border/50 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50">
-          <span>分区</span>
-          <span>文件系统</span>
-          <span>大小</span>
-          <span>挂载点</span>
+          <span>{intl.t("ui.partition")}</span>
+          <span>{intl.t("ui.filesystem")}</span>
+          <span>{intl.t("ui.size")}</span>
+          <span>{intl.t("ui.mountPoint")}</span>
           <span />
         </div>
 
         {disk.partitions.length === 0 ? (
           <p className="px-4 py-6 text-center text-sm text-muted-foreground/60">
-            未发现分区
+            {intl.t("ui.noPartitionsFound")}
           </p>
         ) : (
           <div className="divide-y divide-glass-border/40">
@@ -601,7 +610,7 @@ function DiskDetail({ disk }: { disk: DiskDevice }) {
           className="flex items-center gap-1.5 rounded-xl border border-glass-border bg-background/40 px-3 py-2 text-[12px] text-muted-foreground transition-colors hover:bg-background/70 hover:text-foreground disabled:opacity-40"
         >
           <AddRegular className="size-3.5" />
-          创建分区
+          {intl.t("ui.createPartition")}
         </button>
         <button
           onClick={() => setConfirmState({ type: "wipe", disk: disk.device })}
@@ -609,7 +618,7 @@ function DiskDetail({ disk }: { disk: DiskDevice }) {
           className="flex items-center gap-1.5 rounded-xl border border-status-red/25 bg-status-red/8 px-3 py-2 text-[12px] text-status-red transition-colors hover:bg-status-red/15 disabled:opacity-40"
         >
           <WarningRegular className="size-3.5" />
-          擦除磁盘
+          {intl.t("ui.wipeDisk")}
         </button>
       </div>
     </div>
@@ -619,6 +628,7 @@ function DiskDetail({ disk }: { disk: DiskDevice }) {
 // ─── DiskManager (root) ───────────────────────────────────────────────────────
 
 export function DiskManager() {
+  const intl = useI18n();
   const { data, isLoading, refetch, isRefetching } = useDisks();
   const [selectedDisk, setSelectedDisk] = useState<string | null>(null);
 
@@ -630,7 +640,7 @@ export function DiskManager() {
       {/* Header */}
       <div className="flex shrink-0 items-center justify-between border-b border-glass-border/60 px-4 py-2.5">
         <span className="text-[13px] font-medium text-foreground">
-          {zh(isLoading ? "Loading…" : `${disks.length} disk${disks.length !== 1 ? "s" : ""} detected`)}
+          {intl.text(isLoading ? "Loading…" : `${disks.length} disk${disks.length !== 1 ? "s" : ""} detected`)}
         </span>
         <button
           onClick={() => refetch()}
@@ -638,7 +648,7 @@ export function DiskManager() {
           className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[12px] text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground disabled:opacity-50"
         >
           <ArrowSyncRegular className={cn("size-3.5", isRefetching && "animate-spin")} />
-          刷新
+          {intl.t("ui.refresh")}
         </button>
       </div>
 
@@ -647,9 +657,9 @@ export function DiskManager() {
         {/* Disk list sidebar */}
         <div className="flex w-52 shrink-0 flex-col gap-1.5 overflow-y-auto border-r border-glass-border/60 p-2">
           {isLoading ? (
-            <p className="px-3 py-4 text-center text-xs text-muted-foreground/60">正在检测磁盘…</p>
+            <p className="px-3 py-4 text-center text-xs text-muted-foreground/60">{intl.t("ui.detectingDisks")}</p>
           ) : disks.length === 0 ? (
-            <p className="px-3 py-4 text-center text-xs text-muted-foreground/60">未发现磁盘</p>
+            <p className="px-3 py-4 text-center text-xs text-muted-foreground/60">{intl.t("ui.noDisksFound")}</p>
           ) : (
             disks.map((disk) => (
               <DiskCard
@@ -669,7 +679,7 @@ export function DiskManager() {
           <div className="flex flex-1 items-center justify-center">
             <div className="flex flex-col items-center gap-2 text-center">
               <HardDriveRegular className="size-10 text-muted-foreground/20" />
-              <p className="text-sm text-muted-foreground/60">选择磁盘</p>
+              <p className="text-sm text-muted-foreground/60">{intl.t("ui.selectADisk")}</p>
             </div>
           </div>
         )}

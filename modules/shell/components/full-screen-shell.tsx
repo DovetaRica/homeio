@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { cn } from "@/lib/utils";
 import { useResolvedWallpaper } from "@/modules/shell/hooks/useResolvedWallpaper";
 import { type ReactNode, useEffect, useState } from "react";
@@ -25,6 +26,7 @@ export function FullScreenShell({
   centerClassName,
   bottomClassName,
 }: FullScreenShellProps) {
+  const intl = useI18n();
   const [now, setNow] = useState<Date | null>(null);
   const { wallpaper: storedWallpaper } = useResolvedWallpaper();
   const resolvedWallpaper = wallpaper ?? storedWallpaper;
@@ -66,16 +68,16 @@ export function FullScreenShell({
           >
             <div className="system-floating-surface inline-flex min-w-[18rem] flex-col items-center bg-black/14 px-8 py-5 shadow-[0_24px_60px_rgba(0,0,0,0.24)]">
               <p className="text-6xl font-semibold tracking-[-0.08em] text-foreground/96 tabular-nums sm:text-7xl">
-                {zh(now
-                  ? now.toLocaleTimeString("zh-CN", {
+                {intl.text(now
+                  ? now.toLocaleTimeString(intl.locale, {
                       hour: "2-digit",
                       minute: "2-digit",
                     })
                   : "--:--")}
               </p>
               <p className="mt-2 text-sm tracking-[0.2em] text-foreground/52 uppercase sm:text-base">
-                {zh(now
-                  ? now.toLocaleDateString("zh-CN", {
+                {intl.text(now
+                  ? now.toLocaleDateString(intl.locale, {
                       weekday: "long",
                       month: "long",
                       day: "numeric",

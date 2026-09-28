@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SETTINGS_PANEL_INSET, SETTINGS_PANEL_SHELL } from "@/modules/settings/components/panel/surface";
@@ -49,18 +50,19 @@ function levelBadgeColor(level?: string) {
   }
 }
 
-function formatTimestamp(ts?: string) {
+function formatTimestamp(ts?: string, locale = "en") {
   if (!ts) return null;
   try {
-    return new Date(ts).toLocaleTimeString("zh-CN", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    return new Date(ts).toLocaleTimeString(locale, { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
   } catch {
     return ts.slice(11, 19) || null;
   }
 }
 
 function HomeioLogRow({ entry }: { entry: RawLogEntry }) {
+  const intl = useI18n();
   const [expanded, setExpanded] = useState(false);
-  const ts = formatTimestamp(entry.timestamp);
+  const ts = formatTimestamp(entry.timestamp, intl.locale);
   const hasDetail = Boolean(entry.error || entry.message);
 
   return (
@@ -83,8 +85,8 @@ function HomeioLogRow({ entry }: { entry: RawLogEntry }) {
       </div>
       {expanded && hasDetail && (
         <div className={cn("ml-18 mt-1.5 rounded-lg p-2", SETTINGS_PANEL_INSET)}>
-          {entry.message && <p className="break-all font-mono text-2xs text-foreground/80">{zh(entry.message)}</p>}
-          {entry.error && <p className="mt-0.5 break-all font-mono text-2xs text-status-red">{zh(entry.error.message)}</p>}
+          {entry.message && <p className="break-all font-mono text-2xs text-foreground/80">{intl.text(entry.message)}</p>}
+          {entry.error && <p className="mt-0.5 break-all font-mono text-2xs text-status-red">{intl.text(entry.error.message)}</p>}
         </div>
       )}
     </div>
@@ -106,6 +108,7 @@ function RawLogRow({ entry }: { entry: RawLogEntry }) {
 const REFETCH_INTERVAL = 8_000;
 
 export function LogsSection() {
+  const intl = useI18n();
   const [activeSource, setActiveSource] = useState<LogSource>("homeio");
   const [autoScroll, setAutoScroll] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -142,7 +145,7 @@ export function LogsSection() {
   }
 
   const lastUpdated = dataUpdatedAt
-    ? new Date(dataUpdatedAt).toLocaleTimeString("zh-CN", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" })
+    ? new Date(dataUpdatedAt).toLocaleTimeString(intl.locale, { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" })
     : null;
 
   const sourceLabel =
@@ -163,13 +166,13 @@ export function LogsSection() {
               activeSource === tab.id ? "bg-primary/15 text-primary" : "text-muted-foreground hover:bg-background/60 hover:text-foreground",
             )}
           >
-            {zh(tab.label)}
+            {intl.text(tab.label)}
           </button>
         ))}
         <div className="ml-auto flex items-center gap-2">
           {lastUpdated && (
             <span className="text-2xs text-muted-foreground/60">
-              {zh(isFetching ? "Refreshing…" : `Updated ${lastUpdated}`)}
+              {intl.text(isFetching ? "Refreshing…" : `Updated ${lastUpdated}`)}
             </span>
           )}
           <button
@@ -177,14 +180,14 @@ export function LogsSection() {
             disabled={isFetching}
             className="rounded-lg px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
           >
-            刷新
+            {intl.t("ui.refresh")}
           </button>
           <button
             onClick={handleDownload}
             disabled={!data?.entries?.length}
             className="rounded-lg px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-background/60 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
           >
-            下载
+            {intl.t("ui.download")}
           </button>
         </div>
       </div>
@@ -196,9 +199,9 @@ export function LogsSection() {
           <span className="text-2xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{sourceLabel}</span>
           <div className="flex items-center gap-2">
             {data?.truncated ? (
-              <span className="text-2xs text-status-amber">显示最近 500 行</span>
+              <span className="text-2xs text-status-amber">{intl.t("ui.showingLast500Lines")}</span>
             ) : data?.entries?.length ? (
-              <span className="text-2xs text-muted-foreground/50">{data.entries.length} 条记录</span>
+              <span className="text-2xs text-muted-foreground/50">{data.entries.length} {intl.t("ui.entries")}</span>
             ) : null}
             <button
               onClick={() => setAutoScroll((p) => !p)}
@@ -207,7 +210,7 @@ export function LogsSection() {
                 autoScroll ? "bg-primary/10 text-primary" : "text-muted-foreground hover:text-foreground",
               )}
             >
-              {zh(autoScroll ? "Auto-scroll on" : "Auto-scroll off")}
+              {intl.text(autoScroll ? "Auto-scroll on" : "Auto-scroll off")}
             </button>
           </div>
         </div>
@@ -216,11 +219,11 @@ export function LogsSection() {
         <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto">
           {data?.error ? (
             <div className="flex h-full items-center justify-center">
-              <span className="px-6 text-center text-xs text-status-amber">{zh(data.error)}</span>
+              <span className="px-6 text-center text-xs text-status-amber">{intl.text(data.error)}</span>
             </div>
           ) : !data || data.entries.length === 0 ? (
             <div className="flex h-full items-center justify-center">
-              <span className="text-xs text-muted-foreground">{zh(isFetching ? "Loading logs…" : "No log entries found")}</span>
+              <span className="text-xs text-muted-foreground">{intl.text(isFetching ? "Loading logs…" : "No log entries found")}</span>
             </div>
           ) : activeSource === "homeio" ? (
             data.entries.map((entry, i) => <HomeioLogRow key={i} entry={entry} />)

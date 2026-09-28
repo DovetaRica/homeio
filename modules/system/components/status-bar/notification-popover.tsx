@@ -1,7 +1,10 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import {formatDistanceToNow} from "date-fns";
+import {zhCN, enUS} from "date-fns/locale";
+import { useI18n } from "@/i18n/use-i18n";
 import { PopoverShell } from "@/modules/system/components/status-bar/popover-shell";
 import type { Notification } from "@/modules/system/components/status-bar/types";
 
@@ -20,31 +23,32 @@ export function NotificationPopover({
   onClearAll,
   onViewAll,
 }: NotificationPopoverProps) {
+  const intl = useI18n();
   return (
     <PopoverShell onClose={onClose} className="w-80">
       <div className="flex items-center justify-between p-3 border-b border-glass-border">
         <span className="text-sm font-semibold text-foreground">
-          通知
+          {intl.t("ui.notifications")}
         </span>
         <div className="flex items-center gap-3">
           <button
             onClick={onMarkAllRead}
             className="text-xs text-primary hover:underline cursor-pointer"
           >
-            全部标为已读
+            {intl.t("ui.markAllRead")}
           </button>
           <button
             onClick={onClearAll}
             className="text-xs text-primary hover:underline cursor-pointer"
           >
-            全部清除
+            {intl.t("ui.clearAll")}
           </button>
         </div>
       </div>
       <div className="max-h-72 overflow-y-auto">
         {notifications.length === 0 ? (
           <div className="px-3 py-6 text-center text-xs text-muted-foreground">
-            当前没有提醒
+            {intl.t("ui.noAlertsRightNow")}
           </div>
         ) : (
           notifications.map((item) => (
@@ -60,14 +64,14 @@ export function NotificationPopover({
               <div className={`flex-1 min-w-0 ${item.read ? "ml-5" : ""}`}>
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-medium text-foreground truncate">
-                    {zh(item.title)}
+                    {intl.text(item.title)}
                   </span>
                   <span className="text-xs text-muted-foreground whitespace-nowrap">
-                    {item.time}
+                    {formatDistanceToNow(new Date(item.createdAt), {addSuffix: true, locale: intl.locale === "zh-CN" ? zhCN : enUS})}
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
-                  {zh(item.message)}
+                  {intl.text(item.message)}
                 </p>
               </div>
             </div>
@@ -76,7 +80,7 @@ export function NotificationPopover({
       </div>
       <div className="border-t border-glass-border px-3 py-2">
         <button onClick={onViewAll} className="text-xs text-primary hover:underline cursor-pointer">
-          查看全部通知
+          {intl.t("ui.viewAllNotifications")}
         </button>
       </div>
     </PopoverShell>

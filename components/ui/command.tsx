@@ -1,6 +1,7 @@
 'use client'
-import { zh } from "@/lib/i18n/zh";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import * as React from 'react'
 import { Command as CommandPrimitive } from 'cmdk'
 import { SearchIcon } from '@/components/icons/platform-icons'
@@ -43,11 +44,12 @@ function CommandDialog({
   className?: string
   showCloseButton?: boolean
 }) {
+  const intl = useI18n();
   return (
     <Dialog {...props}>
       <DialogHeader className="sr-only">
-        <DialogTitle>{zh(title)}</DialogTitle>
-        <DialogDescription>{zh(description)}</DialogDescription>
+        <DialogTitle>{intl.text(title)}</DialogTitle>
+        <DialogDescription>{intl.text(description)}</DialogDescription>
       </DialogHeader>
       <DialogContent
         className={cn('overflow-hidden p-0', className)}

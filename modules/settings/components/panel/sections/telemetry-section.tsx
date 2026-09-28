@@ -1,25 +1,27 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Toggle } from "@/modules/settings/components/panel/controls";
 import { useTelemetrySettings } from "@/modules/settings/hooks/useTelemetrySettings";
 import { TELEMETRY_STATS_PAGE_URL } from "@/lib/shared/contracts/telemetry";
 
 export function TelemetrySection() {
+  const intl = useI18n();
   const { settings, isLoading, isSaving, setEnabled } = useTelemetrySettings();
   const enabled = settings?.enabled ?? false;
 
   return (
     <div className="flex flex-col">
       <Toggle
-        label="匿名使用统计"
+        label={intl.t("ui.anonymousUsageStats")}
         description="Twice a day, send a random ID, the Homeio version, CPU architecture and OS. No IP address, usernames, file paths or app names are stored."
         enabled={enabled}
         onToggle={() => setEnabled(!enabled)}
         disabled={isLoading || isSaving || settings?.disabledByEnv}
         disabledReason={
-          zh(settings?.disabledByEnv
+          intl.text(settings?.disabledByEnv
             ? "Turned off by HOMEIO_TELEMETRY=false in the server environment."
             : undefined)
         }
@@ -30,7 +32,7 @@ export function TelemetrySection() {
         rel="noopener noreferrer"
         className="self-start text-xs text-primary hover:underline"
       >
-        在 homeio.app/stats 查看公开汇总统计
+        {intl.t("ui.seeThePublicTotalsOnHomeioAppStats")}
       </a>
     </div>
   );

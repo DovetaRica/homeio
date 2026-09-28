@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { useState } from "react";
 import {
   CRON_PRESETS,
@@ -84,10 +85,11 @@ function buildCron(form: TaskFormState): string {
 // ── Field helpers ────────────────────────────────────────────────────────────
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  const intl = useI18n();
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground/70">
-        {zh(label)}
+        {intl.text(label)}
       </label>
       {children}
     </div>
@@ -112,6 +114,7 @@ function TaskRow({
   onDelete: () => void;
   isRunning: boolean;
 }) {
+  const intl = useI18n();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -129,7 +132,7 @@ function TaskRow({
           <Clock className="size-3.5" />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium text-foreground">{zh(task.label)}</div>
+          <div className="truncate text-sm font-medium text-foreground">{intl.text(task.label)}</div>
           <div className="truncate text-[11px] text-muted-foreground/70">
             {TASK_TYPE_LABELS[task.taskType]} · <span className="font-mono">{task.cronExpression}</span>
           </div>
@@ -147,20 +150,20 @@ function TaskRow({
           {/* Info rows */}
           <div className="mb-3 divide-y divide-glass-border/40">
             <div className="flex items-center justify-between py-1.5">
-              <span className="text-[11px] text-muted-foreground">上次运行</span>
+              <span className="text-[11px] text-muted-foreground">{intl.t("ui.lastRun")}</span>
               <span className={cn("text-[11px] font-medium", task.lastRunStatus === "error" ? "text-status-red" : "text-foreground")}>
                 {formatRelative(task.lastRunAt)}
               </span>
             </div>
             <div className="flex items-center justify-between py-1.5">
-              <span className="text-[11px] text-muted-foreground">下次运行</span>
+              <span className="text-[11px] text-muted-foreground">{intl.t("ui.nextRun")}</span>
               <span className="text-[11px] font-medium text-foreground">
-                {zh(task.nextRunAt ? formatRelative(task.nextRunAt, true) : "—")}
+                {intl.text(task.nextRunAt ? formatRelative(task.nextRunAt, true) : "—")}
               </span>
             </div>
             {task.lastRunOutput && (
               <div className="py-1.5">
-                <span className="text-[11px] text-muted-foreground">输出</span>
+                <span className="text-[11px] text-muted-foreground">{intl.t("ui.output")}</span>
                 <div className={cn(
                   "mt-1 rounded-md border border-glass-border/50 bg-background/40 px-2.5 py-2 font-mono text-[11px] break-all",
                   task.lastRunStatus === "error" ? "text-status-red" : "text-foreground/80",
@@ -181,7 +184,7 @@ function TaskRow({
                 task.enabled ? "bg-status-green/10 text-status-green" : "bg-background/55 text-muted-foreground hover:text-foreground",
               )}
             >
-              {zh(task.enabled ? "Enabled" : "Disabled")}
+              {intl.text(task.enabled ? "Enabled" : "Disabled")}
             </button>
             <button
               type="button"
@@ -190,7 +193,7 @@ function TaskRow({
               className="inline-flex items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-2.5 py-1 text-[11px] text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Play className="size-3" />
-              {zh(isRunning ? "Running…" : "Run now")}
+              {intl.text(isRunning ? "Running…" : "Run now")}
             </button>
             <button
               type="button"
@@ -198,7 +201,7 @@ function TaskRow({
               className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] text-muted-foreground/50 transition-colors hover:bg-status-red/10 hover:text-status-red"
             >
               <Trash2 className="size-3" />
-              删除
+              {intl.t("ui.delete")}
             </button>
           </div>
         </div>
@@ -216,6 +219,7 @@ function CreateTaskForm({
   onSubmit: (input: CreateScheduledTaskInput) => Promise<void>;
   onCancel: () => void;
 }) {
+  const intl = useI18n();
   const [form, setForm] = useState<TaskFormState>(DEFAULT_FORM);
   const [submitting, setSubmitting] = useState(false);
   const { data: installedApps = [] } = useInstalledApps();
@@ -243,9 +247,9 @@ function CreateTaskForm({
 
   return (
     <form onSubmit={handleSubmit} className={cn(SETTINGS_PANEL_INSET, "flex flex-col gap-4 p-4")}>
-      <div className="text-sm font-semibold text-foreground">新建任务</div>
+      <div className="text-sm font-semibold text-foreground">{intl.t("ui.newTask")}</div>
 
-      <Field label="标签">
+      <Field label={intl.t("ui.label")}>
         <input
           required
           value={form.label}
@@ -255,7 +259,7 @@ function CreateTaskForm({
         />
       </Field>
 
-      <Field label="类型">
+      <Field label={intl.t("ui.type")}>
         <select
           value={form.taskType}
           onChange={(e) => patch({ taskType: e.target.value as ScheduledTaskType })}
@@ -268,7 +272,7 @@ function CreateTaskForm({
       </Field>
 
       {form.taskType === "shell" && (
-        <Field label="命令">
+        <Field label={intl.t("ui.command")}>
           <select
             value={form.shellCommand}
             onChange={(e) => patch({ shellCommand: e.target.value })}
@@ -282,24 +286,24 @@ function CreateTaskForm({
       )}
 
       {form.taskType === "script" && (
-        <Field label="Bash 脚本">
+        <Field label={intl.t("ui.bashScript")}>
           <textarea
             required
             rows={5}
             value={form.script}
             onChange={(e) => patch({ script: e.target.value })}
-            placeholder={zh("#!/bin/bash\n# your commands here")}
+            placeholder={intl.text("#!/bin/bash\n# your commands here")}
             spellCheck={false}
             className="w-full resize-y rounded-lg border border-glass-border bg-background/55 px-3 py-2 font-mono text-xs text-foreground placeholder:text-muted-foreground/40 focus:border-primary/40 focus:outline-none"
           />
           <p className="text-[11px] text-muted-foreground/60">
-            运行方式 <code className="font-mono">bash -c</code> · 超时为 2 分钟
+            {intl.t("ui.runsVia")} <code className="font-mono">bash -c</code> {intl.t("ui.2MinuteTimeout")}
           </p>
         </Field>
       )}
 
       {form.taskType === "restart-app" && (
-        <Field label="应用">
+        <Field label={intl.t("ui.apps")}>
           <select
             value={form.appId}
             onChange={(e) => {
@@ -308,7 +312,7 @@ function CreateTaskForm({
             }}
             className={selectCls}
           >
-            <option value="">选择应用…</option>
+            <option value="">{intl.t("ui.selectApp")}</option>
             {installedApps.map((app) => (
               <option key={app.id} value={app.id}>{app.name}</option>
             ))}
@@ -316,14 +320,14 @@ function CreateTaskForm({
         </Field>
       )}
 
-      <Field label="计划">
+      <Field label={intl.t("ui.schedule")}>
         <select
           value={form.cronPreset}
           onChange={(e) => patch({ cronPreset: e.target.value })}
           className={selectCls}
         >
           {CRON_PRESETS.map((p) => (
-            <option key={p.value} value={p.value}>{zh(p.label)}</option>
+            <option key={p.value} value={p.value}>{intl.text(p.label)}</option>
           ))}
         </select>
         {form.cronPreset === "custom" && (
@@ -343,14 +347,14 @@ function CreateTaskForm({
           onClick={onCancel}
           className="rounded-lg px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
         >
-          取消
+          {intl.t("ui.cancel")}
         </button>
         <button
           type="submit"
           disabled={submitting}
           className="rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {zh(submitting ? "Creating…" : "Create task")}
+          {intl.text(submitting ? "Creating…" : "Create task")}
         </button>
       </div>
     </form>
@@ -360,6 +364,7 @@ function CreateTaskForm({
 // ── Section ──────────────────────────────────────────────────────────────────
 
 export function ScheduledTasksSection() {
+  const intl = useI18n();
   const { tasks, createTask, updateTask, deleteTask, runNow } = useScheduledTasks();
   const [showForm, setShowForm] = useState(false);
   const [runningId, setRunningId] = useState<string | null>(null);
@@ -376,11 +381,11 @@ export function ScheduledTasksSection() {
 
   return (
     <div className="flex flex-col gap-1">
-      <SectionDivider title="任务" />
+      <SectionDivider title={intl.t("ui.tasks")} />
 
       {tasks.length === 0 && !showForm && (
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-6 text-center text-xs text-muted-foreground")}>
-          尚无计划任务。
+          {intl.t("ui.noScheduledTasksYet")}
         </div>
       )}
 
@@ -408,7 +413,7 @@ export function ScheduledTasksSection() {
           className="mt-1 flex items-center gap-1.5 rounded-lg px-2 py-2 text-xs text-muted-foreground/60 transition-colors hover:text-foreground/80"
         >
           <Plus className="size-3.5" />
-          添加任务
+          {intl.t("ui.addTask")}
         </button>
       )}
     </div>

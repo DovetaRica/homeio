@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import type { FileEntry } from "@/modules/files/components/file-manager-presenters";
 import { FILES_MENU_SHELL } from "@/modules/files/components/file-manager-surface";
 import { cn } from "@/lib/utils";
@@ -67,37 +68,38 @@ export function FileManagerContextMenu({
   onToggleStar: () => void;
   onUnzip: () => void;
 }) {
+  const intl = useI18n();
   return (
     <div
       className={cn("absolute z-[200] min-w-44 py-1.5", FILES_MENU_SHELL)}
       style={{ left: x, top: y }}
       onClick={(e) => e.stopPropagation()}
     >
-      <MenuItem icon={<FolderOpen className="size-3.5" />} label="打开" onClick={() => { onOpen(); onClose(); }} />
-      <MenuItem icon={<Info className="size-3.5" />} label="查看信息" onClick={() => { onGetInfo(); onClose(); }} />
-      <MenuItem icon={<Link2 className="size-3.5" />} label="复制路径" onClick={() => { onCopyPath(); onClose(); }} />
+      <MenuItem icon={<FolderOpen className="size-3.5" />} label={intl.t("ui.open")} onClick={() => { onOpen(); onClose(); }} />
+      <MenuItem icon={<Info className="size-3.5" />} label={intl.t("ui.getInfo")} onClick={() => { onGetInfo(); onClose(); }} />
+      <MenuItem icon={<Link2 className="size-3.5" />} label={intl.t("ui.copyPath")} onClick={() => { onCopyPath(); onClose(); }} />
       {!isTrashView && (
-        <MenuItem icon={<FileText className="size-3.5" />} label="重命名" onClick={() => { onRename(); onClose(); }} />
+        <MenuItem icon={<FileText className="size-3.5" />} label={intl.t("ui.rename")} onClick={() => { onRename(); onClose(); }} />
       )}
 
       <Divider />
 
-      <MenuItem icon={<Copy className="size-3.5" />} label="复制" onClick={() => { onCopy(); onClose(); }} />
-      <MenuItem icon={<Scissors className="size-3.5" />} label="剪切" onClick={() => { onCut(); onClose(); }} />
-      <MenuItem icon={<ClipboardPaste className="size-3.5" />} label="粘贴" disabled={pasteDisabled} onClick={() => { onPaste(); onClose(); }} />
+      <MenuItem icon={<Copy className="size-3.5" />} label={intl.t("ui.copy")} onClick={() => { onCopy(); onClose(); }} />
+      <MenuItem icon={<Scissors className="size-3.5" />} label={intl.t("ui.cut")} onClick={() => { onCut(); onClose(); }} />
+      <MenuItem icon={<ClipboardPaste className="size-3.5" />} label={intl.t("ui.paste")} disabled={pasteDisabled} onClick={() => { onPaste(); onClose(); }} />
 
       <Divider />
 
-      <MenuItem icon={<Star className="size-3.5 text-amber-400" />} label="切换星标" onClick={() => { onToggleStar(); onClose(); }} />
+      <MenuItem icon={<Star className="size-3.5 text-amber-400" />} label={intl.t("ui.toggleStar")} onClick={() => { onToggleStar(); onClose(); }} />
       <MenuItem
         icon={<Download className="size-3.5" />}
-        label={zh(entry.type === "folder" ? "Download as Zip" : "Download")}
+        label={intl.text(entry.type === "folder" ? "Download as Zip" : "Download")}
         onClick={() => { onDownload(); onClose(); }}
       />
       {entry.type === "file" && entry.ext === "zip" && !isTrashView && (
         <MenuItem
           icon={<FileArchive className="size-3.5" />}
-          label="解压到此处"
+          label={intl.t("ui.unzipHere")}
           onClick={() => { onUnzip(); onClose(); }}
         />
       )}
@@ -106,7 +108,7 @@ export function FileManagerContextMenu({
         <>
           <MenuItem
             icon={<Users className="size-3.5 text-sky-400" />}
-            label={zh(contextShareActive ? "Unshare Folder" : "Share Folder")}
+            label={intl.text(contextShareActive ? "Unshare Folder" : "Share Folder")}
             onClick={() => { onToggleShare(); onClose(); }}
           />
           <Divider />
@@ -115,11 +117,11 @@ export function FileManagerContextMenu({
 
       {isTrashView ? (
         <>
-          <MenuItem icon={<ArrowUp className="size-3.5" />} label="还原" onClick={() => { onRestore(); onClose(); }} />
-          <MenuItem icon={<Trash2 className="size-3.5 text-status-red" />} label="永久删除" danger onClick={() => { onDeletePermanently(); onClose(); }} />
+          <MenuItem icon={<ArrowUp className="size-3.5" />} label={intl.t("ui.restore")} onClick={() => { onRestore(); onClose(); }} />
+          <MenuItem icon={<Trash2 className="size-3.5 text-status-red" />} label={intl.t("ui.deletePermanently")} danger onClick={() => { onDeletePermanently(); onClose(); }} />
         </>
       ) : (
-        <MenuItem icon={<Trash2 className="size-3.5 text-status-red" />} label="移入回收站" danger onClick={() => { onMoveToTrash(); onClose(); }} />
+        <MenuItem icon={<Trash2 className="size-3.5 text-status-red" />} label={intl.t("ui.moveToTrash")} danger onClick={() => { onMoveToTrash(); onClose(); }} />
       )}
     </div>
   );
@@ -142,16 +144,17 @@ export function FileManagerBackgroundContextMenu({
   onNewFile: () => void;
   onPaste: () => void;
 }) {
+  const intl = useI18n();
   return (
     <div
       className={cn("absolute z-[200] min-w-44 py-1.5", FILES_MENU_SHELL)}
       style={{ left: x, top: y }}
       onClick={(e) => e.stopPropagation()}
     >
-      <MenuItem icon={<ClipboardPaste className="size-3.5" />} label="粘贴" disabled={pasteDisabled} onClick={() => { onPaste(); onClose(); }} />
+      <MenuItem icon={<ClipboardPaste className="size-3.5" />} label={intl.t("ui.paste")} disabled={pasteDisabled} onClick={() => { onPaste(); onClose(); }} />
       <Divider />
-      <MenuItem icon={<FolderOpen className="size-3.5" />} label="新建文件夹" onClick={() => { onNewFolder(); onClose(); }} />
-      <MenuItem icon={<FileText className="size-3.5" />} label="新建文件" onClick={() => { onNewFile(); onClose(); }} />
+      <MenuItem icon={<FolderOpen className="size-3.5" />} label={intl.t("ui.newFolder")} onClick={() => { onNewFolder(); onClose(); }} />
+      <MenuItem icon={<FileText className="size-3.5" />} label={intl.t("ui.newFile")} onClick={() => { onNewFile(); onClose(); }} />
     </div>
   );
 }
@@ -173,6 +176,7 @@ function MenuItem({
   label: string;
   onClick: () => void;
 }) {
+  const intl = useI18n();
   return (
     <button
       onClick={onClick}
@@ -187,7 +191,7 @@ function MenuItem({
       )}
     >
       {icon}
-      {zh(label)}
+      {intl.text(label)}
     </button>
   );
 }

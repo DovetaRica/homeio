@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { formatBytesCompact, formatUptimeShort } from "@/lib/client/format";
 import {
   calculateDockerTotals,
@@ -52,11 +53,12 @@ function MetricCard({
   sub: string;
   color: string;
 }) {
+  const intl = useI18n();
   return (
     <div className={cn(PANEL_INSET, "flex flex-col gap-2 px-4 py-3")}>
       <div className="flex items-center justify-between">
         <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground/50">
-          {zh(label)}
+          {intl.text(label)}
         </span>
         <div className={cn("flex size-6 items-center justify-center rounded-md border border-glass-border/60 bg-background/55", color)}>
           <Icon className="size-3" />
@@ -71,10 +73,11 @@ function MetricCard({
 // ── History bars ──────────────────────────────────────────────────────────────
 
 function HistoryBars({ values, color }: { values: number[]; color: string }) {
+  const intl = useI18n();
   return (
     <div className={cn(PANEL_INSET, "flex h-10 items-end gap-px px-2 py-1.5")}>
       {values.length === 0 ? (
-        <span className="m-auto text-xs text-muted-foreground/50">正在采集…</span>
+        <span className="m-auto text-xs text-muted-foreground/50">{intl.t("ui.collecting")}</span>
       ) : (
         values.map((v, i) => (
           <span
@@ -105,16 +108,17 @@ function ResourceHistoryCard({
   history: number[];
   rows: { label: string; value: string }[];
 }) {
+  const intl = useI18n();
   return (
     <div className={cn(PANEL_INSET, "flex flex-col gap-2 p-3")}>
       <div className="flex items-center gap-2">
         <Icon className={cn("size-3.5", iconColor)} />
-        <span className="text-xs font-semibold text-foreground">{zh(title)}</span>
+        <span className="text-xs font-semibold text-foreground">{intl.text(title)}</span>
       </div>
       <HistoryBars values={history} color={barColor} />
       <div className="divide-y divide-glass-border/40">
         {rows.map((r) => (
-          <InfoRow key={r.label} label={zh(r.label)} value={r.value} mono />
+          <InfoRow key={r.label} label={intl.text(r.label)} value={r.value} mono />
         ))}
       </div>
     </div>
@@ -124,9 +128,10 @@ function ResourceHistoryCard({
 // ── Info row ──────────────────────────────────────────────────────────────────
 
 function InfoRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
+  const intl = useI18n();
   return (
     <div className="flex items-center justify-between py-2">
-      <span className="text-xs text-muted-foreground">{zh(label)}</span>
+      <span className="text-xs text-muted-foreground">{intl.text(label)}</span>
       <span className={cn("text-xs font-medium text-foreground", mono && "font-mono")}>{value}</span>
     </div>
   );
@@ -135,6 +140,7 @@ function InfoRow({ label, value, mono }: { label: string; value: string; mono?: 
 // ── Monitor ───────────────────────────────────────────────────────────────────
 
 export function Monitor() {
+  const intl = useI18n();
   const [tab, setTab] = useState<MonitorTab>("processes");
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortKey>("cpu");
@@ -188,7 +194,7 @@ export function Monitor() {
                   : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
               )}
             >
-              {zh(t.label)}
+              {intl.text(t.label)}
             </button>
           ))}
         </div>
@@ -214,14 +220,14 @@ export function Monitor() {
           {/* Metric summary */}
           <div className="mb-3 grid grid-cols-5 gap-2">
             <MetricCard
-              label="处理器"
+              label={intl.t("ui.cpu")}
               icon={Cpu}
               value={`${systemMetrics?.cpu.normalizedPercent?.toFixed(1) ?? "--"}%`}
               sub="System average"
               color="text-primary"
             />
             <MetricCard
-              label="内存"
+              label={intl.t("ui.memory")}
               icon={MemoryStick}
               value={`${systemMetrics?.memory.usedPercent?.toFixed(1) ?? "--"}%`}
               sub={
@@ -232,7 +238,7 @@ export function Monitor() {
               color="text-chart-2"
             />
             <MetricCard
-              label="容器"
+              label={intl.t("ui.container")}
               icon={Container}
               value={`${dockerStats.length}`}
               sub={
@@ -262,7 +268,7 @@ export function Monitor() {
           <div className="mb-3 grid grid-cols-2 gap-2">
             <ResourceHistoryCard
               icon={Cpu}
-              title="处理器历史"
+              title={intl.t("ui.cpuHistory")}
               iconColor="text-primary"
               barColor="bg-primary/80"
               history={cpuHistory}
@@ -273,7 +279,7 @@ export function Monitor() {
             />
             <ResourceHistoryCard
               icon={MemoryStick}
-              title="内存压力"
+              title={intl.t("ui.memoryPressure")}
               iconColor="text-chart-2"
               barColor="bg-chart-2/80"
               history={memHistory}
@@ -286,7 +292,7 @@ export function Monitor() {
             <div className={cn(PANEL_INSET, "flex flex-col gap-2 p-3")}>
               <div className="flex items-center gap-2">
                 <HardDrive className="size-3.5 text-chart-4" />
-                <span className="text-xs font-semibold text-foreground">磁盘使用量</span>
+                <span className="text-xs font-semibold text-foreground">{intl.t("ui.diskUsage")}</span>
               </div>
               {systemMetrics?.storage ? (
                 <>
@@ -294,20 +300,20 @@ export function Monitor() {
                     <div className="h-full rounded-full bg-chart-4 transition-all duration-300" style={{ width: `${systemMetrics.storage.usedPercent.toFixed(1)}%` }} />
                   </div>
                   <div className="divide-y divide-glass-border/40">
-                    <InfoRow label="已用" value={formatBytesCompact(systemMetrics.storage.usedBytes)} mono />
-                    <InfoRow label="总计" value={formatBytesCompact(systemMetrics.storage.totalBytes)} mono />
-                    <InfoRow label="使用情况" value={`${systemMetrics.storage.usedPercent.toFixed(1)}%`} mono />
+                    <InfoRow label={intl.t("ui.used")} value={formatBytesCompact(systemMetrics.storage.usedBytes)} mono />
+                    <InfoRow label={intl.t("ui.total")} value={formatBytesCompact(systemMetrics.storage.totalBytes)} mono />
+                    <InfoRow label={intl.t("ui.usage")} value={`${systemMetrics.storage.usedPercent.toFixed(1)}%`} mono />
                   </div>
                 </>
               ) : (
-                <p className="py-4 text-center text-xs text-muted-foreground/60">存储数据不可用</p>
+                <p className="py-4 text-center text-xs text-muted-foreground/60">{intl.t("ui.storageDataUnavailable")}</p>
               )}
             </div>
 
             <div className={cn(PANEL_INSET, "flex flex-col gap-2 p-3")}>
               <div className="flex items-center gap-2">
                 <Gauge className="size-3.5 text-status-amber" />
-                <span className="text-xs font-semibold text-foreground">平均负载</span>
+                <span className="text-xs font-semibold text-foreground">{intl.t("ui.loadAverage")}</span>
               </div>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -317,7 +323,7 @@ export function Monitor() {
                 ].map(({ label, value }) => (
                   <div key={label} className={cn(PANEL_INSET, "flex flex-col items-center gap-1 py-3")}>
                     <span className="font-mono text-sm font-bold text-foreground">{value ?? "--"}</span>
-                    <span className="text-[11px] text-muted-foreground/60">{zh(label)}</span>
+                    <span className="text-[11px] text-muted-foreground/60">{intl.text(label)}</span>
                   </div>
                 ))}
               </div>
@@ -329,28 +335,28 @@ export function Monitor() {
             <div className="flex items-center justify-between border-b border-glass-border/50 px-4 py-2.5">
               <div className="flex items-center gap-2">
                 <Container className="size-3.5 text-primary" />
-                <span className="text-xs font-semibold text-foreground">Docker 容器</span>
+                <span className="text-xs font-semibold text-foreground">{intl.t("ui.dockerContainers")}</span>
                 {dockerConnected && daemonAvailable !== false && (
                   <span className="flex items-center gap-1 text-[11px] text-status-green">
                     <span className="size-1.5 rounded-full bg-status-green" />
-                    实时
+                    {intl.t("ui.live")}
                   </span>
                 )}
               </div>
               {daemonAvailable === false && (
                 <span className="flex items-center gap-1.5 text-xs text-status-amber">
                   <AlertTriangle className="size-3.5" />
-                  无法连接 Docker 服务
+                  {intl.t("ui.dockerDaemonUnreachable")}
                 </span>
               )}
               {daemonAvailable !== false && dockerStats.length === 0 && (
-                <span className="text-xs text-muted-foreground/60">没有正在运行的容器</span>
+                <span className="text-xs text-muted-foreground/60">{intl.t("ui.noContainersRunning")}</span>
               )}
             </div>
 
             <div className="grid grid-cols-[2.2fr_0.7fr_0.8fr_0.8fr_0.8fr_0.8fr] gap-2 border-b border-glass-border/40 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50">
-              <span>容器</span>
-              <span>状态</span>
+              <span>{intl.t("ui.container")}</span>
+              <span>{intl.t("ui.status")}</span>
               {(["cpu", "memory", "network", "disk"] as SortKey[]).map((key, i) => (
                 <button
                   key={key}
@@ -367,7 +373,7 @@ export function Monitor() {
 
             {filteredProcesses.length === 0 ? (
               <div className="px-4 py-8 text-center text-sm text-muted-foreground">
-                {zh(daemonAvailable === false
+                {intl.text(daemonAvailable === false
                   ? "Cannot connect to Docker daemon"
                   : query
                     ? "No containers match your search"
@@ -428,30 +434,30 @@ export function Monitor() {
                     </div>
                   </div>
                   <span className="rounded-md bg-status-green/12 px-2 py-0.5 text-xs font-medium text-status-green">
-                    已连接
+                    {intl.t("ui.connected")}
                   </span>
                 </div>
                 <div className="divide-y divide-glass-border/40 border-t border-glass-border/50 px-4">
-                  <InfoRow label="下载" value={`${systemMetrics.wifi.downloadMbps?.toFixed(1) ?? "--"} Mbps`} mono />
-                  <InfoRow label="上传" value={`${systemMetrics.wifi.uploadMbps?.toFixed(1) ?? "--"} Mbps`} mono />
-                  <InfoRow label="信号" value={`${systemMetrics.wifi.signalPercent ?? "--"}%`} mono />
+                  <InfoRow label={intl.t("ui.download")} value={`${systemMetrics.wifi.downloadMbps?.toFixed(1) ?? "--"} Mbps`} mono />
+                  <InfoRow label={intl.t("ui.upload")} value={`${systemMetrics.wifi.uploadMbps?.toFixed(1) ?? "--"} Mbps`} mono />
+                  <InfoRow label={intl.t("ui.signal")} value={`${systemMetrics.wifi.signalPercent ?? "--"}%`} mono />
                   <InfoRow label="TX Rate" value={`${systemMetrics.wifi.txRateMbps?.toFixed(0) ?? "--"} Mbps`} mono />
                 </div>
               </div>
             ) : (
               <div className={cn(PANEL_INSET, "flex flex-col items-center gap-2 py-8 text-center")}>
                 <Network className="size-7 text-muted-foreground/30" />
-                <p className="text-sm text-muted-foreground">没有活动网络连接</p>
+                <p className="text-sm text-muted-foreground">{intl.t("ui.noActiveNetworkConnection")}</p>
               </div>
             )}
 
             <div className={cn(PANEL_INSET, "overflow-hidden")}>
               <div className="flex items-center gap-2 border-b border-glass-border/50 px-4 py-3">
                 <Container className="size-3.5 text-primary" />
-                <span className="text-xs font-semibold text-foreground">容器网络活动</span>
+                <span className="text-xs font-semibold text-foreground">{intl.t("ui.containerNetworkActivity")}</span>
               </div>
               {daemonAvailable === false ? (
-                <p className="px-4 py-4 text-xs text-muted-foreground/60">无法连接 Docker 服务</p>
+                <p className="px-4 py-4 text-xs text-muted-foreground/60">{intl.t("ui.dockerDaemonUnreachable")}</p>
               ) : (
                 <div className="grid grid-cols-2 divide-x divide-glass-border/50">
                   {[
@@ -460,7 +466,7 @@ export function Monitor() {
                   ].map(({ label, value }) => (
                     <div key={label} className="flex flex-col items-center gap-1 py-4">
                       <span className="font-mono text-2xl font-bold tabular-nums text-foreground">{value}</span>
-                      <span className="text-[11px] text-muted-foreground/60">{zh(label)}</span>
+                      <span className="text-[11px] text-muted-foreground/60">{intl.text(label)}</span>
                     </div>
                   ))}
                 </div>
@@ -470,18 +476,18 @@ export function Monitor() {
             <div className={cn(PANEL_INSET, "overflow-hidden")}>
               <div className="flex items-center gap-2 border-b border-glass-border/50 px-4 py-3">
                 <Activity className="size-3.5 text-primary" />
-                <span className="text-xs font-semibold text-foreground">系统信息</span>
+                <span className="text-xs font-semibold text-foreground">{intl.t("ui.systemInfo")}</span>
               </div>
               <div className="divide-y divide-glass-border/40 px-4">
-                <InfoRow label="主机名" value={systemMetrics?.hostname ?? "--"} mono />
-                <InfoRow label="平台" value={systemMetrics?.platform ?? "--"} mono />
+                <InfoRow label={intl.t("ui.hostname")} value={systemMetrics?.hostname ?? "--"} mono />
+                <InfoRow label={intl.t("ui.platform")} value={systemMetrics?.platform ?? "--"} mono />
                 <InfoRow
-                  label="运行时间"
+                  label={intl.t("ui.uptime")}
                   value={systemMetrics?.uptimeSeconds ? formatUptimeShort(systemMetrics.uptimeSeconds) : "--"}
                   mono
                 />
                 <InfoRow
-                  label="容器"
+                  label={intl.t("ui.container")}
                   value={daemonAvailable === false ? "unavailable" : `${dockerStats.length} total`}
                   mono
                 />

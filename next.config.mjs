@@ -1,4 +1,5 @@
 import { createRequire } from "module";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const require = createRequire(import.meta.url);
 const pkg = require("./package.json");
@@ -43,4 +44,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default createNextIntlPlugin()(nextConfig);

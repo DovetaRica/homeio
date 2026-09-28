@@ -1,6 +1,7 @@
 'use client'
-import { zh } from "@/lib/i18n/zh";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { useMemo } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 
@@ -192,6 +193,7 @@ function FieldError({
 }: React.ComponentProps<'div'> & {
   errors?: Array<{ message?: string } | undefined>
 }) {
+  const intl = useI18n();
   const content = useMemo(() => {
     if (children) {
       return children
@@ -202,18 +204,18 @@ function FieldError({
     }
 
     if (errors.length === 1 && errors[0]?.message) {
-      return errors[0].message
+      return intl.text(errors[0].message)
     }
 
     return (
       <ul className="ml-4 flex list-disc flex-col gap-1">
         {errors.map(
           (error, index) =>
-            error?.message && <li key={index}>{zh(error.message)}</li>,
+            error?.message && <li key={index}>{intl.text(error.message)}</li>,
         )}
       </ul>
     )
-  }, [children, errors])
+  }, [children, errors, intl])
 
   if (!content) {
     return null

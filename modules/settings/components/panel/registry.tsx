@@ -128,8 +128,8 @@ export function buildSettingsSectionDefinitions(
             timezone: context.generalController.draft.timezone,
           }}
           capabilities={context.settingsBackend.capabilities.general}
-          languageValue="简体中文"
-          languageOptions={["简体中文"]}
+          languageValue={context.desktopPreferences.languageLabel}
+          languageOptions={context.desktopPreferences.languageOptions.map((option) => option.label)}
           onHostnameChange={context.generalController.setHostname}
           onTimezoneChange={context.generalController.setTimezone}
           onLanguageChange={(value) => {

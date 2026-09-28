@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   AlertTriangle,
   Check,
@@ -64,8 +65,9 @@ export function useControlAvailability(
 }
 
 export function ControlDisabledHint({ text }: { text?: string }) {
+  const intl = useI18n();
   if (!text) return null;
-  return <span className="text-xs text-status-amber">{zh(text)}</span>;
+  return <span className="text-xs text-status-amber">{intl.text(text)}</span>;
 }
 
 export function Toggle({
@@ -83,14 +85,15 @@ export function Toggle({
   disabled?: boolean;
   disabledReason?: string;
 }) {
+  const intl = useI18n();
   const availability = useControlAvailability(disabled, disabledReason);
 
   return (
     <div className="flex items-center justify-between py-3">
       <div className="flex flex-col gap-0.5">
-        <span className="text-sm text-foreground">{zh(label)}</span>
+        <span className="text-sm text-foreground">{intl.text(label)}</span>
         {description ? (
-          <span className="text-xs text-muted-foreground">{zh(description)}</span>
+          <span className="text-xs text-muted-foreground">{intl.text(description)}</span>
         ) : null}
         <ControlDisabledHint text={availability.disabledReason} />
       </div>
@@ -98,7 +101,7 @@ export function Toggle({
         type="button"
         role="switch"
         aria-checked={enabled}
-        aria-label={zh(`Toggle ${label}`)}
+        aria-label={intl.t('dynamic.toggleLabel', {value0: intl.text(label)})}
         onClick={availability.disabled ? undefined : onToggle}
         disabled={availability.disabled}
         className={`relative inline-flex h-5 w-10 shrink-0 items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 ${
@@ -140,6 +143,7 @@ export function SettingsInput({
   disabled?: boolean;
   disabledReason?: string;
 }) {
+  const intl = useI18n();
   const [showPassword, setShowPassword] = useState(false);
   const [copied, setCopied] = useState(false);
   const isPassword = type === "password";
@@ -149,10 +153,10 @@ export function SettingsInput({
   return (
     <div className="flex flex-col gap-1.5 py-2">
       <label className="text-xs font-medium text-muted-foreground">
-        {zh(label)}
+        {intl.text(label)}
       </label>
       {description ? (
-        <span className="text-xs text-muted-foreground/70">{zh(description)}</span>
+        <span className="text-xs text-muted-foreground/70">{intl.text(description)}</span>
       ) : null}
       <ControlDisabledHint text={availability.disabledReason} />
       <div className="flex items-center gap-2">
@@ -160,7 +164,7 @@ export function SettingsInput({
           <input
             type={isPassword && !showPassword ? "password" : "text"}
             value={value}
-            placeholder={zh(placeholder)}
+            placeholder={intl.text(placeholder)}
             readOnly={isReadOnly}
             disabled={availability.disabled}
             onChange={(event) => {
@@ -230,15 +234,16 @@ export function SettingsSelect({
   disabled?: boolean;
   disabledReason?: string;
 }) {
+  const intl = useI18n();
   const availability = useControlAvailability(disabled, disabledReason);
 
   return (
     <div className="flex flex-col gap-1.5 py-2">
       <label className="text-xs font-medium text-muted-foreground">
-        {zh(label)}
+        {intl.text(label)}
       </label>
       {description ? (
-        <span className="text-xs text-muted-foreground/70">{zh(description)}</span>
+        <span className="text-xs text-muted-foreground/70">{intl.text(description)}</span>
       ) : null}
       <ControlDisabledHint text={availability.disabledReason} />
       <select
@@ -254,7 +259,7 @@ export function SettingsSelect({
       >
         {options.map((option) => (
           <option key={option} value={option}>
-            {zh(option)}
+            {intl.text(option)}
           </option>
         ))}
       </select>
@@ -263,10 +268,11 @@ export function SettingsSelect({
 }
 
 export function SectionDivider({ title }: { title: string }) {
+  const intl = useI18n();
   return (
     <div className="flex items-center gap-3 pt-5 pb-2">
       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
-        {zh(title)}
+        {intl.text(title)}
       </span>
       <div className="flex-1 h-px bg-glass-border" />
     </div>
@@ -280,6 +286,7 @@ export function InfoBanner({
   text: string;
   variant?: "info" | "warning";
 }) {
+  const intl = useI18n();
   return (
     <div
       className={`flex items-start gap-2.5 rounded-xl p-3 text-xs ${
@@ -293,7 +300,7 @@ export function InfoBanner({
       ) : (
         <Info className="size-4 shrink-0 mt-0.5" />
       )}
-      <span className="leading-relaxed">{zh(text)}</span>
+      <span className="leading-relaxed">{intl.text(text)}</span>
     </div>
   );
 }
@@ -309,12 +316,13 @@ export function StorageBar({
   pct: number;
   color: string;
 }) {
+  const intl = useI18n();
   const safePct = Number.isFinite(pct) ? Math.max(0, Math.min(pct, 100)) : 0;
 
   return (
     <div className="py-2">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-xs text-foreground">{zh(label)}</span>
+        <span className="text-xs text-foreground">{intl.text(label)}</span>
         <span className="text-xs text-muted-foreground">{detail}</span>
       </div>
       <div className="h-2 overflow-hidden rounded-[var(--radius)] bg-background/65">

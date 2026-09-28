@@ -1,13 +1,13 @@
-export function formatTime(date: Date) {
-  return date.toLocaleTimeString("zh-CN", {
+export function formatTime(date: Date, locale = "en") {
+  return date.toLocaleTimeString(locale, {
     hour: "numeric",
     minute: "2-digit",
     hour12: false,
   });
 }
 
-export function formatDate(date: Date) {
-  return date.toLocaleDateString("zh-CN", {
+export function formatDate(date: Date, locale = "en") {
+  return date.toLocaleDateString(locale, {
     weekday: "short",
     month: "short",
     day: "numeric",

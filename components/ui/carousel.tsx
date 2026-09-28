@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import useEmblaCarousel, {
     type UseEmblaCarouselType,
 } from "embla-carousel-react";
@@ -177,6 +179,7 @@ function CarouselPrevious({
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
+  const intl = useI18n();
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
   return (
@@ -196,7 +199,7 @@ function CarouselPrevious({
       {...props}
     >
       <ArrowLeft />
-      <span className="sr-only">上一张</span>
+      <span className="sr-only">{intl.t("ui.previousSlide")}</span>
     </Button>
   );
 }
@@ -207,6 +210,7 @@ function CarouselNext({
   size = "icon",
   ...props
 }: React.ComponentProps<typeof Button>) {
+  const intl = useI18n();
   const { orientation, scrollNext, canScrollNext } = useCarousel();
 
   return (
@@ -226,7 +230,7 @@ function CarouselNext({
       {...props}
     >
       <ArrowRight />
-      <span className="sr-only">下一张</span>
+      <span className="sr-only">{intl.t("ui.nextSlide")}</span>
     </Button>
   );
 }

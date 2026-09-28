@@ -1,8 +1,9 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
-import { zhCN } from "date-fns/locale";
+
+import { useI18n } from "@/i18n/use-i18n";
+import { zhCN, enUS } from "date-fns/locale";
 import { Calendar } from "@/components/ui/calendar";
 import { PopoverShell } from "@/modules/system/components/status-bar/popover-shell";
 
@@ -17,6 +18,7 @@ export function DatePickerPopover({
   selectedDate,
   onSelectDate,
 }: DatePickerPopoverProps) {
+  const intl = useI18n();
   const today = new Date();
   const isToday =
     selectedDate.getFullYear() === today.getFullYear() &&
@@ -32,10 +34,10 @@ export function DatePickerPopover({
         <div className="mb-3 flex items-start justify-between gap-3 border-b border-border/50 pb-3">
           <div>
             <p className="text-2xs font-semibold uppercase tracking-[0.18em] text-muted-foreground/80">
-              日历
+              {intl.t("ui.calendar")}
             </p>
             <p className="mt-1 text-sm font-medium text-foreground">
-              {selectedDate.toLocaleDateString("zh-CN", {
+              {selectedDate.toLocaleDateString(intl.locale, {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
@@ -43,12 +45,12 @@ export function DatePickerPopover({
             </p>
           </div>
           <span className="rounded-full border border-border/60 bg-background/65 px-2.5 py-1 text-2xs font-semibold uppercase tracking-[0.16em] text-muted-foreground/85">
-            {zh(isToday ? "Today" : selectedDate.toLocaleDateString("zh-CN", { year: "numeric" }))}
+            {intl.text(isToday ? "Today" : selectedDate.toLocaleDateString(intl.locale, { year: "numeric" }))}
           </span>
         </div>
         <Calendar
           mode="single"
-          locale={zhCN}
+          locale={intl.locale === "zh-CN" ? zhCN : enUS}
           navLayout="around"
           selected={selectedDate}
           onSelect={(date) => {
@@ -57,7 +59,7 @@ export function DatePickerPopover({
           className="w-full bg-transparent p-0"
           formatters={{
             formatWeekdayName: (date) =>
-              date.toLocaleDateString("zh-CN", { weekday: "short" }).replace("周", ""),
+              date.toLocaleDateString(intl.locale, { weekday: "short" }).replace("周", ""),
           }}
           classNames={{
             root: "w-full",

@@ -1,7 +1,9 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import {LanguageSelect} from "@/i18n/language-select";
+import { useI18n } from "@/i18n/use-i18n";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -33,6 +35,7 @@ const setupSteps = [
 ] as const;
 
 export function RegisterForm() {
+  const intl = useI18n();
   const router = useRouter();
   const [step, setStep] = useState<WizardStep>("welcome");
   const [username, setUsername] = useState("");
@@ -73,7 +76,7 @@ export function RegisterForm() {
       .then(() => { if (!cancelled) setStep("done"); })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setError(zh(err instanceof Error ? err.message : "Registration failed"));
+          setError(err instanceof Error ? err.message : "Registration failed");
           setStep("account");
         }
       });
@@ -88,10 +91,10 @@ export function RegisterForm() {
   function handleAccountSubmit(e: FormEvent) {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setError(zh("Passwords do not match"));
+      setError(intl.t("ui.passwordsDoNotMatch"));
       return;
     }
-    setError(zh(null));
+    setError(null);
     credentials.current = { username, password, confirmPassword };
     setStep("setup");
   }
@@ -132,15 +135,15 @@ export function RegisterForm() {
               />
             </div>
             <div className="system-pill-surface mt-2 px-3 py-1 text-[10px] tracking-[0.22em] text-foreground/54 uppercase">
-              家庭服务器
+              {intl.t("ui.homeServer")}
             </div>
           </div>
 
           <p className="text-[1.6rem] font-medium leading-[1.2] tracking-[-0.03em] text-foreground">
-            欢迎使用<br />家庭服务器
+            {intl.t("ui.welcomeToYour")}<br />{intl.t("ui.homeServer")}
           </p>
           <p className="mx-auto mb-7 mt-2.5 max-w-[22rem] text-[12px] leading-relaxed text-muted-foreground/72">
-            快速设置私有家庭服务器，在一处访问文件、应用和设置。
+            {intl.t("ui.setUpYourPrivateHomeServerInMinutesAllYourFilesApps")}
           </p>
 
           <button
@@ -148,7 +151,7 @@ export function RegisterForm() {
             onClick={() => setStep("account")}
             className="system-primary-action inline-flex cursor-pointer items-center gap-2 rounded-full px-8 py-2.5 text-sm font-medium transition-all hover:brightness-110"
           >
-            开始使用
+            {intl.t("ui.getStarted")}
             <ArrowRight className="size-4" />
           </button>
         </div>
@@ -167,15 +170,15 @@ export function RegisterForm() {
               />
             </div>
             <div className="system-pill-surface mt-2 px-3 py-1 text-[10px] tracking-[0.22em] text-foreground/54 uppercase">
-              家庭服务器
+              {intl.t("ui.homeServer")}
             </div>
           </div>
 
           <p className="text-[1.48rem] font-medium tracking-[-0.03em] text-foreground">
-            创建管理员账户
+            {intl.t("ui.createAdminAccount")}
           </p>
           <p className="mb-5 mt-1 text-[11px] tracking-[0.18em] text-muted-foreground/78 uppercase">
-            配置本地访问
+            {intl.t("ui.configureLocalAccess")}
           </p>
 
           <form className="space-y-3 text-left" onSubmit={handleAccountSubmit}>
@@ -193,7 +196,7 @@ export function RegisterForm() {
                     autoComplete="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="管理员用户名"
+                    placeholder={intl.t("ui.adminUsername")}
                     className="h-10 w-full border-0 bg-transparent px-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground/52"
                     required
                     autoFocus
@@ -211,14 +214,14 @@ export function RegisterForm() {
                     autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="新密码"
+                    placeholder={intl.t("ui.newPassword")}
                     className="h-10 w-full border-0 bg-transparent px-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground/52"
                     required
                   />
                   <button
                     type="button"
                     className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-[var(--system-radius-icon)] text-muted-foreground transition-colors hover:bg-white/[0.08] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                    aria-label={zh(isPasswordVisible ? "Hide password" : "Show password")}
+                    aria-label={intl.text(isPasswordVisible ? "Hide password" : "Show password")}
                     onClick={() => setIsPasswordVisible((v) => !v)}
                   >
                     {isPasswordVisible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -236,14 +239,14 @@ export function RegisterForm() {
                     autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="确认新密码"
+                    placeholder={intl.t("ui.confirmNewPassword")}
                     className="h-10 w-full border-0 bg-transparent px-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground/52"
                     required
                   />
                   <button
                     type="button"
                     className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-[var(--system-radius-icon)] text-muted-foreground transition-colors hover:bg-white/[0.08] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                    aria-label={zh(isConfirmPasswordVisible ? "Hide confirm password" : "Show confirm password")}
+                    aria-label={intl.text(isConfirmPasswordVisible ? "Hide confirm password" : "Show confirm password")}
                     onClick={() => setIsConfirmPasswordVisible((v) => !v)}
                   >
                     {isConfirmPasswordVisible ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -256,7 +259,7 @@ export function RegisterForm() {
               <div className="flex justify-center">
                 <div className="system-error-capsule">
                   <span className="size-1.5 shrink-0 rounded-full bg-status-red shadow-[0_0_10px_rgba(239,68,68,0.45)]" />
-                  <p className="text-xs tracking-[0.01em] text-status-red/92">{zh(error)}</p>
+                  <p className="text-xs tracking-[0.01em] text-status-red/92">{intl.text(error)}</p>
                 </div>
               </div>
             ) : null}
@@ -271,16 +274,16 @@ export function RegisterForm() {
               }
               className="system-primary-action w-full cursor-pointer rounded-full py-2.5 text-sm font-medium transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              继续
+              {intl.t("ui.continue")}
             </button>
           </form>
 
           <button
             type="button"
-            onClick={() => { setError(zh(null)); setStep("welcome"); }}
+            onClick={() => { setError(null); setStep("welcome"); }}
             className="mt-4 text-xs text-muted-foreground/50 transition-colors hover:text-muted-foreground/80"
           >
-            ← 返回
+            {intl.t("ui.back2")}
           </button>
         </div>
       )}
@@ -298,15 +301,15 @@ export function RegisterForm() {
               />
             </div>
             <div className="system-pill-surface mt-2 px-3 py-1 text-[10px] tracking-[0.22em] text-foreground/54 uppercase">
-              家庭服务器
+              {intl.t("ui.homeServer")}
             </div>
           </div>
 
           <p className="text-[1.4rem] font-medium tracking-[-0.03em] text-foreground">
-            {zh(currentSetupStep?.title)}
+            {intl.text(currentSetupStep?.title)}
           </p>
           <p className="mb-4 mt-1 text-[11px] tracking-[0.18em] text-muted-foreground/80 uppercase">
-            正在初始化
+            {intl.t("ui.setupInProgress")}
           </p>
 
           <div className="system-soft-surface px-2.5 py-2">
@@ -324,16 +327,16 @@ export function RegisterForm() {
               </div>
 
               <p className="text-sm font-medium text-foreground">
-                {zh(currentSetupStep?.description)}
+                {intl.text(currentSetupStep?.description)}
               </p>
               <p className="mt-2 text-xs leading-5 text-muted-foreground/92">
-                首次启动时后台服务需要初始化，可能稍慢。
+                {intl.t("ui.firstLaunchMayTakeLongerWhileBackgroundServicesFinishInitialization")}
               </p>
 
               <div className="mt-3.5 flex items-center gap-3">
                 <span className="inline-flex size-8 shrink-0 animate-spin rounded-full border border-white/18 border-t-white" />
                 <span className="text-xs tracking-[0.18em] text-foreground/62 uppercase">
-                  处理中
+                  {intl.t("ui.working")}
                 </span>
               </div>
             </div>
@@ -354,15 +357,15 @@ export function RegisterForm() {
               />
             </div>
             <div className="system-pill-surface mt-2 px-3 py-1 text-[10px] tracking-[0.22em] text-foreground/54 uppercase">
-              家庭服务器
+              {intl.t("ui.homeServer")}
             </div>
           </div>
 
           <p className="text-[1.6rem] font-medium leading-[1.2] tracking-[-0.03em] text-foreground">
-            一切就绪
+            {intl.t("ui.youAposReAllSet")}
           </p>
           <p className="mx-auto mb-7 mt-2.5 max-w-[22rem] text-[12px] leading-relaxed text-muted-foreground/72">
-            家庭服务器已就绪，登录即可进入桌面。
+            {intl.t("ui.yourHomeServerIsReadySignInToAccessYourDashboard")}
           </p>
 
           <button
@@ -373,11 +376,12 @@ export function RegisterForm() {
             }}
             className="system-primary-action inline-flex cursor-pointer items-center gap-2 rounded-full px-8 py-2.5 text-sm font-medium transition-all hover:brightness-110"
           >
-            打开应用页面
+            {intl.t("ui.openDashboard")}
             <ArrowRight className="size-4" />
           </button>
         </div>
       )}
+      <LanguageSelect className="mt-5 flex justify-center" />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { useState } from "react";
 import { ArrowLeft, Check, Copy, Download, Lock, Shield } from "@/components/icons/platform-icons";
 import { cn } from "@/lib/utils";
@@ -92,6 +93,7 @@ function downloadBackupCodes(codes: string[]) {
 }
 
 export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps) {
+  const intl = useI18n();
   const [step, setStep] = useState<WizardStep>("idle");
   const [setupData, setSetupData] = useState<{
     secret: string;
@@ -186,7 +188,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
 
   return (
     <>
-      <SectionDivider title="双重身份验证" />
+      <SectionDivider title={intl.t("ui.twoFactorAuthentication")} />
 
       {step === "idle" ? (
         <div className={cn(SETTINGS_PANEL_INSET, "flex flex-col gap-3 px-4 py-3")}>
@@ -198,12 +200,12 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-medium text-foreground">
-                    身份验证器
+                    {intl.t("ui.authenticatorApp")}
                   </span>
                   <StatusBadge enabled={status.enabled} />
                 </div>
                 <p className="mt-0.5 text-[11px] text-muted-foreground/70">
-                  {zh(status.enabled
+                  {intl.text(status.enabled
                     ? `Enabled on ${formatEnrolledAt(status.enrolledAt)}. A 6-digit code is required at sign-in.`
                     : "Add a second step to sign-in using an authenticator app (Google Authenticator, 1Password, Aegis, …).")}
                 </p>
@@ -218,7 +220,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                   disabled={isDemoMode}
                   className="rounded-lg border border-status-red/40 px-3 py-1.5 text-xs font-medium text-status-red transition-colors hover:bg-status-red/10 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {zh(showDisable ? "Cancel" : "Disable")}
+                  {intl.text(showDisable ? "Cancel" : "Disable")}
                 </button>
               ) : (
                 <button
@@ -227,7 +229,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                   disabled={isDemoMode || startSetup.isPending}
                   className="rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {zh(startSetup.isPending ? "Preparing…" : "Enable")}
+                  {intl.text(startSetup.isPending ? "Preparing…" : "Enable")}
                 </button>
               )}
             </div>
@@ -243,7 +245,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                 htmlFor="two-factor-disable-code"
                 className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground/80"
               >
-                使用当前验证码或备用验证码确认
+                {intl.t("ui.confirmWithCurrentCodeOrBackupCode")}
               </label>
               <input
                 id="two-factor-disable-code"
@@ -264,10 +266,10 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                 disabled={disable.isPending || !disableCode.trim()}
                 className="self-end rounded-lg bg-status-red/85 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-status-red disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {zh(disable.isPending ? "Disabling…" : "Disable 2FA")}
+                {intl.text(disable.isPending ? "Disabling…" : "Disable 2FA")}
               </button>
               <p className="text-[11px] text-muted-foreground/70">
-                此操作会退出登录，需要重新登录。
+                {intl.t("ui.youAposLlBeSignedOutAndNeedToSignInAgain")}
               </p>
             </div>
           ) : null}
@@ -282,7 +284,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             className="self-start inline-flex items-center gap-1 text-[11px] text-muted-foreground/80 hover:text-foreground"
           >
             <ArrowLeft className="size-3" />
-            取消
+            {intl.t("ui.cancel")}
           </button>
 
           <div className="flex flex-col gap-3 md:flex-row md:items-start">
@@ -295,10 +297,10 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             <div className="flex flex-col gap-3">
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  使用身份验证器扫描
+                  {intl.t("ui.scanWithYourAuthenticatorApp")}
                 </p>
                 <p className="mt-1 text-[11px] text-muted-foreground/80">
-                  在身份验证器中添加账户并扫描二维码；也可以手动输入下方密钥。
+                  {intl.t("ui.addANewAccountAndScanThisQrDonAposTHave")}
                 </p>
               </div>
               <div className="flex items-center gap-2">
@@ -309,7 +311,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                   type="button"
                   onClick={copySecret}
                   className="flex size-8 items-center justify-center rounded-lg border border-glass-border bg-background/55 text-muted-foreground transition-colors hover:bg-background/70 hover:text-foreground"
-                  aria-label="复制密钥"
+                  aria-label={intl.t("ui.copySecret")}
                 >
                   {secretCopied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
                 </button>
@@ -319,7 +321,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
                 onClick={() => setStep("verify")}
                 className="self-start rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25"
               >
-                继续
+                {intl.t("ui.continue")}
               </button>
             </div>
           </div>
@@ -334,14 +336,14 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             className="self-start inline-flex items-center gap-1 text-[11px] text-muted-foreground/80 hover:text-foreground"
           >
             <ArrowLeft className="size-3" />
-            返回
+            {intl.t("ui.back")}
           </button>
           <div>
             <p className="text-sm font-medium text-foreground">
-              请输入六位验证码
+              {intl.t("ui.enterThe6DigitCode")}
             </p>
             <p className="mt-1 text-[11px] text-muted-foreground/80">
-              输入身份验证器中的当前验证码以确认。
+              {intl.t("ui.typeTheCurrentCodeFromYourAuthenticatorAppToConfirm")}
             </p>
           </div>
           <input
@@ -369,7 +371,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             disabled={verify.isPending || !verifyCode.trim()}
             className="self-end rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {zh(verify.isPending ? "Verifying…" : "Verify and enable")}
+            {intl.text(verify.isPending ? "Verifying…" : "Verify and enable")}
           </button>
         </div>
       ) : null}
@@ -382,10 +384,10 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             </div>
             <div>
               <p className="text-sm font-medium text-foreground">
-                保存备用验证码
+                {intl.t("ui.saveYourBackupCodes")}
               </p>
               <p className="mt-1 text-[11px] text-muted-foreground/80">
-                丢失身份验证器后，只能使用这十个备用验证码登录。每个只能使用一次，之后无法再次显示，请妥善保存。
+                {intl.t("ui.theseTenCodesAreTheOnlyWayToSignInIfYou")}
               </p>
             </div>
           </div>
@@ -405,7 +407,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
               className="inline-flex items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-background/70"
             >
               <Copy className="size-3" />
-              全部复制
+              {intl.t("ui.copyAll")}
             </button>
             <button
               type="button"
@@ -413,7 +415,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
               className="inline-flex items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-background/70"
             >
               <Download className="size-3" />
-              下载文本
+              {intl.t("ui.downloadTxt")}
             </button>
           </div>
 
@@ -424,7 +426,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
               onChange={(event) => setAcknowledgedBackup(event.target.checked)}
               className="mt-0.5 size-3.5 accent-primary"
             />
-            <span>我已将备用验证码妥善保存。</span>
+            <span>{intl.t("ui.iSavedTheseCodesSomewhereSafe")}</span>
           </label>
 
           <button
@@ -433,7 +435,7 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
             disabled={!acknowledgedBackup}
             className="self-end rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            完成
+            {intl.t("ui.done")}
           </button>
         </div>
       ) : null}
@@ -442,16 +444,17 @@ export function TwoFactorCard({ status, isDemoMode = false }: TwoFactorCardProps
 }
 
 function StatusBadge({ enabled }: { enabled: boolean }) {
+  const intl = useI18n();
   if (enabled) {
     return (
       <span className="rounded-md bg-status-green/15 px-1.5 py-0.5 text-[11px] font-medium text-status-green">
-        已启用
+        {intl.t("ui.enabled")}
       </span>
     );
   }
   return (
     <span className="rounded-md bg-muted/40 px-1.5 py-0.5 text-[11px] font-medium text-muted-foreground">
-      已禁用
+      {intl.t("ui.disabled")}
     </span>
   );
 }

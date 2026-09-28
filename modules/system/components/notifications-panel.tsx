@@ -1,11 +1,13 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Bell, Trash2, CheckCircle2 } from "@/components/icons/platform-icons";
 import { useNotifications } from "@/modules/system/hooks/useNotifications";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+import {zhCN, enUS} from "date-fns/locale";
 import { useState } from "react";
 
 const KIND_DOT: Record<string, string> = {
@@ -17,6 +19,7 @@ const KIND_DOT: Record<string, string> = {
 type Filter = "all" | "unread";
 
 export function NotificationsPanel() {
+  const intl = useI18n();
   const { notifications, unreadCount, markAllRead, clearAll } = useNotifications();
   const [filter, setFilter] = useState<Filter>("all");
 
@@ -29,7 +32,7 @@ export function NotificationsPanel() {
         <div className="flex items-center gap-1 rounded-lg border border-glass-border/60 bg-background/40 p-0.5">
           {(["all", "unread"] as Filter[]).map((f) => (
             <button
-              key={f}
+              key={intl.text(f)}
               onClick={() => setFilter(f)}
               className={cn(
                 "rounded-md px-3 py-1 text-xs font-medium capitalize transition-colors",
@@ -52,20 +55,20 @@ export function NotificationsPanel() {
           <button
             onClick={() => markAllRead()}
             disabled={unreadCount === 0}
-            title="全部标为已读"
+            title={intl.t("ui.markAllRead")}
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <CheckCircle2 className="size-3.5" />
-            全部标为已读
+            {intl.t("ui.markAllRead")}
           </button>
           <button
             onClick={() => clearAll()}
             disabled={notifications.length === 0}
-            title="全部清除"
+            title={intl.t("ui.clearAll")}
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-status-red disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Trash2 className="size-3.5" />
-            全部清除
+            {intl.t("ui.clearAll")}
           </button>
         </div>
       </div>
@@ -76,7 +79,7 @@ export function NotificationsPanel() {
           <div className="flex flex-col items-center justify-center gap-3 py-20 text-center text-muted-foreground">
             <Bell className="size-10 opacity-20" />
             <p className="text-sm">
-              {zh(filter === "unread" ? "No unread notifications" : "No notifications")}
+              {intl.text(filter === "unread" ? "No unread notifications" : "No notifications")}
             </p>
           </div>
         ) : (
@@ -98,13 +101,13 @@ export function NotificationsPanel() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-3">
                     <span className={cn("text-sm font-medium", n.read ? "text-muted-foreground" : "text-foreground")}>
-                      {zh(n.title)}
+                      {intl.text(n.title)}
                     </span>
                     <span className="shrink-0 text-xs text-muted-foreground/60">
-                      {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true })}
+                      {formatDistanceToNow(new Date(n.createdAt), { addSuffix: true, locale: intl.locale === "zh-CN" ? zhCN : enUS })}
                     </span>
                   </div>
-                  <p className="mt-0.5 text-sm text-muted-foreground">{n.body}</p>
+                  <p className="mt-0.5 text-sm text-muted-foreground">{intl.text(n.body)}</p>
                 </div>
               </li>
             ))}

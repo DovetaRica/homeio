@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import Image from "next/image";
 import { FullScreenShell } from "@/modules/shell/components/full-screen-shell";
 import {
@@ -26,6 +27,7 @@ export function LockScreen({
   username,
   wallpaper = "/images/1.jpg",
 }: LockScreenProps) {
+  const intl = useI18n();
   const displayUsername = username.replace(
     /\b([a-z])/gi,
     (letter) => letter.toUpperCase(),
@@ -40,7 +42,7 @@ export function LockScreen({
     event.preventDefault();
     if (!password.trim()) return;
 
-    setError(zh(null));
+    setError(null);
     setIsUnlocking(true);
 
     try {
@@ -48,7 +50,7 @@ export function LockScreen({
       setPassword("");
     } catch (unlockError) {
       setError(
-        zh(unlockError instanceof Error ? unlockError.message : "Unlock failed"),
+        intl.text(unlockError instanceof Error ? unlockError.message : "Unlock failed"),
       );
     } finally {
       setIsUnlocking(false);
@@ -72,8 +74,8 @@ export function LockScreen({
         topRight={
           <button
             className="system-dock-surface flex size-10 cursor-pointer items-center justify-center text-foreground/68 transition-colors hover:border-white/10 hover:bg-black/26 hover:text-foreground disabled:opacity-60"
-            aria-label="退出登录"
-            title="退出登录"
+            aria-label={intl.t("ui.logout")}
+            title={intl.t("ui.logout")}
             onClick={handleLogout}
             disabled={isLoggingOut}
           >
@@ -93,7 +95,7 @@ export function LockScreen({
                 />
               </div>
               <div className="system-pill-surface mt-2.5 px-3 py-1 text-[10px] tracking-[0.24em] text-foreground/58 uppercase">
-                家庭服务器
+                {intl.t("ui.homeServer")}
               </div>
             </div>
 
@@ -101,7 +103,7 @@ export function LockScreen({
               {displayUsername}
             </p>
             <p className="mb-5 mt-1 text-[11px] tracking-[0.18em] text-muted-foreground/78 uppercase">
-              会话已锁定
+              {intl.t("ui.lockedSession")}
             </p>
 
             <form className="space-y-3" onSubmit={handleUnlock}>
@@ -115,7 +117,7 @@ export function LockScreen({
                     type={isPasswordVisible ? "text" : "password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
-                    placeholder="请输入密码"
+                    placeholder={intl.t("ui.enterYourPassword")}
                     className="h-10 w-full border-0 bg-transparent px-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground/52"
                     autoFocus
                   />
@@ -124,7 +126,7 @@ export function LockScreen({
                     type="button"
                     className="flex size-10 shrink-0 items-center justify-center rounded-[var(--system-radius-control)] text-muted-foreground transition-colors hover:bg-white/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                     aria-label={
-                      zh(isPasswordVisible ? "Hide password" : "Show password")
+                      intl.text(isPasswordVisible ? "Hide password" : "Show password")
                     }
                     onClick={() =>
                       setIsPasswordVisible((currentValue) => !currentValue)
@@ -142,7 +144,7 @@ export function LockScreen({
                     className="system-primary-action group flex h-10 shrink-0 items-center gap-2 px-4 text-sm font-medium transition-all hover:translate-x-0.5 hover:brightness-110 disabled:translate-x-0 disabled:cursor-not-allowed disabled:opacity-45"
                     disabled={isUnlocking || !password.trim()}
                   >
-                    <span>{zh(isUnlocking ? "Unlocking..." : "Unlock")}</span>
+                    <span>{intl.text(isUnlocking ? "Unlocking..." : "Unlock")}</span>
                     <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                   </button>
                 </div>
@@ -153,7 +155,7 @@ export function LockScreen({
                   <div className="system-error-capsule">
                     <span className="size-1.5 shrink-0 rounded-full bg-status-red shadow-[0_0_10px_rgba(239,68,68,0.45)]" />
                     <p className="text-xs tracking-[0.01em] text-status-red/92">
-                      {zh(error)}
+                      {intl.text(error)}
                     </p>
                   </div>
                 </div>
@@ -161,11 +163,11 @@ export function LockScreen({
             </form>
 
             <p className="mt-4 text-xs text-muted-foreground">
-              按下{zh(" ")}
+              {intl.t("ui.press")}{intl.text(" ")}
               <span className="system-keycap-surface px-1.5 py-0.5 text-[11px] text-foreground/90">
                 Command + L
-              </span>{zh(" ")}
-              可随时锁定
+              </span>{intl.text(" ")}
+              {intl.t("ui.anytimeToLock")}
             </p>
           </div>
         }

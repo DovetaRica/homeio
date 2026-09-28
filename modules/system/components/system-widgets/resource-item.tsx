@@ -1,5 +1,6 @@
 
-import { zh } from "@/lib/i18n/zh";
+import { useI18n } from "@/i18n/use-i18n";
+
 import type { ResourceWidgetItem } from "@/modules/system/components/system-widgets/types";
 import { ProgressBar } from "@/modules/system/components/system-widgets/progress-bar";
 
@@ -10,6 +11,7 @@ export function ResourceItem({
   progress,
   colorClassName,
 }: ResourceWidgetItem) {
+  const intl = useI18n();
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
@@ -17,7 +19,7 @@ export function ResourceItem({
           <div className="flex size-4 items-center justify-center rounded-md bg-white/[0.07]">
             <Icon className="size-2.5 text-muted-foreground/70" />
           </div>
-          <span className="text-xs text-muted-foreground">{zh(label)}</span>
+          <span className="text-xs text-muted-foreground">{intl.text(label)}</span>
         </div>
         <span className="text-xs font-mono font-medium text-foreground">{value}</span>
       </div>

@@ -1,5 +1,6 @@
 
-import { zh } from "@/lib/i18n/zh";
+import { useI18n } from "@/i18n/use-i18n";
+
 import type { LucideIcon } from "@/components/icons/platform-icons";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,7 @@ export function WidgetCard({
   children,
   className,
 }: WidgetCardProps) {
+  const intl = useI18n();
   return (
     <section
       className={cn(
@@ -40,7 +42,7 @@ export function WidgetCard({
             </div>
           ) : null}
           <h3 className="text-[10px] font-semibold uppercase tracking-[0.15em] text-foreground/55">
-            {zh(title)}
+            {intl.text(title)}
           </h3>
         </header>
       ) : null}

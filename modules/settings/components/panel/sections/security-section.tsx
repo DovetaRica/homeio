@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   InfoBanner,
   SectionDivider,
@@ -35,12 +36,13 @@ function PreferenceRow({
   description?: string;
   children: React.ReactNode;
 }) {
+  const intl = useI18n();
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
       <div className="min-w-0">
-        <div className="text-sm text-foreground">{zh(label)}</div>
+        <div className="text-sm text-foreground">{intl.text(label)}</div>
         {description && (
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{zh(description)}</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{intl.text(description)}</div>
         )}
       </div>
       {children}
@@ -54,6 +56,7 @@ export function SecuritySection({
   isDemoMode = false,
   onChange,
 }: SecuritySectionProps) {
+  const intl = useI18n();
   const isDisabled = isDemoMode || data.isLoading || data.isSaving;
 
   if (isDemoMode) {
@@ -64,9 +67,9 @@ export function SecuritySection({
             <Lock className="size-4 text-muted-foreground" />
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">安全设置已锁定</p>
+            <p className="text-sm font-medium text-foreground">{intl.t("ui.securitySettingsAreLocked")}</p>
             <p className="mt-1 text-xs text-muted-foreground">
-              演示模式下无法修改防火墙和入侵防护设置。
+              {intl.t("ui.firewallAndIntrusionPreventionControlsAreDisabledInDemoMode")}
             </p>
           </div>
         </div>
@@ -81,11 +84,11 @@ export function SecuritySection({
       )}
 
       {/* ── Firewall ── */}
-      <SectionDivider title="防火墙" />
+      <SectionDivider title={intl.t("ui.firewall")} />
       <div className="flex flex-col gap-1.5">
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
-            label="UFW 防火墙"
+            label={intl.t("ui.ufwFirewall")}
             description="Uncomplicated Firewall for managing inbound and outbound rules"
             enabled={draft.firewallEnabled}
             onToggle={() => onChange({ firewallEnabled: !draft.firewallEnabled })}
@@ -93,7 +96,7 @@ export function SecuritySection({
           />
         </div>
 
-        <PreferenceRow label="默认入站策略" description="Action for unsolicited inbound connections">
+        <PreferenceRow label={intl.t("ui.defaultIncomingPolicy")} description="Action for unsolicited inbound connections">
           <select
             value={draft.firewallIncomingPolicy}
             onChange={(e) => onChange({ firewallIncomingPolicy: e.target.value as SystemSecurityPolicy })}
@@ -106,7 +109,7 @@ export function SecuritySection({
           </select>
         </PreferenceRow>
 
-        <PreferenceRow label="默认出站策略" description="Action for unsolicited outbound connections">
+        <PreferenceRow label={intl.t("ui.defaultOutgoingPolicy")} description="Action for unsolicited outbound connections">
           <select
             value={draft.firewallOutgoingPolicy}
             onChange={(e) => onChange({ firewallOutgoingPolicy: e.target.value as SystemSecurityPolicy })}
@@ -121,7 +124,7 @@ export function SecuritySection({
       </div>
 
       {/* ── Intrusion Prevention ── */}
-      <SectionDivider title="入侵防护" />
+      <SectionDivider title={intl.t("ui.intrusionPrevention")} />
       <div className="flex flex-col gap-1.5">
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
@@ -133,7 +136,7 @@ export function SecuritySection({
           />
         </div>
 
-        <PreferenceRow label="最大重试次数" description="Failed attempts before banning an IP">
+        <PreferenceRow label={intl.t("ui.maxRetries")} description="Failed attempts before banning an IP">
           <input
             value={draft.fail2banMaxRetries}
             onChange={(e) => onChange({ fail2banMaxRetries: e.target.value })}
@@ -144,7 +147,7 @@ export function SecuritySection({
           />
         </PreferenceRow>
 
-        <PreferenceRow label="封禁时长" description="Seconds to keep the IP blocked (3600 = 1 hr)">
+        <PreferenceRow label={intl.t("ui.banDuration")} description="Seconds to keep the IP blocked (3600 = 1 hr)">
           <input
             value={draft.fail2banBanDurationSeconds}
             onChange={(e) => onChange({ fail2banBanDurationSeconds: e.target.value })}

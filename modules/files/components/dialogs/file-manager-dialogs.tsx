@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { getFileIcon, type FileEntry } from "@/modules/files/components/file-manager-presenters";
 import {
   FILES_MENU_SHELL,
@@ -29,13 +30,14 @@ export function CreateEntryDialog({
   onDialogChange: (value: string) => void;
   onSubmit: () => void;
 }) {
+  const intl = useI18n();
   return (
     <div className={overlay} onClick={onClose}>
       <div
         className={cn("w-full max-w-xs p-3", FILES_MENU_SHELL)}
         role="dialog"
         aria-modal="true"
-        aria-label={zh(dialog.kind === "folder" ? "Create new folder" : "Create new file")}
+        aria-label={intl.text(dialog.kind === "folder" ? "Create new folder" : "Create new file")}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
@@ -44,11 +46,11 @@ export function CreateEntryDialog({
           ) : (
             <File className="size-4 text-emerald-400" />
           )}
-          <span>{zh(dialog.kind === "folder" ? "Create New Folder" : "Create New File")}</span>
+          <span>{intl.text(dialog.kind === "folder" ? "Create New Folder" : "Create New File")}</span>
         </div>
 
         <label className="mb-2 block text-xs text-muted-foreground">
-          {zh(dialog.kind === "folder" ? "Folder name" : "File name")}
+          {intl.text(dialog.kind === "folder" ? "Folder name" : "File name")}
           <input
             autoFocus
             type="text"
@@ -59,22 +61,22 @@ export function CreateEntryDialog({
               else if (e.key === "Escape") { e.preventDefault(); onClose(); }
             }}
             className={inputField}
-            placeholder={zh(dialog.kind === "folder" ? "my-folder" : "notes.txt")}
+            placeholder={intl.text(dialog.kind === "folder" ? "my-folder" : "notes.txt")}
           />
         </label>
 
-        {dialog.error && <div className="mb-2 text-xs text-status-red">{zh(dialog.error)}</div>}
+        {dialog.error && <div className="mb-2 text-xs text-status-red">{intl.text(dialog.error)}</div>}
 
         <div className="flex justify-end gap-2">
           <button onClick={onClose} disabled={isCreatePending} className={cancelBtn}>
-            取消
+            {intl.t("ui.cancel")}
           </button>
           <button
             onClick={onSubmit}
             disabled={dialog.name.trim().length === 0 || Boolean(dialog.error) || isCreatePending}
             className="rounded-lg bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            创建
+            {intl.t("ui.create")}
           </button>
         </div>
       </div>
@@ -95,13 +97,14 @@ export function RenameEntryDialog({
   onDialogChange: (value: string) => void;
   onSubmit: () => void;
 }) {
+  const intl = useI18n();
   return (
     <div className={overlay} onClick={onClose}>
       <div
         className={cn("w-full max-w-xs p-3", FILES_MENU_SHELL)}
         role="dialog"
         aria-modal="true"
-        aria-label="重命名项目"
+        aria-label={intl.t("ui.renameItem")}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-2 flex items-center gap-2 text-sm font-medium text-foreground">
@@ -110,11 +113,11 @@ export function RenameEntryDialog({
           ) : (
             <File className="size-4 text-emerald-400" />
           )}
-          <span>重命名</span>
+          <span>{intl.t("ui.rename")}</span>
         </div>
 
         <label className="mb-2 block text-xs text-muted-foreground">
-          新名称
+          {intl.t("ui.newName")}
           <input
             autoFocus
             type="text"
@@ -129,11 +132,11 @@ export function RenameEntryDialog({
           />
         </label>
 
-        {dialog.error && <div className="mb-2 text-xs text-status-red">{zh(dialog.error)}</div>}
+        {dialog.error && <div className="mb-2 text-xs text-status-red">{intl.text(dialog.error)}</div>}
 
         <div className="flex justify-end gap-2">
           <button onClick={onClose} disabled={isRenamePending} className={cancelBtn}>
-            取消
+            {intl.t("ui.cancel")}
           </button>
           <button
             onClick={onSubmit}
@@ -145,7 +148,7 @@ export function RenameEntryDialog({
             }
             className="rounded-lg bg-primary/15 px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {zh(isRenamePending ? "Renaming…" : "Rename")}
+            {intl.text(isRenamePending ? "Renaming…" : "Rename")}
           </button>
         </div>
       </div>
@@ -162,35 +165,36 @@ export function EmptyTrashConfirmDialog({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
+  const intl = useI18n();
   return (
     <div className={overlay} onClick={onCancel}>
       <div
         className={cn("w-full max-w-xs p-4", FILES_MENU_SHELL)}
         role="dialog"
         aria-modal="true"
-        aria-label="清空回收站"
+        aria-label={intl.t("ui.emptyTrash")}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
           <Trash2 className="size-4 shrink-0 text-status-red" />
-          <span>清空回收站</span>
+          <span>{intl.t("ui.emptyTrash")}</span>
         </div>
         <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
-          永久删除{zh(" ")}
+          {intl.t("ui.deletePermanently")}{intl.text(" ")}
           <span className="font-semibold text-foreground">
-            {itemCount} 个项目{zh(itemCount !== 1 ? "s" : "")}
-          </span>{zh(" ")}
-          从回收站中永久删除？此操作无法撤销。
+            {itemCount} {intl.t("ui.item")}{intl.text(itemCount !== 1 ? "s" : "")}
+          </span>{intl.text(" ")}
+          {intl.t("ui.fromTrashThisCannotBeUndone")}
         </p>
         <div className="flex justify-end gap-2">
           <button onClick={onCancel} className={cancelBtn}>
-            取消
+            {intl.t("ui.cancel")}
           </button>
           <button
             onClick={onConfirm}
             className="rounded-lg bg-status-red/15 px-2.5 py-1 text-xs font-medium text-status-red transition-colors hover:bg-status-red/20"
           >
-            清空回收站
+            {intl.t("ui.emptyTrash")}
           </button>
         </div>
       </div>
@@ -212,10 +216,11 @@ export function UploadProgressDialog({
   progress: { loaded: number; total: number } | null;
   onCancel?: () => void;
 }) {
+  const intl = useI18n();
   const isUpload = operation === "upload";
   const progressPercent = getUploadPercent(progress);
   const progressText = progress
-    ? `${formatBytesCompact(progress.loaded)} of ${formatBytesCompact(progress.total)}`
+    ? intl.t('dynamic.progress', {loaded: formatBytesCompact(progress.loaded), total: formatBytesCompact(progress.total)})
     : isUpload
       ? "Preparing upload"
       : "Extracting archive";
@@ -229,15 +234,15 @@ export function UploadProgressDialog({
         className={cn("w-full max-w-sm overflow-hidden p-0", FILES_MENU_SHELL)}
         role="dialog"
         aria-modal="true"
-        aria-label={zh(progressLabel)}
+        aria-label={intl.text(progressLabel)}
       >
         <div className="flex h-11 shrink-0 select-none items-center border-b border-glass-border/50 bg-popover/70 backdrop-blur-2xl">
           <div className="flex items-center gap-1.5 px-4">
             {onCancel ? (
               <button
                 onClick={onCancel}
-                aria-label={zh(`Cancel ${operation}`)}
-                title={zh(`Cancel ${operation}`)}
+                aria-label={intl.t('dynamic.cancelOperation', {value0: intl.text(operation)})}
+                title={intl.t('dynamic.cancelOperation', {value0: intl.text(operation)})}
                 className="group flex size-3 cursor-pointer items-center justify-center rounded-full bg-[#ff5f57] ring-1 ring-inset ring-black/10"
               >
                 <X className="size-[7px] text-[#6a0002] opacity-0 transition-opacity group-hover:opacity-100" />
@@ -254,7 +259,7 @@ export function UploadProgressDialog({
             ) : (
               <FileArchive className="size-3.5 text-primary/70" />
             )}
-            <span className="text-xs font-medium text-foreground/80">{zh(title)}</span>
+            <span className="text-xs font-medium text-foreground/80">{intl.text(title)}</span>
           </div>
           <div className="w-[76px]" />
         </div>
@@ -264,7 +269,7 @@ export function UploadProgressDialog({
           <div
             className="overflow-hidden rounded-full bg-white/10"
             role="progressbar"
-            aria-label={zh(progressLabel)}
+            aria-label={intl.text(progressLabel)}
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={progress ? progressPercent : undefined}
@@ -279,12 +284,12 @@ export function UploadProgressDialog({
           </div>
           <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
             <span>{status}</span>
-            <span className="tabular-nums">{zh(progress ? `${progressPercent}%` : isUpload ? "0%" : "Working")}</span>
+            <span className="tabular-nums">{intl.text(progress ? `${progressPercent}%` : isUpload ? "0%" : "Working")}</span>
           </div>
           {onCancel ? (
             <div className="mt-4 flex justify-end">
               <button onClick={onCancel} className={cancelBtn}>
-                取消 {operation}
+                {intl.t("ui.cancel")} {operation}
               </button>
             </div>
           ) : null}
@@ -301,6 +306,7 @@ export function FileInfoDialogOverlay({
   fileInfo: FileInfoResponse;
   onClose: () => void;
 }) {
+  const intl = useI18n();
   const rows = [
     {
       label: "Type",
@@ -314,13 +320,13 @@ export function FileInfoDialogOverlay({
     { label: "Size", value: fileInfo.type === "folder" ? "—" : formatBytesCompact(fileInfo.sizeBytes) },
     {
       label: "Modified",
-      value: new Date(fileInfo.modifiedAt).toLocaleString("zh-CN", {
+      value: new Date(fileInfo.modifiedAt).toLocaleString(intl.locale, {
         month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
       }),
     },
     {
       label: "Created",
-      value: new Date(fileInfo.createdAt).toLocaleString("zh-CN", {
+      value: new Date(fileInfo.createdAt).toLocaleString(intl.locale, {
         month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
       }),
     },
@@ -335,7 +341,7 @@ export function FileInfoDialogOverlay({
         className={cn("w-full max-w-sm p-4", FILES_MENU_SHELL)}
         role="dialog"
         aria-modal="true"
-        aria-label="文件信息"
+        aria-label={intl.t("ui.fileInfo")}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-3 flex items-center justify-between">
@@ -356,7 +362,7 @@ export function FileInfoDialogOverlay({
         <div className="space-y-1.5 text-xs">
           {rows.map(({ label, value }) => (
             <div key={label} className={cn("flex items-start gap-2 px-2.5 py-1.5", FILES_PANEL_INSET)}>
-              <span className="w-24 shrink-0 text-muted-foreground/70">{zh(label)}</span>
+              <span className="w-24 shrink-0 text-muted-foreground/70">{intl.text(label)}</span>
               <span className="break-all font-mono text-foreground">{value}</span>
             </div>
           ))}
@@ -364,7 +370,7 @@ export function FileInfoDialogOverlay({
 
         <div className="mt-3 flex justify-end">
           <button onClick={onClose} className={cancelBtn}>
-            关闭
+            {intl.t("ui.close")}
           </button>
         </div>
       </div>
@@ -385,37 +391,38 @@ export function PasteConflictDialog({
   onSkip: () => void;
   onSkipAll: () => void;
 }) {
+  const intl = useI18n();
   return (
     <div className="absolute inset-0 z-[205] flex items-center justify-center bg-background/35 px-4 backdrop-blur-[1px]">
       <div
         className={cn("w-full max-w-sm p-4", FILES_MENU_SHELL)}
         role="dialog"
         aria-modal="true"
-        aria-label="文件冲突"
+        aria-label={intl.t("ui.fileConflict")}
       >
         <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-foreground">
           <File className="size-4 shrink-0 text-status-amber" />
-          <span>项目已存在</span>
+          <span>{intl.t("ui.itemAlreadyExists")}</span>
         </div>
         <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
-          <span className="font-semibold text-foreground">{conflictName}</span> 已存在于目标位置，请选择处理方式。
+          <span className="font-semibold text-foreground">{conflictName}</span> {intl.t("ui.alreadyExistsInTheDestinationWhatWouldYouLikeToDo")}
         </p>
         <div className="flex flex-col gap-2">
           <button
             onClick={onReplace}
             className="rounded-lg bg-status-red/15 px-3 py-2 text-left text-xs font-medium text-status-red transition-colors hover:bg-status-red/20"
           >
-            替换：覆盖现有项目
+            {intl.t("ui.replaceOverwriteTheExistingItem")}
           </button>
           <button
             onClick={onKeepBoth}
             className="rounded-lg bg-primary/15 px-3 py-2 text-left text-xs font-medium text-primary transition-colors hover:bg-primary/20"
           >
-            保留两者：重命名新项目
+            {intl.t("ui.keepBothRenameTheNewItem")}
           </button>
           <div className="flex gap-2">
-            <button onClick={onSkip} className={cn("flex-1", cancelBtn)}>跳过</button>
-            <button onClick={onSkipAll} className={cn("flex-1", cancelBtn)}>全部跳过</button>
+            <button onClick={onSkip} className={cn("flex-1", cancelBtn)}>{intl.t("ui.skip")}</button>
+            <button onClick={onSkipAll} className={cn("flex-1", cancelBtn)}>{intl.t("ui.skipAll")}</button>
           </div>
         </div>
       </div>

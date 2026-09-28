@@ -1,7 +1,9 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import {LanguageSelect} from "@/i18n/language-select";
+import { useI18n } from "@/i18n/use-i18n";
 import Image from "next/image";
 import {
   ArrowLeft,
@@ -49,6 +51,7 @@ function describeTotpError(
 }
 
 export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
+  const intl = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = useMemo(() => {
@@ -93,7 +96,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
 
   async function handleCredentialsSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(zh(null));
+    setError(null);
     setIsSubmitting(true);
 
     try {
@@ -148,7 +151,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
       router.refresh();
     } catch (submitError) {
       setError(
-        zh(submitError instanceof Error ? submitError.message : "Login failed"),
+        intl.text(submitError instanceof Error ? submitError.message : "Login failed"),
       );
     } finally {
       setIsSubmitting(false);
@@ -158,7 +161,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
   async function handleTotpSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (stage.kind !== "totp") return;
-    setError(zh(null));
+    setError(null);
     setIsSubmitting(true);
 
     try {
@@ -188,7 +191,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
       router.refresh();
     } catch (submitError) {
       setError(
-        zh(submitError instanceof Error ? submitError.message : "Sign-in failed"),
+        intl.text(submitError instanceof Error ? submitError.message : "Sign-in failed"),
       );
     } finally {
       setIsSubmitting(false);
@@ -198,7 +201,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
   function backToCredentials() {
     setStage({ kind: "credentials" });
     setTotpCode("");
-    setError(zh(null));
+    setError(null);
     setPassword("");
   }
 
@@ -206,7 +209,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
     if (stage.kind !== "totp") return;
     setStage({ ...stage, useBackupCode: !stage.useBackupCode });
     setTotpCode("");
-    setError(zh(null));
+    setError(null);
   }
 
   return (
@@ -222,15 +225,15 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
           />
         </div>
         <div className="system-pill-surface mt-2 px-3 py-1 text-[10px] tracking-[0.22em] text-foreground/54 uppercase">
-          家庭服务器
+          {intl.t("ui.homeServer")}
         </div>
       </div>
 
       <p className="text-[1.48rem] font-medium tracking-[-0.03em] text-foreground">
-        {zh(stage.kind === "credentials" ? "Welcome back" : "Two-step verification")}
+        {intl.text(stage.kind === "credentials" ? "Welcome back" : "Two-step verification")}
       </p>
       <p className="mb-5 mt-1 text-[11px] tracking-[0.18em] text-muted-foreground/78 uppercase">
-        {zh(stage.kind === "credentials"
+        {intl.text(stage.kind === "credentials"
           ? "Sign in to continue"
           : stage.useBackupCode
             ? "Enter a backup code"
@@ -239,10 +242,10 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
 
       {isDemoMode && stage.kind === "credentials" ? (
         <div className="mb-3 rounded-[var(--system-radius-control)] border border-white/10 bg-black/22 px-4 py-3 text-left text-xs text-foreground/70 shadow-[var(--system-shadow-surface)] backdrop-blur-2xl">
-          <p className="font-medium tracking-[0.02em] text-foreground/90">演示模式</p>
+          <p className="font-medium tracking-[0.02em] text-foreground/90">{intl.t("ui.demoMode")}</p>
           <p className="mt-0.5 leading-5">
-            用户名： <span className="font-mono text-foreground/90">{DEMO_USERNAME}</span>
-            {zh(" · ")}密码： <span className="font-mono text-foreground/90">{DEMO_PASSWORD}</span>
+            {intl.t("ui.username2")} <span className="font-mono text-foreground/90">{DEMO_USERNAME}</span>
+            {intl.text(" · ")}{intl.t("ui.password2")} <span className="font-mono text-foreground/90">{DEMO_PASSWORD}</span>
           </p>
         </div>
       ) : null}
@@ -250,10 +253,10 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
       {showRestoreBanner && stage.kind === "credentials" ? (
         <div className="mb-3 rounded-[var(--system-radius-control)] border border-yellow-500/18 bg-black/22 px-4 py-3 text-left text-xs text-yellow-300 shadow-[var(--system-shadow-surface)] backdrop-blur-2xl">
           <p className="font-medium tracking-[0.02em]">
-            还原完成，会话已重置
+            {intl.t("ui.restoreCompleteSessionReset")}
           </p>
           <p className="mt-1 leading-5 text-yellow-300/78">
-            请使用创建此备份时的账户和密码登录。
+            {intl.t("ui.pleaseSignInWithTheCredentialsThatWereActiveWhenThisBackup")}
           </p>
         </div>
       ) : null}
@@ -274,7 +277,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
                   autoComplete="username"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
-                  placeholder="用户名"
+                  placeholder={intl.t("ui.username")}
                   className="h-10 w-full border-0 bg-transparent px-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground/52"
                   required
                   autoFocus
@@ -292,14 +295,14 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
                   autoComplete="current-password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
-                  placeholder="密码"
+                  placeholder={intl.t("ui.password")}
                   className="h-10 w-full border-0 bg-transparent px-1 text-[15px] text-foreground outline-none placeholder:text-muted-foreground/52"
                   required
                 />
                 <button
                   type="button"
                   className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-[var(--system-radius-icon)] text-muted-foreground transition-colors hover:bg-white/[0.08] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                  aria-label={zh(isPasswordVisible ? "Hide password" : "Show password")}
+                  aria-label={intl.text(isPasswordVisible ? "Hide password" : "Show password")}
                   aria-pressed={isPasswordVisible}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() =>
@@ -321,7 +324,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
               <div className="system-error-capsule">
                 <span className="size-1.5 shrink-0 rounded-full bg-status-red shadow-[0_0_10px_rgba(239,68,68,0.45)]" />
                 <p className="text-xs tracking-[0.01em] text-status-red/92">
-                  {zh(error)}
+                  {intl.text(error)}
                 </p>
               </div>
             </div>
@@ -338,7 +341,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
             className="system-primary-action group flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span>
-              {zh(isSubmitting
+              {intl.text(isSubmitting
                 ? "Signing in..."
                 : retryCountdown > 0
                   ? `Try again in ${retryCountdown}s`
@@ -363,7 +366,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
                 autoComplete="one-time-code"
                 value={totpCode}
                 onChange={(event) => setTotpCode(event.target.value)}
-                placeholder={zh(stage.useBackupCode ? "Backup code" : "123 456")}
+                placeholder={intl.text(stage.useBackupCode ? "Backup code" : "123 456")}
                 className="h-10 w-full border-0 bg-transparent px-1 text-[15px] tracking-[0.2em] text-foreground outline-none placeholder:text-muted-foreground/52"
                 autoFocus
                 required
@@ -376,7 +379,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
               <div className="system-error-capsule">
                 <span className="size-1.5 shrink-0 rounded-full bg-status-red shadow-[0_0_10px_rgba(239,68,68,0.45)]" />
                 <p className="text-xs tracking-[0.01em] text-status-red/92">
-                  {zh(error)}
+                  {intl.text(error)}
                 </p>
               </div>
             </div>
@@ -387,7 +390,7 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
             disabled={isSubmitting || !totpCode.trim()}
             className="system-primary-action group flex w-full items-center justify-center gap-2 rounded-full py-2.5 text-sm font-medium transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <span>{zh(isSubmitting ? "Verifying..." : "Verify and sign in")}</span>
+            <span>{intl.text(isSubmitting ? "Verifying..." : "Verify and sign in")}</span>
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
 
@@ -398,18 +401,19 @@ export function LoginForm({ isDemoMode = false }: { isDemoMode?: boolean }) {
               className="inline-flex items-center gap-1 hover:text-foreground"
             >
               <ArrowLeft className="size-3" />
-              返回
+              {intl.t("ui.back")}
             </button>
             <button
               type="button"
               onClick={toggleBackupCode}
               className="hover:text-foreground"
             >
-              {zh(stage.useBackupCode ? "Use authenticator code" : "Use backup code instead")}
+              {intl.text(stage.useBackupCode ? "Use authenticator code" : "Use backup code instead")}
             </button>
           </div>
         </form>
       )}
+      <LanguageSelect className="mt-5 flex justify-center" />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { SETTINGS_PANEL_INSET } from "@/modules/settings/components/panel/surface";
 import { useServerInfo } from "@/modules/system/hooks/useServerInfo";
 import { useSystemMetrics } from "@/modules/system/hooks/useSystemMetrics";
@@ -19,10 +20,11 @@ function formatBytes(bytes: number | null): string {
 }
 
 function Row({ label, value, mono = false }: { label: string; value: string | null | undefined; mono?: boolean }) {
+  const intl = useI18n();
   if (!value) return null;
   return (
     <div className="flex items-start justify-between gap-4 py-2">
-      <span className="shrink-0 text-xs text-muted-foreground">{zh(label)}</span>
+      <span className="shrink-0 text-xs text-muted-foreground">{intl.text(label)}</span>
       <span className={cn("max-w-[60%] break-all text-right text-xs font-medium text-foreground", mono && "font-mono")}>{value}</span>
     </div>
   );
@@ -33,24 +35,26 @@ function Rows({ children }: { children: React.ReactNode }) {
 }
 
 function OsTab({ info }: { info: ServerHardwareInfo }) {
+  const intl = useI18n();
   const { os, system } = info;
   return (
     <Rows>
-      <Row label="主机名" value={os.hostname} />
-      <Row label="操作系统" value={[os.distro, os.release].filter(Boolean).join(" ") || os.platform} />
+      <Row label={intl.t("ui.hostname")} value={os.hostname} />
+      <Row label={intl.t("ui.os")} value={[os.distro, os.release].filter(Boolean).join(" ") || os.platform} />
       <Row label="Codename" value={os.codename} />
-      <Row label="内核" value={os.kernel} mono />
-      <Row label="架构" value={os.arch} />
+      <Row label={intl.t("ui.kernel")} value={os.kernel} mono />
+      <Row label={intl.t("ui.architecture")} value={os.arch} />
       {system.manufacturer && system.model && (
-        <Row label="系统" value={[system.manufacturer, system.model, system.version].filter(Boolean).join(" ")} />
+        <Row label={intl.t("ui.system")} value={[system.manufacturer, system.model, system.version].filter(Boolean).join(" ")} />
       )}
-      <Row label="序列号" value={system.serial} mono />
+      <Row label={intl.t("ui.serial")} value={system.serial} mono />
       <Row label="UUID" value={system.uuid} mono />
     </Rows>
   );
 }
 
 function CpuTab({ info }: { info: ServerHardwareInfo }) {
+  const intl = useI18n();
   const { cpu } = info;
   const name = [cpu.manufacturer, cpu.brand].filter(Boolean).join(" ") || null;
   const coreInfo = cpu.physicalCores && cpu.cores
@@ -62,10 +66,10 @@ function CpuTab({ info }: { info: ServerHardwareInfo }) {
 
   return (
     <Rows>
-      <Row label="型号" value={name} />
-      <Row label="核心数" value={coreInfo} />
-      {cpu.processors && cpu.processors > 1 && <Row label="插槽" value={String(cpu.processors)} />}
-      <Row label="速度" value={speedInfo} />
+      <Row label={intl.t("ui.model")} value={name} />
+      <Row label={intl.t("ui.cores")} value={coreInfo} />
+      {cpu.processors && cpu.processors > 1 && <Row label={intl.t("ui.slots")} value={String(cpu.processors)} />}
+      <Row label={intl.t("ui.speed")} value={speedInfo} />
       <Row label="Socket" value={cpu.socket} />
       <Row label="Governor" value={cpu.governor} />
     </Rows>
@@ -73,20 +77,21 @@ function CpuTab({ info }: { info: ServerHardwareInfo }) {
 }
 
 function MemoryTab({ info }: { info: ServerHardwareInfo }) {
+  const intl = useI18n();
   const { memory } = info;
   const filledSlots = memory.slots.filter((s) => s.sizeBytes && s.sizeBytes > 0);
 
   return (
     <div>
       <Rows>
-        <Row label="总计" value={formatBytes(memory.totalBytes)} />
-        {filledSlots.length > 0 && <Row label="内存模块" value={`${filledSlots.length} installed`} />}
+        <Row label={intl.t("ui.total")} value={formatBytes(memory.totalBytes)} />
+        {filledSlots.length > 0 && <Row label={intl.t("ui.modules")} value={`${filledSlots.length} installed`} />}
       </Rows>
 
       {filledSlots.length > 0 && (
         <>
           <div className="border-t border-glass-border/40 px-4 pb-1 pt-3">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50">插槽</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50">{intl.t("ui.slots")}</span>
           </div>
           <div className="divide-y divide-glass-border/30 px-4">
             {filledSlots.map((slot, i) => (
@@ -109,9 +114,10 @@ function MemoryTab({ info }: { info: ServerHardwareInfo }) {
 }
 
 function GpuTab({ info }: { info: ServerHardwareInfo }) {
+  const intl = useI18n();
   const { controllers } = info.gpu;
   if (controllers.length === 0) {
-    return <div className="px-4 py-3 text-xs text-muted-foreground">未检测到显卡。</div>;
+    return <div className="px-4 py-3 text-xs text-muted-foreground">{intl.t("ui.noGpuDetected")}</div>;
   }
   return (
     <div className="divide-y divide-glass-border/40 px-4">
@@ -133,10 +139,11 @@ function GpuTab({ info }: { info: ServerHardwareInfo }) {
 }
 
 function ThermalTab({ metrics }: { metrics: SystemMetricsSnapshot | undefined }) {
+  const intl = useI18n();
   const temp = metrics?.temperature;
 
   if (!metrics) {
-    return <div className="px-4 py-3 text-xs text-muted-foreground">正在加载温度数据…</div>;
+    return <div className="px-4 py-3 text-xs text-muted-foreground">{intl.t("ui.loadingTemperatureData")}</div>;
   }
 
   const main = temp?.mainCelsius;
@@ -144,7 +151,7 @@ function ThermalTab({ metrics }: { metrics: SystemMetricsSnapshot | undefined })
   const cores = temp?.coresCelsius ?? [];
 
   if (main === null && cores.length === 0) {
-    return <div className="px-4 py-3 text-xs text-muted-foreground">当前环境无法读取温度传感器。</div>;
+    return <div className="px-4 py-3 text-xs text-muted-foreground">{intl.t("ui.temperatureSensorsNotAvailableOnThisHost")}</div>;
   }
 
   function tempColor(c: number) {
@@ -165,13 +172,13 @@ function ThermalTab({ metrics }: { metrics: SystemMetricsSnapshot | undefined })
       <div className="flex gap-6 border-b border-glass-border/40 px-4 py-3">
         {main != null && (
           <div>
-            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">处理器</div>
+            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">{intl.t("ui.cpu")}</div>
             <div className={cn("mt-0.5 text-lg font-semibold tabular-nums", tempColor(main))}>{main}°C</div>
           </div>
         )}
         {max != null && (
           <div>
-            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">最大</div>
+            <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">{intl.t("ui.max")}</div>
             <div className={cn("mt-0.5 text-lg font-semibold tabular-nums", tempColor(max))}>{max}°C</div>
           </div>
         )}
@@ -181,13 +188,13 @@ function ThermalTab({ metrics }: { metrics: SystemMetricsSnapshot | undefined })
       {cores.length > 0 && (
         <div className="px-4 pb-3 pt-3">
           <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/50">
-            核心数
+            {intl.t("ui.cores")}
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-2.5 sm:grid-cols-3">
             {cores.map((c, i) => (
               <div key={i}>
                 <div className="mb-1 flex items-center justify-between">
-                  <span className="text-[11px] text-muted-foreground/70">核心 {i}</span>
+                  <span className="text-[11px] text-muted-foreground/70">{intl.t("ui.core")} {i}</span>
                   <span className={cn("text-[11px] font-medium tabular-nums", tempColor(c))}>{c}°C</span>
                 </div>
                 <div className="h-1 overflow-hidden rounded-full bg-background/50">
@@ -206,10 +213,11 @@ function ThermalTab({ metrics }: { metrics: SystemMetricsSnapshot | undefined })
 }
 
 function NetworkTab({ info }: { info: ServerHardwareInfo }) {
+  const intl = useI18n();
   const { interfaces } = info.network;
 
   if (interfaces.length === 0) {
-    return <div className="px-4 py-3 text-xs text-muted-foreground">未发现网络接口。</div>;
+    return <div className="px-4 py-3 text-xs text-muted-foreground">{intl.t("ui.noNetworkInterfacesFound")}</div>;
   }
 
   return (
@@ -226,7 +234,7 @@ function NetworkTab({ info }: { info: ServerHardwareInfo }) {
             )}
             {iface.isDefault && (
               <span className="rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide bg-primary/15 text-primary">
-                默认
+                {intl.t("ui.default")}
               </span>
             )}
             <div className="ml-auto flex items-center gap-1.5">
@@ -244,7 +252,7 @@ function NetworkTab({ info }: { info: ServerHardwareInfo }) {
               <div className="flex justify-between gap-4">
                 <span className="text-[11px] text-muted-foreground/60">IPv4</span>
                 <span className="font-mono text-[11px] text-foreground/80">
-                  {iface.ip4}{zh(iface.ip4subnet ? `/${iface.ip4subnet}` : "")}
+                  {iface.ip4}{intl.text(iface.ip4subnet ? `/${iface.ip4subnet}` : "")}
                 </span>
               </div>
             )}
@@ -265,7 +273,7 @@ function NetworkTab({ info }: { info: ServerHardwareInfo }) {
                 <span className="text-[11px] text-muted-foreground/60">{iface.speedMbps} Mbps</span>
               )}
               {iface.duplex && (
-                <span className="text-[11px] text-muted-foreground/60">{iface.duplex} 双工</span>
+                <span className="text-[11px] text-muted-foreground/60">{iface.duplex} {intl.t("ui.duplex")}</span>
               )}
               {iface.dhcp && (
                 <span className="text-[11px] text-muted-foreground/60">DHCP</span>
@@ -279,27 +287,29 @@ function NetworkTab({ info }: { info: ServerHardwareInfo }) {
 }
 
 function FirmwareTab({ info }: { info: ServerHardwareInfo }) {
+  const intl = useI18n();
   const { bios, baseboard } = info;
   return (
     <Rows>
       {baseboard.manufacturer && baseboard.model && (
-        <Row label="主板" value={[baseboard.manufacturer, baseboard.model, baseboard.version].filter(Boolean).join(" ")} />
+        <Row label={intl.t("ui.motherboard")} value={[baseboard.manufacturer, baseboard.model, baseboard.version].filter(Boolean).join(" ")} />
       )}
-      <Row label="BIOS 厂商" value={bios.vendor} />
-      <Row label="BIOS 版本" value={bios.version} mono />
-      <Row label="BIOS 日期" value={bios.releaseDate} />
+      <Row label={intl.t("ui.biosVendor")} value={bios.vendor} />
+      <Row label={intl.t("ui.biosVersion")} value={bios.version} mono />
+      <Row label={intl.t("ui.biosDate")} value={bios.releaseDate} />
     </Rows>
   );
 }
 
 function BatteryTab({ info }: { info: ServerHardwareInfo }) {
+  const intl = useI18n();
   const { battery } = info;
   return (
     <Rows>
-      <Row label="制造商" value={battery.manufacturer} />
-      <Row label="设计容量" value={battery.designedCapacityWh ? `${battery.designedCapacityWh} Wh` : null} />
-      <Row label="最大容量" value={battery.maxCapacityWh ? `${battery.maxCapacityWh} Wh` : null} />
-      <Row label="循环次数" value={battery.cycleCount != null ? String(battery.cycleCount) : null} />
+      <Row label={intl.t("ui.manufacturer")} value={battery.manufacturer} />
+      <Row label={intl.t("ui.designedCapacity")} value={battery.designedCapacityWh ? `${battery.designedCapacityWh} Wh` : null} />
+      <Row label={intl.t("ui.maxCapacity")} value={battery.maxCapacityWh ? `${battery.maxCapacityWh} Wh` : null} />
+      <Row label={intl.t("ui.cycleCount")} value={battery.cycleCount != null ? String(battery.cycleCount) : null} />
     </Rows>
   );
 }
@@ -320,6 +330,7 @@ function SkeletonTab() {
 type TabId = "os" | "cpu" | "memory" | "gpu" | "thermal" | "network" | "battery" | "firmware";
 
 export function ServerInfoSection() {
+  const intl = useI18n();
   const { data: info, isLoading, isError } = useServerInfo();
   const { data: metrics } = useSystemMetrics();
   const [activeTab, setActiveTab] = useState<TabId>("os");
@@ -353,7 +364,7 @@ export function ServerInfoSection() {
                 : "text-muted-foreground hover:bg-background/60 hover:text-foreground",
             )}
           >
-            {zh(tab.label)}
+            {intl.text(tab.label)}
           </button>
         ))}
         {info && (
@@ -367,7 +378,7 @@ export function ServerInfoSection() {
       <div className="py-1">
         {isLoading && <SkeletonTab />}
         {isError && (
-          <div className="px-4 py-3 text-xs text-muted-foreground">加载硬件信息失败。</div>
+          <div className="px-4 py-3 text-xs text-muted-foreground">{intl.t("ui.failedToLoadHardwareInformation")}</div>
         )}
         {info && safeTab === "os"       && <OsTab info={info} />}
         {info && safeTab === "cpu"      && <CpuTab info={info} />}

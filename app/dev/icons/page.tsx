@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   ArchiveFileIcon,
   AudioFileIcon,
@@ -29,11 +30,12 @@ const ICONS = [
 ];
 
 export default function IconsDevPage() {
+  const intl = useI18n();
   return (
     <div className="min-h-screen bg-[#1a1a1a] p-12">
-      <h1 className="mb-2 text-2xl font-bold text-white">文件图标</h1>
+      <h1 className="mb-2 text-2xl font-bold text-white">{intl.t("ui.fileIcons")}</h1>
       <p className="mb-10 text-sm text-white/40">
-        颜色跟随 <code className="rounded bg-white/10 px-1.5 py-0.5">--accent</code> CSS variable
+        {intl.t("ui.colorsFollow")} <code className="rounded bg-white/10 px-1.5 py-0.5">--accent</code> CSS variable
       </p>
 
       {/* Large */}
@@ -45,7 +47,7 @@ export default function IconsDevPage() {
           {ICONS.map(({ label, icon: Icon }) => (
             <div key={label} className="flex flex-col items-center gap-2">
               <Icon className="size-14" />
-              <span className="text-[11px] text-white/50">{zh(label)}</span>
+              <span className="text-[11px] text-white/50">{intl.text(label)}</span>
             </div>
           ))}
         </div>
@@ -60,7 +62,7 @@ export default function IconsDevPage() {
           {ICONS.map(({ label, icon: Icon }) => (
             <div key={label} className="flex flex-col items-center gap-2">
               <Icon className="size-8" />
-              <span className="text-[11px] text-white/50">{zh(label)}</span>
+              <span className="text-[11px] text-white/50">{intl.text(label)}</span>
             </div>
           ))}
         </div>
@@ -75,7 +77,7 @@ export default function IconsDevPage() {
           {ICONS.map(({ label, icon: Icon }) => (
             <div key={label} className="flex flex-col items-center gap-2">
               <Icon className="size-5" />
-              <span className="text-[11px] text-white/50">{zh(label)}</span>
+              <span className="text-[11px] text-white/50">{intl.text(label)}</span>
             </div>
           ))}
         </div>
@@ -104,7 +106,7 @@ export default function IconsDevPage() {
             >
               <Icon className="size-14" />
               <span className="line-clamp-2 break-all text-center text-[12px] font-medium text-white/70">
-                {zh(label)}
+                {intl.text(label)}
               </span>
             </div>
           ))}

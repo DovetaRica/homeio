@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import "./globals.css";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 const _inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const _geistMono = Geist_Mono({
@@ -10,7 +12,7 @@ const _geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Homeio · 中文版",
+  title: "Homeio",
   description:
     "Your home server dashboard - manage all your self-hosted services in one place.",
   icons: {
@@ -30,17 +32,18 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
   return (
-    <html lang="zh-CN" className="dark" suppressHydrationWarning={true}>
+    <html lang={locale} className="dark" suppressHydrationWarning={true}>
       <body
         className={`${_inter.variable} ${_geistMono.variable} font-sans antialiased`}
       >
-        <AppProviders>{children}</AppProviders>
+        <NextIntlClientProvider><AppProviders>{children}</AppProviders></NextIntlClientProvider>
       </body>
     </html>
   );

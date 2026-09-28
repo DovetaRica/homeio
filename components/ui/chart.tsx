@@ -1,6 +1,7 @@
 'use client'
-import { zh } from "@/lib/i18n/zh";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import * as React from 'react'
 import * as RechartsPrimitive from 'recharts'
 
@@ -127,6 +128,7 @@ function ChartTooltipContent({
     nameKey?: string
     labelKey?: string
   }) {
+  const intl = useI18n();
   const { config } = useChart()
 
   const tooltipLabel = React.useMemo(() => {
@@ -178,7 +180,7 @@ function ChartTooltipContent({
         className,
       )}
     >
-      {zh(!nestLabel ? tooltipLabel : null)}
+      {intl.text(!nestLabel ? tooltipLabel : null)}
       <div className="grid gap-1.5">
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || 'value'}`
@@ -228,7 +230,7 @@ function ChartTooltipContent({
                     )}
                   >
                     <div className="grid gap-1.5">
-                      {zh(nestLabel ? tooltipLabel : null)}
+                      {intl.text(nestLabel ? tooltipLabel : null)}
                       <span className="text-muted-foreground">
                         {itemConfig?.label || item.name}
                       </span>
@@ -262,6 +264,7 @@ function ChartLegendContent({
     hideIcon?: boolean
     nameKey?: string
   }) {
+  const intl = useI18n();
   const { config } = useChart()
 
   if (!payload?.length) {
@@ -297,7 +300,7 @@ function ChartLegendContent({
                 }}
               />
             )}
-            {zh(itemConfig?.label)}
+            {intl.text(itemConfig?.label)}
           </div>
         )
       })}

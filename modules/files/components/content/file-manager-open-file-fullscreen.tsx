@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Download, Minimize2, RotateCw, ZoomIn, ZoomOut } from "@/components/icons/platform-icons";
 import { getFileIcon, type FileEntry } from "@/modules/files/components/file-manager-presenters";
 import type { FileReadResponse } from "@/lib/shared/contracts/files";
@@ -26,6 +27,7 @@ export function OpenFileFullscreen({
   openFileViewer,
   onCollapse,
 }: OpenFileFullscreenProps) {
+  const intl = useI18n();
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
   useEffect(() => {
@@ -56,7 +58,7 @@ export function OpenFileFullscreen({
         <button
           onClick={() => setZoom((z) => Math.max(z - ZOOM_STEP, ZOOM_MIN))}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="缩小"
+          aria-label={intl.t("ui.zoomOut")}
         >
           <ZoomOut className="size-4" />
         </button>
@@ -69,14 +71,14 @@ export function OpenFileFullscreen({
         <button
           onClick={() => setZoom((z) => Math.min(z + ZOOM_STEP, ZOOM_MAX))}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="放大"
+          aria-label={intl.t("ui.zoomIn")}
         >
           <ZoomIn className="size-4" />
         </button>
         <button
           onClick={() => setRotation((r) => (r + 90) % 360)}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="旋转 90 度"
+          aria-label={intl.t("ui.rotate90Degrees")}
         >
           <RotateCw className="size-4" />
         </button>
@@ -84,14 +86,14 @@ export function OpenFileFullscreen({
           href={openFileAssetUrl}
           download={openFile.entry.name}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="下载"
+          aria-label={intl.t("ui.download")}
         >
           <Download className="size-4" />
         </a>
         <button
           onClick={onCollapse}
           className="rounded p-1.5 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-          aria-label="退出全屏"
+          aria-label={intl.t("ui.exitFullScreen")}
         >
           <Minimize2 className="size-4" />
         </button>

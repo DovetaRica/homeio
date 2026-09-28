@@ -1,3 +1,5 @@
+
+import { useI18n } from "@/i18n/use-i18n";
 type ComposeEditorViewProps = {
   composeDraft: string;
   onChange: (next: string) => void;
@@ -5,15 +7,16 @@ type ComposeEditorViewProps = {
 };
 
 export function ComposeEditorView({ composeDraft, onChange, parseError }: ComposeEditorViewProps) {
+  const intl = useI18n();
   return (
     <section className="flex-1 overflow-hidden px-4 py-3">
       <div className="mb-2 rounded-lg border border-glass-border bg-secondary/25 px-2.5 py-1.5 text-2xs text-muted-foreground">
-        以 Docker Compose 为准，表单字段由此草稿生成。
+        {intl.t("ui.dockerComposeIsTheSourceOfTruthClassicFieldsAreDerivedFrom")}
       </div>
 
       {parseError ? (
         <div className="mb-2 rounded-lg border border-status-red/40 bg-status-red/10 px-2.5 py-1.5 text-2xs text-status-red">
-          无法解析 Compose： {parseError}
+          {intl.t("ui.unableToParseCompose")} {parseError}
         </div>
       ) : null}
 

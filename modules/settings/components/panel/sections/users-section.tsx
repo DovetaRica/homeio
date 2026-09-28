@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { InfoBanner, SectionDivider } from "@/modules/settings/components/panel/controls";
 import { SETTINGS_PANEL_INSET } from "@/modules/settings/components/panel/surface";
 import { TwoFactorCard } from "@/modules/settings/components/panel/sections/two-factor-card";
@@ -18,6 +20,7 @@ export function UsersSection({
   twoFactor,
   isDemoMode = false,
 }: UsersSectionProps) {
+  const intl = useI18n();
   const initial = username.charAt(0).toUpperCase();
 
   return (
@@ -27,7 +30,7 @@ export function UsersSection({
         variant="info"
       />
 
-      <SectionDivider title="用户账户" />
+      <SectionDivider title={intl.t("ui.userAccounts")} />
       <div className={cn(SETTINGS_PANEL_INSET, "overflow-hidden")}>
         <div className="flex items-center gap-3 px-4 py-3">
           <div
@@ -40,30 +43,30 @@ export function UsersSection({
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-foreground">{username}</span>
               <span className="rounded-md bg-primary/15 px-1.5 py-0.5 text-[11px] font-medium text-primary">
-                管理员
+                {intl.t("ui.admin")}
               </span>
             </div>
-            <div className="text-[11px] text-muted-foreground/70">本地账户 · 当前会话</div>
+            <div className="text-[11px] text-muted-foreground/70">{intl.t("ui.localAccountCurrentSession")}</div>
           </div>
         </div>
       </div>
 
       <TwoFactorCard status={twoFactor} isDemoMode={isDemoMode} />
 
-      <SectionDivider title="访问" />
+      <SectionDivider title={intl.t("ui.access")} />
       <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
         <div className="min-w-0">
-          <div className="text-sm text-foreground">添加用户</div>
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">多用户支持尚未开放</div>
+          <div className="text-sm text-foreground">{intl.t("ui.addUser")}</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{intl.t("ui.multiUserSupportIsComingSoon")}</div>
         </div>
         <button
           disabled
           className="inline-flex items-center gap-1.5 rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Plus className="size-3" />
-          添加用户
+          {intl.t("ui.addUser")}
           <span className="rounded bg-primary/20 px-1 py-px text-[10px] font-semibold uppercase tracking-wide">
-            暂未开放
+            {intl.t("ui.soon")}
           </span>
         </button>
       </div>

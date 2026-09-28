@@ -1,12 +1,8 @@
 export const DESKTOP_PREFERENCES_STORAGE_KEY = "desktop.preferences.v1";
 
 export const DESKTOP_LANGUAGE_OPTIONS = [
-  { code: "en-US", label: "English (US)" },
-  { code: "en-GB", label: "English (UK)" },
-  { code: "de-DE", label: "Deutsch" },
-  { code: "fr-FR", label: "Francais" },
-  { code: "es-ES", label: "Espanol" },
-  { code: "pt-PT", label: "Portugues" },
+  { code: "en", label: "English" },
+  { code: "zh-CN", label: "简体中文" },
 ] as const;
 
 export type DesktopLanguageCode = (typeof DESKTOP_LANGUAGE_OPTIONS)[number]["code"];
@@ -40,7 +36,7 @@ export const DEFAULT_DESKTOP_NOTIFICATION_PREFERENCES: DesktopNotificationPrefer
 };
 
 export const DEFAULT_DESKTOP_PREFERENCES: DesktopPreferences = {
-  language: "en-US",
+  language: "en",
   autoCheckUpdates: true,
   notifications: DEFAULT_DESKTOP_NOTIFICATION_PREFERENCES,
 };
@@ -110,7 +106,7 @@ function parseNotificationPreferences(
   };
 }
 
-export function isDesktopLanguageCode(value: string): value is DesktopLanguageCode {
+export function isDesktopLanguageCode(value: unknown): value is DesktopLanguageCode {
   return DESKTOP_LANGUAGE_OPTIONS.some((option) => option.code === value);
 }
 
@@ -122,12 +118,9 @@ export function readDesktopPreferences(storage: Storage | undefined) {
     if (!raw) return DEFAULT_DESKTOP_PREFERENCES;
 
     const parsed = JSON.parse(raw) as Partial<DesktopPreferences>;
-    if (!parsed.language || !isDesktopLanguageCode(parsed.language)) {
-      return DEFAULT_DESKTOP_PREFERENCES;
-    }
-
     return {
-      language: parsed.language,
+      // Old language options were cosmetic. Preserve all other saved preferences.
+      language: isDesktopLanguageCode(parsed.language) ? parsed.language : DEFAULT_DESKTOP_PREFERENCES.language,
       autoCheckUpdates:
         typeof parsed.autoCheckUpdates === "boolean"
           ? parsed.autoCheckUpdates

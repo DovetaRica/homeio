@@ -1,5 +1,7 @@
 'use client'
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
@@ -163,6 +165,7 @@ function Sidebar({
   variant?: 'sidebar' | 'floating' | 'inset'
   collapsible?: 'offcanvas' | 'icon' | 'none'
 }) {
+  const intl = useI18n();
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
   if (collapsible === 'none') {
@@ -196,8 +199,8 @@ function Sidebar({
           side={side}
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>侧栏</SheetTitle>
-            <SheetDescription>显示移动端侧栏。</SheetDescription>
+            <SheetTitle>{intl.t("ui.sidebar")}</SheetTitle>
+            <SheetDescription>{intl.t("ui.displaysTheMobileSidebar")}</SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
@@ -258,6 +261,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
+  const intl = useI18n();
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -274,22 +278,23 @@ function SidebarTrigger({
       {...props}
     >
       <PanelLeftIcon />
-      <span className="sr-only">切换侧栏</span>
+      <span className="sr-only">{intl.t("ui.toggleSidebar")}</span>
     </Button>
   )
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
+  const intl = useI18n();
   const { toggleSidebar } = useSidebar()
 
   return (
     <button
       data-sidebar="rail"
       data-slot="sidebar-rail"
-      aria-label="切换侧栏"
+      aria-label={intl.t("ui.toggleSidebar")}
       tabIndex={-1}
       onClick={toggleSidebar}
-      title="切换侧栏"
+      title={intl.t("ui.toggleSidebar")}
       className={cn(
         'hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex',
         'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',

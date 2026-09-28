@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { setUserLocale } from "@/i18n/actions";
+import { isLocale, defaultLocale } from "@/i18n/config";
+import { toast } from "sonner";
 import {
   DEFAULT_DESKTOP_PREFERENCES,
   DESKTOP_LANGUAGE_OPTIONS,
@@ -10,15 +15,19 @@ import {
 } from "@/lib/desktop/preferences";
 
 export function useDesktopPreferences() {
+  const resolvedLocale = useLocale();
+  const language = isLocale(resolvedLocale) ? resolvedLocale : defaultLocale;
+  const router = useRouter();
+  const t = useTranslations();
   const [preferences, setPreferences] = useState(DEFAULT_DESKTOP_PREFERENCES);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    setPreferences(readDesktopPreferences(window.localStorage));
+    setPreferences({...readDesktopPreferences(window.localStorage), language});
     setIsHydrated(true);
-  }, []);
+  }, [language]);
 
   useEffect(() => {
     if (!isHydrated || typeof window === "undefined") return;
@@ -38,11 +47,11 @@ export function useDesktopPreferences() {
     isHydrated,
     languageLabel,
     languageOptions: DESKTOP_LANGUAGE_OPTIONS,
-    setLanguage(language: (typeof DESKTOP_LANGUAGE_OPTIONS)[number]["code"]) {
-      setPreferences((current) => ({
-        ...current,
-        language,
-      }));
+    setLanguage(nextLanguage: (typeof DESKTOP_LANGUAGE_OPTIONS)[number]["code"]) {
+      void setUserLocale(nextLanguage).then(() => {
+        setPreferences((current) => ({...current, language: nextLanguage}));
+        router.refresh();
+      }).catch(() => toast.error(t('dynamic.languageSaveFailed')));
     },
     setAutoCheckUpdates(autoCheckUpdates: boolean) {
       setPreferences((current) => ({

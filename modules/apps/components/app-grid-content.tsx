@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { getStoreOperationActionLabel } from "@/lib/shared/store-operations";
 import {
   getAppVisualState,
@@ -37,6 +38,7 @@ export function AppGridContent({
   onOpenApp,
   primaryOperation,
 }: AppGridContentProps) {
+  const intl = useI18n();
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const iconContainerClass =
     iconSize === "small"
@@ -63,12 +65,12 @@ export function AppGridContent({
             <span className="size-1.5 shrink-0 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.6)] animate-pulse" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-medium text-foreground">
-                {getStoreOperationActionLabel(primaryOperation.action)}{zh(" ")}
+                {getStoreOperationActionLabel(primaryOperation.action)}{intl.text(" ")}
                 <span className="text-foreground/60">{primaryOperation.appName}</span>
               </p>
             </div>
             <span className="shrink-0 tabular-nums text-2xs text-muted-foreground/60">
-              {zh(activeOperationsCount > 1
+              {intl.text(activeOperationsCount > 1
                 ? `+${activeOperationsCount - 1} more`
                 : `${primaryOperation.progressPercent}%`)}
             </span>
@@ -89,7 +91,7 @@ export function AppGridContent({
               <div className="absolute inset-0 animate-grid-scan rounded-full bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
             </div>
             <p className="mt-4 text-2xs uppercase tracking-[0.2em] font-mono text-muted-foreground">
-              正在同步容器
+              {intl.t("ui.syncingContainers")}
             </p>
           </div>
           {/* Skeleton placeholder icons that match the real grid layout */}
@@ -108,7 +110,7 @@ export function AppGridContent({
       ) : isAppsError && apps.length === 0 ? (
         <div className="mt-24 text-center">
           <p className="text-2xs uppercase tracking-[0.2em] font-mono text-status-red">
-            连接失败
+            {intl.t("ui.connectionFailed")}
           </p>
         </div>
       ) : apps.length === 0 ? (
@@ -137,9 +139,9 @@ export function AppGridContent({
                 } ${animationsEnabled ? "transition-all duration-200" : ""} ${
                   animationsEnabled ? "group-active:scale-95" : ""
                 }`}
-                aria-label={zh(`Open ${app.name}`)}
+                aria-label={intl.t('dynamic.openName', {value0: app.name})}
                 data-app-status={app.status}
-                title={zh(visualState.title)}
+                title={intl.text(visualState.title)}
               >
                 <div className="relative">
                   <div
@@ -162,7 +164,7 @@ export function AppGridContent({
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={app.logoUrl}
-                          alt={zh(`${app.name} logo`)}
+                          alt={intl.t('dynamic.appLogo', {value0: app.name})}
                           className={`absolute inset-0 h-full w-full object-contain p-1.5 ${visualState.imageClass}`}
                           loading="lazy"
                           decoding="async"
@@ -219,7 +221,7 @@ export function AppGridContent({
                   {app.updateAvailable && app.status === "running" ? (
                     <span
                       className="pointer-events-none absolute -top-0.5 -right-0.5 size-2.5 rounded-full border border-background bg-primary"
-                      title="有可用更新"
+                      title={intl.t("ui.updateAvailable")}
                     />
                   ) : null}
                 </div>

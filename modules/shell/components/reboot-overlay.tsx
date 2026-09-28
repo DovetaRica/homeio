@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { StatusScreen } from "./status-screen";
 
 type RebootOverlayProps = {
@@ -101,7 +102,8 @@ const PHASE_COPY: Record<
 };
 
 export function RebootOverlay({ action, phase }: RebootOverlayProps) {
+  const intl = useI18n();
   const copy = PHASE_COPY[action][phase];
 
-  return <StatusScreen title={zh(copy.title)} body={copy.description} />;
+  return <StatusScreen title={intl.text(copy.title)} body={copy.description} />;
 }

@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   InfoBanner,
   SectionDivider,
@@ -44,6 +45,7 @@ function StatusDot({ status }: { status: string }) {
 }
 
 export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps) {
+  const intl = useI18n();
   const rootUsedPct = data.usedPercent != null ? Number(data.usedPercent.toFixed(1)) : 0;
   const smartData = data.smart;
   const smartCheckedLabel = smartData?.checkedAt
@@ -70,13 +72,13 @@ export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps)
           </div>
           <div className="flex-1">
             <p className="flex items-center gap-2 text-sm font-medium text-foreground">
-              磁盘与分区管理
+              {intl.t("ui.diskPartitionManager")}
               <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-400">
-                实验性
+                {intl.t("ui.experimental")}
               </span>
             </p>
             <p className="text-[11px] text-muted-foreground/70">
-              格式化、挂载和管理分区
+              {intl.t("ui.formatMountAndManagePartitions")}
             </p>
           </div>
           <ChevronRightRegular className="size-4 text-muted-foreground/40" />
@@ -84,12 +86,12 @@ export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps)
       )}
 
       {/* ── Files root ── */}
-      <SectionDivider title="文件根目录" />
+      <SectionDivider title={intl.t("ui.filesRoot")} />
       <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-3")}>
         <div className="mb-2 flex items-center justify-between gap-2">
           <span className="font-mono text-xs text-muted-foreground">{data.mountPath}</span>
           <span className="text-xs font-medium text-foreground">
-            {zh(data.summary !== "--" ? `${data.summary} · ${Math.round(rootUsedPct)}%` : "Unavailable")}
+            {intl.text(data.summary !== "--" ? `${data.summary} · ${Math.round(rootUsedPct)}%` : "Unavailable")}
           </span>
         </div>
         <UsageBar pct={rootUsedPct} color={DISK_COLORS[0]!} />
@@ -100,7 +102,7 @@ export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps)
             { label: "Total", value: formatStorageSize(data.totalBytes) },
           ].map(({ label, value }) => (
             <div key={label}>
-              <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">{zh(label)}</div>
+              <div className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">{intl.text(label)}</div>
               <div className="mt-0.5 text-xs font-medium text-foreground">{value}</div>
             </div>
           ))}
@@ -108,17 +110,17 @@ export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps)
       </div>
 
       {/* ── Disks ── */}
-      <SectionDivider title="磁盘" />
+      <SectionDivider title={intl.t("ui.disk")} />
       {data.disks.length === 0 ? (
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-3 text-xs text-muted-foreground")}>
-          没有磁盘指标。
+          {intl.t("ui.noDiskMetricsAvailable")}
         </div>
       ) : (
         <div className={cn(SETTINGS_PANEL_INSET, "divide-y divide-glass-border/50 px-4")}>
           {data.disks.map((disk, i) => (
             <div key={disk.id} className="py-3">
               <div className="mb-1.5 flex items-center justify-between gap-2">
-                <span className="text-xs font-medium text-foreground">{zh(disk.label)}</span>
+                <span className="text-xs font-medium text-foreground">{intl.text(disk.label)}</span>
                 <span className="text-xs text-muted-foreground">
                   {formatStorageSize(disk.usedBytes)} / {formatStorageSize(disk.totalBytes)} · {Math.round(disk.usedPercent)}%
                 </span>
@@ -142,7 +144,7 @@ export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps)
           </div>
           <div className="divide-y divide-glass-border/50 border-t border-glass-border/50 px-4">
             <div className="flex items-center justify-between py-2.5">
-              <span className="text-xs text-muted-foreground">状态</span>
+              <span className="text-xs text-muted-foreground">{intl.t("ui.status")}</span>
               <span className={cn(
                 "text-xs font-medium",
                 data.raid.status === "healthy" ? "text-status-green" : data.raid.status === "degraded" ? "text-status-amber" : "text-muted-foreground",
@@ -151,26 +153,26 @@ export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps)
               </span>
             </div>
             <div className="flex items-center justify-between py-2.5">
-              <span className="text-xs text-muted-foreground">总大小</span>
+              <span className="text-xs text-muted-foreground">{intl.t("ui.totalSize")}</span>
               <span className="text-xs font-medium text-foreground">{formatStorageSize(data.raid.totalBytes)}</span>
             </div>
             <div className="flex items-center justify-between py-2.5">
-              <span className="text-xs text-muted-foreground">冗余</span>
+              <span className="text-xs text-muted-foreground">{intl.t("ui.redundancy")}</span>
               <span className="text-xs font-medium text-foreground">{data.raid.redundancy ?? "Not reported"}</span>
             </div>
           </div>
         </div>
       ) : (
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-3 text-xs text-muted-foreground")}>
-          当前环境未检测到 RAID 存储池。
+          {intl.t("ui.noRaidPoolDetectedOnThisHost")}
         </div>
       )}
 
       {/* ── Shared Folders ── */}
-      <SectionDivider title="共享文件夹" />
+      <SectionDivider title={intl.t("ui.shareFolder")} />
       <div className={cn(SETTINGS_PANEL_INSET, "overflow-hidden")}>
         {data.shares.length === 0 ? (
-          <div className="px-4 py-3 text-xs text-muted-foreground">未配置共享文件夹。</div>
+          <div className="px-4 py-3 text-xs text-muted-foreground">{intl.t("ui.noSharedFoldersConfigured")}</div>
         ) : (
           <div className="divide-y divide-glass-border/50">
             {data.shares.map((share) => (
@@ -194,22 +196,22 @@ export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps)
           </div>
         )}
         <div className="flex items-center justify-between border-t border-glass-border/50 px-4 py-2">
-          <span className="text-[11px] text-muted-foreground/60">{data.localShareCount} 本地 · {data.networkShareCount} 网络</span>
+          <span className="text-[11px] text-muted-foreground/60">{data.localShareCount} {intl.t("ui.local")} {data.networkShareCount} {intl.t("ui.network")}</span>
         </div>
       </div>
 
       {/* ── S.M.A.R.T. ── */}
-      <SectionDivider title="S.M.A.R.T. 健康状态" />
+      <SectionDivider title={intl.t("ui.sMARTHealth")} />
       {!smartData ? (
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-3 text-xs text-muted-foreground")}>
-          当前环境无法读取 S.M.A.R.T. 状态。
+          {intl.t("ui.sMARTStatusUnavailableOnThisHost")}
         </div>
       ) : (
         <div className={cn(SETTINGS_PANEL_INSET, "overflow-hidden")}>
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-2.5">
               <StatusDot status={smartData.status} />
-              <span className="text-sm font-medium text-foreground">{zh(smartData.message)}</span>
+              <span className="text-sm font-medium text-foreground">{intl.text(smartData.message)}</span>
             </div>
             {smartCheckedLabel && (
               <span className="text-[11px] text-muted-foreground/60">{smartCheckedLabel}</span>
@@ -236,7 +238,7 @@ export function StorageSection({ data, onOpenDiskManager }: StorageSectionProps)
                     )}
                     {disk.powerOnHours != null && (
                       <span>
-                        {zh(disk.powerOnHours >= 8_760
+                        {intl.text(disk.powerOnHours >= 8_760
                           ? `${(disk.powerOnHours / 8_760).toFixed(1)}yr`
                           : disk.powerOnHours >= 24
                             ? `${Math.floor(disk.powerOnHours / 24)}d`

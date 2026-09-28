@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   Dialog,
   DialogContent,
@@ -43,6 +45,7 @@ export function NetworkStorageDialog({
   onClose,
   onNavigateToNetwork,
 }: NetworkStorageDialogProps) {
+  const intl = useI18n();
   const currentUserQuery = useCurrentUser();
   const autoDiscoverRanRef = useRef(false);
   const [isAddFormOpen, setIsAddFormOpen] = useState(false);
@@ -160,8 +163,8 @@ export function NetworkStorageDialog({
           className="max-w-[min(96vw,60rem)] gap-0 overflow-hidden rounded-[calc(var(--radius)+0.75rem)] border-glass-border bg-popover/96 p-0 shadow-2xl shadow-black/45 backdrop-blur-2xl"
         >
           <DialogHeader className="sr-only">
-            <DialogTitle>网络存储</DialogTitle>
-            <DialogDescription>发现、挂载和管理 SMB 共享。</DialogDescription>
+            <DialogTitle>{intl.t("ui.networkStorage")}</DialogTitle>
+            <DialogDescription>{intl.t("ui.discoverMountAndManageSmbShares")}</DialogDescription>
           </DialogHeader>
 
           {/* Window chrome title bar */}
@@ -171,7 +174,7 @@ export function NetworkStorageDialog({
               <button
                 onClick={onClose}
                 className="group flex size-3 cursor-pointer items-center justify-center rounded-full bg-[#ff5f57] transition-all hover:brightness-110"
-                aria-label="关闭"
+                aria-label={intl.t("ui.close")}
               >
                 <X className="size-[7px] text-[#6a0002] opacity-0 transition-opacity group-hover:opacity-100" />
               </button>
@@ -181,7 +184,7 @@ export function NetworkStorageDialog({
 
             {/* Centered title */}
             <div className="flex flex-1 items-center justify-center">
-              <span className="text-xs font-medium text-foreground/80">网络存储</span>
+              <span className="text-xs font-medium text-foreground/80">{intl.t("ui.networkStorage")}</span>
             </div>
 
             {/* Right actions */}
@@ -197,7 +200,7 @@ export function NetworkStorageDialog({
                 ) : (
                   <RefreshCw className="size-3" />
                 )}
-                重新扫描
+                {intl.t("ui.rescan")}
               </button>
             </div>
           </div>
@@ -226,8 +229,8 @@ export function NetworkStorageDialog({
               }}
               disabled={isBusy}
               className="absolute bottom-5 right-5 flex size-11 items-center justify-center rounded-full bg-primary/20 text-primary shadow-lg shadow-primary/10 transition-colors hover:bg-primary/30 disabled:cursor-not-allowed disabled:opacity-50"
-              aria-label="添加网络共享"
-              title="添加网络共享"
+              aria-label={intl.t("ui.addNetworkShare")}
+              title={intl.t("ui.addNetworkShare")}
             >
               <Plus className="size-5" />
             </button>

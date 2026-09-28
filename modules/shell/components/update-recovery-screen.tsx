@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { reloadBrowserWindow } from "@/lib/desktop/browser-reload";
 import {
   clearPersistedPowerActionState,
@@ -57,6 +58,7 @@ export function UpdateRecoveryScreen({
   manageRecovery = true,
   phaseOverride,
 }: UpdateRecoveryScreenProps) {
+  const intl = useI18n();
   const router = useRouter();
   const [phase, setPhase] = useState<UpdateRecoveryPhase>("starting");
   const [fatalError, setFatalError] = useState<string | null>(null);
@@ -171,7 +173,7 @@ export function UpdateRecoveryScreen({
 
   return (
     <StatusScreen
-      title={zh(phaseCopy.title)}
+      title={intl.text(phaseCopy.title)}
       body={phaseCopy.body}
       failed={phase === "failed"}
       action={
@@ -181,7 +183,7 @@ export function UpdateRecoveryScreen({
             onClick={() => router.replace("/")}
             className="mt-6 inline-flex items-center rounded-[var(--radius)] bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:brightness-110"
           >
-            返回 Homeio
+            {intl.t("ui.returnToHomeio")}
           </button>
         ) : null
       }

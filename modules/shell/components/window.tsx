@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Maximize2, Minimize2, Minus, X } from "@/components/icons/platform-icons";
 import {
   Tooltip,
@@ -44,6 +45,7 @@ export function Window({
   isMinimized = false,
   animationsEnabled = true,
 }: WindowProps) {
+  const intl = useI18n();
   const [isMaximized, setIsMaximized] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ x: -1, y: -1 });
@@ -228,31 +230,31 @@ export function Window({
                 <button
                   onClick={onClose}
                   className="group size-3 rounded-[var(--radius)] bg-[#ff5f57] hover:brightness-110 transition-all flex items-center justify-center cursor-pointer"
-                  aria-label="关闭窗口"
+                  aria-label={intl.t("ui.closeWindow")}
                 >
                   <X className="size-2 text-[#4a0002] opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>关闭</TooltipContent>
+              <TooltipContent side="bottom" sideOffset={6}>{intl.t("ui.close")}</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={onMinimize}
                   className="group size-3 rounded-[var(--radius)] bg-[#febc2e] hover:brightness-110 transition-all flex items-center justify-center cursor-pointer"
-                  aria-label="最小化窗口"
+                  aria-label={intl.t("ui.minimizeWindow")}
                 >
                   <Minus className="size-2 text-[#5f4a00] opacity-0 group-hover:opacity-100 transition-opacity" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>最小化</TooltipContent>
+              <TooltipContent side="bottom" sideOffset={6}>{intl.t("ui.minimize")}</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   onClick={toggleMaximize}
                   className="group size-3 rounded-[var(--radius)] bg-[#28c840] hover:brightness-110 transition-all flex items-center justify-center cursor-pointer"
-                  aria-label={zh(isMaximized ? "Restore window" : "Maximize window")}
+                  aria-label={intl.text(isMaximized ? "Restore window" : "Maximize window")}
                 >
                   {isMaximized ? (
                     <Minimize2 className="size-2 text-[#004a00] opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -262,7 +264,7 @@ export function Window({
                 </button>
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={6}>
-                {zh(isMaximized ? "Restore" : "Maximize")}
+                {intl.text(isMaximized ? "Restore" : "Maximize")}
               </TooltipContent>
             </Tooltip>
           </div>
@@ -270,7 +272,7 @@ export function Window({
 
         <div className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
           {icon}
-          <span className="text-xs font-medium text-foreground">{zh(title)}</span>
+          <span className="text-xs font-medium text-foreground">{intl.text(title)}</span>
         </div>
 
         <div className="w-16" />

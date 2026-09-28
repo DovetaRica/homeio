@@ -1,5 +1,6 @@
 
-import { zh } from "@/lib/i18n/zh";
+import { useI18n } from "@/i18n/use-i18n";
+
 import { Toggle } from "@/components/ui/toggle";
 import { Check, Info } from "@/components/icons/platform-icons";
 
@@ -29,6 +30,7 @@ export function ClassicFormView({
   state,
   onChange,
 }: ClassicFormViewProps) {
+  const intl = useI18n();
   const update = (patch: Partial<ClassicConfigState>) => {
     onChange({ ...state, ...patch });
   };
@@ -44,7 +46,7 @@ export function ClassicFormView({
       ) : null}
 
       <div className="space-y-3">
-        <Field label="Docker 镜像 *">
+        <Field label={intl.t("ui.dockerImage2")}>
           <Input
             ariaLabel="Docker Image"
             value={state.dockerImage}
@@ -54,7 +56,7 @@ export function ClassicFormView({
           />
         </Field>
 
-        <Field label="标题 *">
+        <Field label={intl.t("ui.title2")}>
           <Input
             ariaLabel="Title"
             value={state.title}
@@ -64,14 +66,14 @@ export function ClassicFormView({
           />
         </Field>
 
-        <Field label="图标地址">
+        <Field label={intl.t("ui.iconUrl")}>
           <div className="flex items-center gap-2">
             <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-glass-border bg-secondary/30">
               {state.iconUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={state.iconUrl}
-                  alt={zh(`${state.title || "App"} icon`)}
+                  alt={intl.t('dynamic.appIcon', {value0: state.title || "App"})}
                   className="size-full object-cover"
                 />
               ) : (
@@ -87,7 +89,7 @@ export function ClassicFormView({
           </div>
         </Field>
 
-        <Field label="Web 界面">
+        <Field label={intl.t("ui.webUi")}>
           <div className="grid grid-cols-1 gap-1.5 md:grid-cols-12">
             <div className="md:col-span-2">
               <Select
@@ -163,11 +165,11 @@ export function ClassicFormView({
             placeholder="https://myapp.example.com"
           />
           <p className="mt-1 text-xs text-muted-foreground">
-            “打开”按钮使用的地址。留空时使用当前服务器地址；通过隧道或反向代理访问时可指定其他地址。
+            {intl.t("ui.whereTheOpenButtonSendsYouLeaveEmptyToUseThisServer")}
           </p>
         </Field>
 
-        <Field label="网络">
+        <Field label={intl.t("ui.network")}>
           <Select
             ariaLabel="Network"
             value={state.network}
@@ -180,7 +182,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="端口"
+          label={intl.t("ui.port")}
           withAdd
           onAdd={() =>
             update({
@@ -223,7 +225,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="挂载卷"
+          label={intl.t("ui.volumes")}
           withAdd
           onAdd={() =>
             update({
@@ -267,7 +269,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="环境变量"
+          label={intl.t("ui.environmentVariables")}
           withAdd
           onAdd={() =>
             update({
@@ -311,7 +313,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="设备"
+          label={intl.t("ui.devices")}
           withAdd
           onAdd={() => update({ devices: [...state.devices, ""] })}
         >
@@ -323,7 +325,7 @@ export function ClassicFormView({
         </Field>
 
         <Field
-          label="容器启动命令"
+          label={intl.t("ui.containerCommand")}
           withAdd
           onAdd={() =>
             update({ containerCommands: [...state.containerCommands, ""] })
@@ -351,11 +353,11 @@ export function ClassicFormView({
                 state.privileged ? "bg-primary" : "bg-muted-foreground/50"
               }`}
             />
-            {zh(state.privileged ? "Enabled" : "Disabled")}
+            {intl.text(state.privileged ? "Enabled" : "Disabled")}
           </Toggle>
         </Field>
 
-        <Field label="重启策略">
+        <Field label={intl.t("ui.restartPolicy")}>
           <Input
             ariaLabel="Restart Policy"
             value={state.restartPolicy}
@@ -364,7 +366,7 @@ export function ClassicFormView({
           />
         </Field>
 
-        <Field label="容器权限（cap-add）">
+        <Field label={intl.t("ui.containerCapabilitiesCapAdd")}>
           <Input
             ariaLabel="Container Capabilities (cap-add)"
             value={state.capabilities}
@@ -373,7 +375,7 @@ export function ClassicFormView({
           />
         </Field>
 
-        <Field label="容器主机名">
+        <Field label={intl.t("ui.containerHostname")}>
           <Input
             ariaLabel="Container Hostname"
             value={state.hostname}
@@ -398,17 +400,18 @@ function Field({
   withAdd?: boolean;
   onAdd?: () => void;
 }) {
+  const intl = useI18n();
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-foreground">{zh(label)}</label>
+        <label className="text-xs font-semibold text-foreground">{intl.text(label)}</label>
         {withAdd && (
           <button
             type="button"
             onClick={onAdd}
             className="cursor-pointer rounded-[var(--radius)] border border-glass-border bg-secondary/40 px-2.5 py-0.5 text-2xs font-medium text-foreground transition-colors hover:bg-secondary/60"
           >
-            + 添加
+            {intl.t("ui.add2")}
           </button>
         )}
       </div>
@@ -432,14 +435,15 @@ function Input({
   readOnly?: boolean;
   success?: boolean;
 }) {
+  const intl = useI18n();
   return (
     <div className="relative">
       <input
         type="text"
-        aria-label={zh(ariaLabel)}
+        aria-label={intl.text(ariaLabel)}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder={zh(placeholder)}
+        placeholder={intl.text(placeholder)}
         readOnly={readOnly}
         className={`h-9 w-full rounded-lg border bg-secondary/35 px-2.5 pr-8 text-xs text-foreground placeholder:text-muted-foreground/70 focus:outline-none ${
           success
@@ -465,16 +469,17 @@ function Select({
   onChange: (value: string) => void;
   ariaLabel: string;
 }) {
+  const intl = useI18n();
   return (
     <select
-      aria-label={zh(ariaLabel)}
+      aria-label={intl.text(ariaLabel)}
       value={value}
       onChange={(event) => onChange(event.target.value)}
       className="h-9 w-full rounded-lg border border-glass-border bg-secondary/35 px-2.5 text-xs text-foreground focus:border-primary/50 focus:outline-none"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
-          {zh(option.label)}
+          {intl.text(option.label)}
         </option>
       ))}
     </select>
@@ -482,10 +487,11 @@ function Select({
 }
 
 function HintText() {
+  const intl = useI18n();
   return (
     <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
       <Info className="size-3.5" />
-      点击“+”添加。
+      {intl.t("ui.clickQuotQuotToAddOne")}
     </p>
   );
 }
@@ -499,6 +505,7 @@ function PortEditor({
   onRemove: () => void;
   onChange: (row: PortRow) => void;
 }) {
+  const intl = useI18n();
   return (
     <div className="rounded-lg border border-glass-border bg-secondary/20 p-1.5">
       <div className="mb-1 flex justify-end">
@@ -507,7 +514,7 @@ function PortEditor({
           onClick={onRemove}
           className="cursor-pointer text-2xs text-muted-foreground hover:text-status-red"
         >
-          移除
+          {intl.t("ui.remove")}
         </button>
       </div>
       <div className="grid grid-cols-1 gap-1.5 md:grid-cols-3">
@@ -516,14 +523,14 @@ function PortEditor({
           onChange={(value) =>
             onChange({ ...row, host: value.replace(/[^0-9]/g, "") })
           }
-          placeholder="主机"
+          placeholder={intl.t("ui.host")}
         />
         <Input
           value={row.container}
           onChange={(value) =>
             onChange({ ...row, container: value.replace(/[^0-9]/g, "") })
           }
-          placeholder="容器"
+          placeholder={intl.t("ui.container")}
         />
         <Select
           ariaLabel="Protocol"
@@ -550,6 +557,7 @@ function VolumeEditor({
   onRemove: () => void;
   onChange: (row: VolumeRow) => void;
 }) {
+  const intl = useI18n();
   return (
     <div className="rounded-lg border border-glass-border bg-secondary/20 p-1.5">
       <div className="mb-1 flex justify-end">
@@ -558,19 +566,19 @@ function VolumeEditor({
           onClick={onRemove}
           className="cursor-pointer text-2xs text-muted-foreground hover:text-status-red"
         >
-          移除
+          {intl.t("ui.remove")}
         </button>
       </div>
       <div className="grid grid-cols-1 gap-1.5 md:grid-cols-2">
         <Input
           value={row.host}
           onChange={(value) => onChange({ ...row, host: value })}
-          placeholder="主机"
+          placeholder={intl.t("ui.host")}
         />
         <Input
           value={row.container}
           onChange={(value) => onChange({ ...row, container: value })}
-          placeholder="容器"
+          placeholder={intl.t("ui.container")}
         />
       </div>
     </div>
@@ -586,6 +594,7 @@ function EnvEditor({
   onRemove: () => void;
   onChange: (row: EnvRow) => void;
 }) {
+  const intl = useI18n();
   return (
     <div className="rounded-lg border border-glass-border bg-secondary/20 p-1.5">
       <div className="mb-1 flex justify-end">
@@ -594,7 +603,7 @@ function EnvEditor({
           onClick={onRemove}
           className="cursor-pointer text-2xs text-muted-foreground hover:text-status-red"
         >
-          移除
+          {intl.t("ui.remove")}
         </button>
       </div>
       <div className="grid grid-cols-1 gap-1.5 md:grid-cols-2">
@@ -622,6 +631,7 @@ function StringListEditor({
   placeholder: string;
   onChange: (values: string[]) => void;
 }) {
+  const intl = useI18n();
   if (values.length === 0) {
     return <HintText />;
   }
@@ -643,7 +653,7 @@ function StringListEditor({
               }
               className="cursor-pointer text-2xs text-muted-foreground hover:text-status-red"
             >
-              移除
+              {intl.t("ui.remove")}
             </button>
           </div>
           <Input
@@ -655,7 +665,7 @@ function StringListEditor({
                 ),
               )
             }
-            placeholder={zh(placeholder)}
+            placeholder={intl.text(placeholder)}
           />
         </div>
       ))}

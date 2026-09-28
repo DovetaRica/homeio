@@ -1,5 +1,6 @@
 
-import { zh } from "@/lib/i18n/zh";
+import { useI18n } from "@/i18n/use-i18n";
+
 import type { DockerRunState } from "@/modules/apps/components/configurator/configurator-mapper";
 
 type DockerRunViewProps = {
@@ -8,6 +9,7 @@ type DockerRunViewProps = {
 };
 
 export function DockerRunView({ state, onChange }: DockerRunViewProps) {
+  const intl = useI18n();
   const update = (patch: Partial<DockerRunState>) => {
     onChange({ ...state, ...patch });
   };
@@ -15,15 +17,15 @@ export function DockerRunView({ state, onChange }: DockerRunViewProps) {
   return (
     <section className="flex-1 overflow-y-auto px-4 py-3">
       <p className="mb-3 text-2xs text-muted-foreground">
-        Docker Run 仅用于自定义安装，请粘贴完整的 <code>docker run ...</code>{zh(" ")}
-        命令； <code>docker pull ...</code> 不适用于此页，Web 界面信息由命令中的发布端口推断。
+        {intl.t("ui.dockerRunIsAvailableForCustomInstallsOnlyPasteAFull")} <code>docker run ...</code>{intl.text(" ")}
+        {intl.t("ui.commandHere")} <code>docker pull ...</code> {intl.t("ui.isNotSupportedInThisTabWebUiMetadataIsDerivedFrom")}
       </p>
 
       <div className="space-y-3">
         <label className="flex flex-col gap-1 text-2xs text-muted-foreground">
-          应用名称
+          {intl.t("ui.appName")}
           <input
-            aria-label="应用名称"
+            aria-label={intl.t("ui.appName")}
             required
             value={state.name}
             onChange={(event) => update({ name: event.target.value })}
@@ -33,9 +35,9 @@ export function DockerRunView({ state, onChange }: DockerRunViewProps) {
         </label>
 
         <label className="flex flex-col gap-1 text-2xs text-muted-foreground">
-          图标地址
+          {intl.t("ui.iconUrl")}
           <input
-            aria-label="图标地址"
+            aria-label={intl.t("ui.iconUrl")}
             value={state.iconUrl}
             onChange={(event) => update({ iconUrl: event.target.value })}
             placeholder="https://..."
@@ -44,9 +46,9 @@ export function DockerRunView({ state, onChange }: DockerRunViewProps) {
         </label>
 
         <label className="flex flex-col gap-1 text-2xs text-muted-foreground">
-          仓库地址（可选）
+          {intl.t("ui.repositoryUrlOptional")}
           <input
-            aria-label="仓库地址"
+            aria-label={intl.t("ui.repositoryUrl")}
             value={state.repositoryUrl}
             onChange={(event) => update({ repositoryUrl: event.target.value })}
             placeholder="https://github.com/owner/repo"
@@ -55,7 +57,7 @@ export function DockerRunView({ state, onChange }: DockerRunViewProps) {
         </label>
 
         <label className="flex flex-col gap-1 text-2xs text-muted-foreground">
-          Docker Run 命令
+          {intl.t("ui.dockerRunCommand")}
           <textarea
             aria-label="Docker Run"
             required

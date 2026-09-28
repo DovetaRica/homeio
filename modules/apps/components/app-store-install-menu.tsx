@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Plus } from "@/components/icons/platform-icons";
 import { useEffect, useRef, useState } from "react";
 
@@ -12,6 +14,7 @@ export function AppStoreInstallMenu({
   onInstallCustomClick,
   onManageSourcesClick,
 }: AppStoreInstallMenuProps) {
+  const intl = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -37,11 +40,11 @@ export function AppStoreInstallMenu({
       <button
         type="button"
         onClick={() => setIsOpen((value) => !value)}
-        aria-label="安装菜单"
+        aria-label={intl.t("ui.installMenu")}
         className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-primary/15 text-primary rounded-md hover:bg-primary/25 transition-colors cursor-pointer"
       >
         <Plus className="size-3.5" />
-        安装
+        {intl.t("ui.install")}
       </button>
 
       {isOpen ? (
@@ -58,7 +61,7 @@ export function AppStoreInstallMenu({
             }}
             className="w-full text-left px-2.5 py-1.5 text-xs text-foreground hover:bg-secondary/50 rounded-md transition-colors cursor-pointer"
           >
-            安装自定义应用
+            {intl.t("ui.installCustomApp")}
           </button>
           <button
             role="menuitem"
@@ -69,7 +72,7 @@ export function AppStoreInstallMenu({
             }}
             className="w-full text-left px-2.5 py-1.5 text-xs text-foreground hover:bg-secondary/50 rounded-md transition-colors cursor-pointer"
           >
-            管理应用源
+            {intl.t("ui.manageSources")}
           </button>
         </div>
       ) : null}

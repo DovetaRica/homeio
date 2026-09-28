@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { AppGridContent } from "@/modules/apps/components/app-grid-content";
 import { useAppGridController } from "@/modules/apps/components/app-grid-controller";
 import { AppGridContextMenu } from "@/modules/apps/components/app-grid-menu";
@@ -27,6 +29,7 @@ export function AppGrid({
   onOpenSettings,
   onCopyUrl,
 }: AppGridProps) {
+  const intl = useI18n();
   const controller = useAppGridController({
     onCopyUrl,
     onOpenDashboard,
@@ -46,7 +49,7 @@ export function AppGrid({
           <button
             onClick={controller.dismissActionError}
             className="mt-0.5 shrink-0 opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
-            aria-label="关闭错误提示"
+            aria-label={intl.t("ui.dismissError")}
           >
             <X className="size-3" />
           </button>

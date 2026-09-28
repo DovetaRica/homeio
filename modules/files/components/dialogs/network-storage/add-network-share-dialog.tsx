@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Input } from "@/components/ui/input";
 import {
   Dialog,
@@ -54,6 +56,7 @@ export function AddNetworkShareDialog({
   onSelectShare,
   onSubmit,
 }: AddNetworkShareDialogProps) {
+  const intl = useI18n();
   function update<K extends keyof AddNetworkShareDraft>(key: K, value: AddNetworkShareDraft[K]) {
     onDraftChange((current) => ({ ...current, [key]: value }));
   }
@@ -62,8 +65,8 @@ export function AddNetworkShareDialog({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent showCloseButton={false} className="max-w-[34rem] gap-0 border-glass-border bg-popover/96 p-0 shadow-2xl shadow-black/45 backdrop-blur-2xl">
         <DialogHeader className="sr-only">
-          <DialogTitle>添加网络共享</DialogTitle>
-          <DialogDescription>连接 SMB 共享</DialogDescription>
+          <DialogTitle>{intl.t("ui.addNetworkShare")}</DialogTitle>
+          <DialogDescription>{intl.t("ui.connectToAnSmbShare")}</DialogDescription>
         </DialogHeader>
 
         {/* Window chrome title bar */}
@@ -73,7 +76,7 @@ export function AddNetworkShareDialog({
             <button
               onClick={onClose}
               className="group flex size-3 cursor-pointer items-center justify-center rounded-full bg-[#ff5f57] transition-all hover:brightness-110"
-              aria-label="关闭"
+              aria-label={intl.t("ui.close")}
             >
               <X className="size-[7px] text-[#6a0002] opacity-0 transition-opacity group-hover:opacity-100" />
             </button>
@@ -83,7 +86,7 @@ export function AddNetworkShareDialog({
 
           {/* Centered title */}
           <div className="flex flex-1 items-center justify-center">
-            <span className="text-xs font-medium text-foreground/80">添加网络共享</span>
+            <span className="text-xs font-medium text-foreground/80">{intl.t("ui.addNetworkShare")}</span>
           </div>
 
           {/* Right action — back button to balance */}
@@ -92,10 +95,10 @@ export function AddNetworkShareDialog({
               type="button"
               onClick={onClose}
               className="inline-flex h-6 items-center gap-1 rounded-md border border-glass-border bg-background/80 px-2 text-[11px] text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground"
-              aria-label="返回"
+              aria-label={intl.t("ui.back")}
             >
               <ArrowLeft className="size-3" />
-              返回
+              {intl.t("ui.back")}
             </button>
           </div>
         </div>
@@ -103,12 +106,12 @@ export function AddNetworkShareDialog({
         <div className="space-y-5 px-5 py-5">
           {/* Server */}
           <div>
-            <FieldLabel>服务器</FieldLabel>
+            <FieldLabel>{intl.t("ui.server")}</FieldLabel>
             <div className="flex gap-2">
               <Input
                 value={draft.host}
                 onChange={(event) => update("host", event.target.value)}
-                placeholder="主机名或 IP（例如 nas.local、192.168.1.100）"
+                placeholder={intl.t("ui.hostOrIpEGNasLocal1921681100")}
                 className="h-8 rounded-lg border-glass-border bg-background/55 px-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/40 focus-visible:ring-0"
               />
               <button
@@ -118,26 +121,26 @@ export function AddNetworkShareDialog({
                 className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <RefreshCw className="size-3" />
-                扫描
+                {intl.t("ui.scan")}
               </button>
             </div>
           </div>
 
           {/* Credentials */}
           <div>
-            <FieldLabel>凭据</FieldLabel>
+            <FieldLabel>{intl.t("ui.credentials")}</FieldLabel>
             <div className="grid grid-cols-2 gap-2">
               <Input
                 value={draft.username}
                 onChange={(event) => update("username", event.target.value)}
-                placeholder="用户名"
+                placeholder={intl.t("ui.username")}
                 className="h-8 rounded-lg border-glass-border bg-background/55 px-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/40 focus-visible:ring-0"
               />
               <Input
                 type="password"
                 value={draft.password}
                 onChange={(event) => update("password", event.target.value)}
-                placeholder="密码"
+                placeholder={intl.t("ui.password")}
                 className="h-8 rounded-lg border-glass-border bg-background/55 px-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/40 focus-visible:ring-0"
               />
             </div>
@@ -145,12 +148,12 @@ export function AddNetworkShareDialog({
 
           {/* Share */}
           <div>
-            <FieldLabel>共享</FieldLabel>
+            <FieldLabel>{intl.t("ui.shared")}</FieldLabel>
             <div className="flex gap-2">
               <Input
                 value={draft.share}
                 onChange={(event) => update("share", event.target.value)}
-                placeholder="共享名称（例如 Media、Documents）"
+                placeholder={intl.t("ui.shareNameEGMediaDocuments")}
                 className="h-8 rounded-lg border-glass-border bg-background/55 px-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus-visible:border-primary/40 focus-visible:ring-0"
               />
               <button
@@ -164,7 +167,7 @@ export function AddNetworkShareDialog({
                 ) : (
                   <Search className="size-3" />
                 )}
-                查找
+                {intl.t("ui.find")}
               </button>
             </div>
 
@@ -191,7 +194,7 @@ export function AddNetworkShareDialog({
             onClick={onClose}
             className="h-8 rounded-lg border border-glass-border bg-background/55 px-3 text-xs text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground"
           >
-            取消
+            {intl.t("ui.cancel")}
           </button>
           <button
             type="button"
@@ -200,7 +203,7 @@ export function AddNetworkShareDialog({
             className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-primary/20 px-3 text-xs font-medium text-primary transition-colors hover:bg-primary/30 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {createPending ? <Loader2 className="size-3 animate-spin" /> : <Plus className="size-3" />}
-            添加共享
+            {intl.t("ui.addShare")}
           </button>
         </div>
       </DialogContent>

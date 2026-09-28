@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,12 +46,13 @@ function PreferenceRow({
   description?: string;
   children: React.ReactNode;
 }) {
+  const intl = useI18n();
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
       <div className="min-w-0">
-        <div className="text-sm text-foreground">{zh(label)}</div>
+        <div className="text-sm text-foreground">{intl.text(label)}</div>
         {description && (
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{zh(description)}</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{intl.text(description)}</div>
         )}
       </div>
       {children}
@@ -65,6 +67,7 @@ export function PowerSection({
   onSaveScheduledReboot,
   onFactoryReset,
 }: PowerSectionProps) {
+  const intl = useI18n();
   const rebooting = power.reboot.isPending;
   const shuttingDown = power.shutdown.isPending;
   const resetting = power.factoryReset.isPending;
@@ -93,7 +96,7 @@ export function PowerSection({
   return (
     <div className="flex flex-col gap-1">
       {/* ── Power Management ── */}
-      <SectionDivider title="电源管理" />
+      <SectionDivider title={intl.t("ui.powerManagement")} />
       <InfoBanner
         text="These actions will affect all running services. Make sure to save your work before proceeding."
         variant="warning"
@@ -112,25 +115,25 @@ export function PowerSection({
               )}
             >
               <RefreshCw className="size-5 text-status-amber group-hover:animate-spin" />
-              <span className="text-xs font-medium text-foreground">重启</span>
-              <span className="text-[11px] text-muted-foreground/60">重启所有服务</span>
+              <span className="text-xs font-medium text-foreground">{intl.t("ui.reboot")}</span>
+              <span className="text-[11px] text-muted-foreground/60">{intl.t("ui.restartAllServices")}</span>
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>要重启服务器吗？</AlertDialogTitle>
+              <AlertDialogTitle>{intl.t("ui.rebootServer")}</AlertDialogTitle>
               <AlertDialogDescription>
-                所有运行中的 Docker 容器和服务会暂时停止并重启，约需 30～60 秒。
+                {intl.t("ui.allRunningDockerContainersAndServicesWillBeTemporarilyStoppedAndRestarted")}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogCancel>{intl.t("ui.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-status-amber text-white hover:bg-status-amber/90"
                 onClick={() => void onRebootNow()}
                 disabled={rebooting}
               >
-                {rebooting ? <><Loader2 className="size-4 animate-spin" />正在重启…</> : "Reboot now"}
+                {rebooting ? <><Loader2 className="size-4 animate-spin" />{intl.t("ui.rebooting")}</> : "Reboot now"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -146,25 +149,25 @@ export function PowerSection({
               )}
             >
               <Power className="size-5 text-status-red" />
-              <span className="text-xs font-medium text-foreground">关机</span>
-              <span className="text-[11px] text-muted-foreground/60">关闭服务器电源</span>
+              <span className="text-xs font-medium text-foreground">{intl.t("ui.shutdown")}</span>
+              <span className="text-[11px] text-muted-foreground/60">{intl.t("ui.powerOffTheMachine")}</span>
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>要关闭服务器吗？</AlertDialogTitle>
+              <AlertDialogTitle>{intl.t("ui.shutDownServer")}</AlertDialogTitle>
               <AlertDialogDescription>
-                此操作将完全关闭服务器，需要手动开机后才能再次访问 Homeio。
+                {intl.t("ui.thisPowersTheMachineOffCompletelyYouWillNeedToStartIt")}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogCancel>{intl.t("ui.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive text-white hover:bg-destructive/90"
                 onClick={() => void onShutdownNow()}
                 disabled={shuttingDown}
               >
-                {shuttingDown ? <><Loader2 className="size-4 animate-spin" />正在关机…</> : "Shutdown now"}
+                {shuttingDown ? <><Loader2 className="size-4 animate-spin" />{intl.t("ui.shuttingDown")}</> : "Shutdown now"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -172,12 +175,12 @@ export function PowerSection({
       </div>
 
       {/* ── Scheduled Reboot ── */}
-      <SectionDivider title="定时重启" />
+      <SectionDivider title={intl.t("ui.scheduledReboot")} />
       {scheduledReboot.error && <InfoBanner text={scheduledReboot.error} variant="warning" />}
       <div className="flex flex-col gap-1.5">
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
-            label="定时重启"
+            label={intl.t("ui.scheduledReboot")}
             description="Automatically reboot the server on a set schedule"
             enabled={scheduleEnabled}
             onToggle={() => setScheduleEnabled((v) => !v)}
@@ -185,20 +188,20 @@ export function PowerSection({
           />
         </div>
 
-        <PreferenceRow label="频率">
+        <PreferenceRow label={intl.t("ui.frequency")}>
           <select
             value={scheduleFrequency}
             onChange={(e) => setScheduleFrequency(e.target.value as "daily" | "weekly")}
             disabled={!scheduleEnabled || scheduleDisabled}
             className={selectCls}
           >
-            <option value="daily">每天</option>
-            <option value="weekly">每周</option>
+            <option value="daily">{intl.t("ui.daily")}</option>
+            <option value="weekly">{intl.t("ui.weekly")}</option>
           </select>
         </PreferenceRow>
 
         {scheduleFrequency === "weekly" && (
-          <PreferenceRow label="星期">
+          <PreferenceRow label={intl.t("ui.dayOfWeek")}>
             <select
               value={scheduleDayOfWeek}
               onChange={(e) => setScheduleDayOfWeek(e.target.value as ScheduledRebootInput["dayOfWeek"])}
@@ -212,7 +215,7 @@ export function PowerSection({
           </PreferenceRow>
         )}
 
-        <PreferenceRow label="时间" description="24-hour server local time">
+        <PreferenceRow label={intl.t("ui.time")} description="24-hour server local time">
           <select
             value={scheduleTime}
             onChange={(e) => setScheduleTime(e.target.value)}
@@ -227,7 +230,7 @@ export function PowerSection({
 
         <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
           <span className="text-[11px] text-muted-foreground/70">
-            {zh(scheduleEnabled
+            {intl.text(scheduleEnabled
               ? `Reboot will run ${scheduleFrequency === "daily" ? "daily" : `every ${scheduleDayOfWeek}`} at ${scheduleTime}.`
               : "Scheduled reboot is disabled.")}
           </span>
@@ -236,13 +239,13 @@ export function PowerSection({
             onClick={() => void onSaveScheduledReboot({ enabled: scheduleEnabled, frequency: scheduleFrequency, dayOfWeek: scheduleDayOfWeek, time: scheduleTime })}
             className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {scheduledReboot.isPending ? <><Loader2 className="size-3 animate-spin" />正在保存…</> : "Save schedule"}
+            {scheduledReboot.isPending ? <><Loader2 className="size-3 animate-spin" />{intl.t("ui.saving")}</> : "Save schedule"}
           </button>
         </div>
       </div>
 
       {/* ── Factory Reset ── */}
-      <SectionDivider title="恢复出厂设置" />
+      <SectionDivider title={intl.t("ui.factoryReset")} />
       {power.factoryReset.error && <InfoBanner text={power.factoryReset.error} variant="warning" />}
       <InfoBanner
         text="Factory reset will stop all containers, remove Docker images, custom networks, and volumes, reset the database, delete everything under /DATA, recreate the default directories, and then reboot the machine."
@@ -250,8 +253,8 @@ export function PowerSection({
       />
       <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
         <div className="min-w-0">
-          <div className="text-sm text-foreground">重置服务器</div>
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">清除所有数据并重置 Homeio</div>
+          <div className="text-sm text-foreground">{intl.t("ui.factoryResetServer")}</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{intl.t("ui.wipesAllDataAndReturnsHomeioToACleanState")}</div>
         </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -260,24 +263,24 @@ export function PowerSection({
               className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-destructive/15 px-3 py-1.5 text-xs font-medium text-destructive transition-colors hover:bg-destructive/25 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <AlertTriangle className="size-3" />
-              {zh(resetting ? "Resetting…" : "Factory Reset")}
+              {intl.text(resetting ? "Resetting…" : "Factory Reset")}
             </button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>要重置服务器吗？</AlertDialogTitle>
+              <AlertDialogTitle>{intl.t("ui.factoryResetServer2")}</AlertDialogTitle>
               <AlertDialogDescription>
-                危险操作：将删除 Docker 容器、镜像、卷和自定义网络，重置数据库并清空 /DATA，然后重新创建数据目录并重启。重置后需要重新注册。
+                {intl.t("ui.thisIsDestructiveHomeioWillRemoveDockerContainersImagesVolumesCustomNetworks")}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>取消</AlertDialogCancel>
+              <AlertDialogCancel>{intl.t("ui.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive text-white hover:bg-destructive/90"
                 onClick={() => void onFactoryReset()}
                 disabled={resetting}
               >
-                {resetting ? <><Loader2 className="size-4 animate-spin" />正在重置…</> : "Factory reset"}
+                {resetting ? <><Loader2 className="size-4 animate-spin" />{intl.t("ui.resetting")}</> : "Factory reset"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

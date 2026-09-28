@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Droplets, Sun, Thermometer, Wind } from "@/components/icons/platform-icons";
 import {
   Cloud,
@@ -22,6 +23,7 @@ type WeatherPopoverProps = {
 };
 
 export function WeatherPopover({ weather, onClose }: WeatherPopoverProps) {
+  const intl = useI18n();
   const mainTemperature = formatTemperature(weather?.current.temperatureC);
   const feelsLike = formatTemperature(weather?.current.feelsLikeC);
   const hasMainTemperature = typeof weather?.current.temperatureC === "number";
@@ -41,7 +43,7 @@ export function WeatherPopover({ weather, onClose }: WeatherPopoverProps) {
                 {mainTemperature}
               </span>
               <span className="text-lg text-muted-foreground mb-0.5">
-                {zh(hasMainTemperature ? "C" : "")}
+                {intl.text(hasMainTemperature ? "C" : "")}
               </span>
             </div>
             <p className="text-xs text-muted-foreground">
@@ -53,20 +55,20 @@ export function WeatherPopover({ weather, onClose }: WeatherPopoverProps) {
 
         <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
-            <Droplets className="size-3" /> 湿度 {weather?.current.humidityPercent ?? "--"}%
+            <Droplets className="size-3" /> {intl.t("ui.hum")} {weather?.current.humidityPercent ?? "--"}%
           </span>
           <span className="flex items-center gap-1">
-            <Wind className="size-3" /> 风速 {weather?.current.windSpeedKph ?? "--"} km/h
+            <Wind className="size-3" /> {intl.t("ui.wind")} {weather?.current.windSpeedKph ?? "--"} km/h
           </span>
           <span className="flex items-center gap-1">
-            <Sun className="size-3" /> 体感 {feelsLike}
-            {zh(hasFeelsLike ? "C" : "")}
+            <Sun className="size-3" /> {intl.t("ui.feels")} {feelsLike}
+            {intl.text(hasFeelsLike ? "C" : "")}
           </span>
         </div>
 
         <div className="mt-4 border-t border-glass-border pt-3">
           <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">
-            未来五天
+            {intl.t("ui.next5Days")}
           </p>
           <div className="flex items-stretch gap-1.5">
             {dailyForecast.length > 0 ? (
@@ -76,7 +78,7 @@ export function WeatherPopover({ weather, onClose }: WeatherPopoverProps) {
                   className="flex flex-1 min-w-0 flex-col items-center gap-1 rounded-lg bg-secondary/25 px-1.5 py-2 text-xs text-muted-foreground"
                 >
                   <span className="text-2xs font-medium text-foreground">
-                    {new Date(`${day.date}T00:00:00`).toLocaleDateString(undefined, {
+                    {new Date(`${day.date}T00:00:00`).toLocaleDateString(intl.locale, {
                       weekday: "short",
                     })}
                   </span>
@@ -88,7 +90,7 @@ export function WeatherPopover({ weather, onClose }: WeatherPopoverProps) {
                 </div>
               ))
             ) : (
-              <span className="text-xs text-muted-foreground">暂无天气预报</span>
+              <span className="text-xs text-muted-foreground">{intl.t("ui.noForecastAvailable")}</span>
             )}
           </div>
         </div>

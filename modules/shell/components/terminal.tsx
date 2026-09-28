@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import type { TerminalOutputLine } from "@/lib/shared/contracts/terminal";
 import { useTerminalCommand } from "@/modules/shell/hooks/useTerminalCommand";
 import { ChevronRight, Copy, Download, Search, X } from "@/components/icons/platform-icons";
@@ -97,6 +98,7 @@ export function Terminal({
   commandRequest?: TerminalCommandRequest;
   readOnly?: boolean;
 }) {
+  const intl = useI18n();
   const rootRef = useRef<HTMLDivElement>(null);
 
   const [lines, setLines] = useState<TermLine[]>([
@@ -546,36 +548,36 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
-                aria-label="搜索终端输出"
+                aria-label={intl.t("ui.searchTerminalOutput")}
               >
                 <Search className="size-3.5" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>搜索输出（Ctrl+F）</TooltipContent>
+            <TooltipContent side="bottom" sideOffset={6}>{intl.t("ui.searchOutputCtrlF")}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={handleCopyAll}
                 className="rounded p-1 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-                aria-label="复制全部终端输出"
+                aria-label={intl.t("ui.copyAllTerminalOutput")}
               >
                 <Copy className="size-3.5" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>复制全部输出</TooltipContent>
+            <TooltipContent side="bottom" sideOffset={6}>{intl.t("ui.copyAllOutput")}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={handleDownloadTranscript}
                 className="rounded p-1 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-                aria-label="下载终端记录"
+                aria-label={intl.t("ui.downloadTerminalTranscript")}
               >
                 <Download className="size-3.5" />
               </button>
             </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>下载记录</TooltipContent>
+            <TooltipContent side="bottom" sideOffset={6}>{intl.t("ui.downloadTranscript")}</TooltipContent>
           </Tooltip>
         </div>
       </div>
@@ -606,14 +608,14 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
                 scheduleFocusInput();
               }
             }}
-            placeholder="搜索输出…"
+            placeholder={intl.t("ui.searchOutput")}
             className="flex-1 bg-transparent font-mono text-xs text-foreground outline-none placeholder:text-muted-foreground"
             spellCheck={false}
           />
 
           {searchQuery.trim() && (
             <span className="shrink-0 font-mono text-xs text-muted-foreground">
-              {zh(searchMatchLineIndices.length > 0
+              {intl.text(searchMatchLineIndices.length > 0
                 ? `${searchMatchIndex + 1}/${searchMatchLineIndices.length}`
                 : "no matches")}
             </span>
@@ -623,14 +625,14 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
             <button
               onClick={() => navigateSearchMatch("prev")}
               className="rounded px-1 py-0.5 text-xs text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-              title="上一个匹配项（Shift+Enter）"
+              title={intl.t("ui.previousMatchShiftEnter")}
             >
               ↑
             </button>
             <button
               onClick={() => navigateSearchMatch("next")}
               className="rounded px-1 py-0.5 text-xs text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-              title="下一个匹配项（Enter）"
+              title={intl.t("ui.nextMatchEnter")}
             >
               ↓
             </button>
@@ -643,7 +645,7 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
               scheduleFocusInput();
             }}
             className="rounded p-1 text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
-            aria-label="关闭搜索"
+            aria-label={intl.t("ui.closeSearch")}
           >
             <X className="size-3.5" />
           </button>
@@ -680,7 +682,7 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
               )}
               {line.type === "input" && (
                 <div>
-                  <span className="text-status-green">{line.prompt}</span>{zh(" ")}
+                  <span className="text-status-green">{line.prompt}</span>{intl.text(" ")}
                   <span className="text-foreground">{line.content}</span>
                 </div>
               )}
@@ -699,7 +701,7 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
 
         {readOnly ? (
           <div className="pt-2 text-xs text-muted-foreground">
-            只读模式：命令输入已禁用。
+            {intl.t("ui.readOnlyModeCommandInputIsDisabled")}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex items-center">
@@ -737,10 +739,10 @@ Shortcuts: Ctrl+C interrupt  Ctrl+L clear  Ctrl+F search  Ctrl+W delete word`,
                 : "text-status-green/70"
           }
         >
-          {zh(isExecuting ? "running…" : readOnly ? "read-only" : "ready")}
+          {intl.text(isExecuting ? "running…" : readOnly ? "read-only" : "ready")}
         </span>
         <span>{toPromptPath(cwd)}</span>
-        <span>{commandHistory.length} 条命令</span>
+        <span>{commandHistory.length} {intl.t("ui.cmds")}</span>
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -50,12 +51,13 @@ function PreferenceRow({
   description?: string;
   children: React.ReactNode;
 }) {
+  const intl = useI18n();
   return (
     <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
       <div className="min-w-0">
-        <div className="text-sm text-foreground">{zh(label)}</div>
+        <div className="text-sm text-foreground">{intl.text(label)}</div>
         {description && (
-          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{zh(description)}</div>
+          <div className="mt-0.5 text-[11px] text-muted-foreground/70">{intl.text(description)}</div>
         )}
       </div>
       {children}
@@ -71,6 +73,7 @@ export function BackupSection({
   onRunBackupNow,
   onRestoreBackup,
 }: BackupSectionProps) {
+  const intl = useI18n();
   const [restoreBackupId, setRestoreBackupId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -89,32 +92,32 @@ export function BackupSection({
       {data.restore.error && <InfoBanner text={data.restore.error} variant="warning" />}
 
       {/* ── Schedule ── */}
-      <SectionDivider title="计划" />
+      <SectionDivider title={intl.t("ui.schedule")} />
       <div className="flex flex-col gap-1.5">
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
           <Toggle
-            label="自动备份"
+            label={intl.t("ui.automaticBackups")}
             description="Run full local backups of Homeio-managed data on the schedule below."
             enabled={settingsDraft.enabled}
             onToggle={() => onSettingsChange({ enabled: !settingsDraft.enabled })}
             disabled={capabilities.schedule.disabled}
-            disabledReason={zh(capabilities.schedule.disabledReason)}
+            disabledReason={intl.text(capabilities.schedule.disabledReason)}
           />
         </div>
 
-        <PreferenceRow label="频率">
+        <PreferenceRow label={intl.t("ui.frequency")}>
           <select
             value={settingsDraft.frequency}
             onChange={(e) => onSettingsChange({ frequency: e.target.value as "daily" | "weekly" })}
             className={cn(selectCls, "w-36")}
           >
-            <option value="daily">每天</option>
-            <option value="weekly">每周</option>
+            <option value="daily">{intl.t("ui.daily")}</option>
+            <option value="weekly">{intl.t("ui.weekly")}</option>
           </select>
         </PreferenceRow>
 
         {settingsDraft.frequency === "weekly" && (
-          <PreferenceRow label="星期">
+          <PreferenceRow label={intl.t("ui.dayOfWeek")}>
             <select
               value={settingsDraft.dayOfWeek}
               onChange={(e) => onSettingsChange({ dayOfWeek: e.target.value as BackupSettingsDraft["dayOfWeek"] })}
@@ -127,7 +130,7 @@ export function BackupSection({
           </PreferenceRow>
         )}
 
-        <PreferenceRow label="时间" description="24-hour format">
+        <PreferenceRow label={intl.t("ui.time")} description="24-hour format">
           <select
             value={settingsDraft.time}
             onChange={(e) => onSettingsChange({ time: e.target.value })}
@@ -139,7 +142,7 @@ export function BackupSection({
           </select>
         </PreferenceRow>
 
-        <PreferenceRow label="保留策略" description="Backups to keep in /DATA/Backups/homeio">
+        <PreferenceRow label={intl.t("ui.retention")} description="Backups to keep in /DATA/Backups/homeio">
           <input
             value={settingsDraft.retentionCount}
             onChange={(e) => onSettingsChange({ retentionCount: e.target.value })}
@@ -149,35 +152,35 @@ export function BackupSection({
           />
         </PreferenceRow>
 
-        <PreferenceRow label="本地路径" description="备份仅保存在本地">
+        <PreferenceRow label={intl.t("ui.localPath")} description={intl.t("ui.backupsAreStoredLocallyOnly")}>
           <span className="font-mono text-xs text-muted-foreground">{data.backupRoot}</span>
         </PreferenceRow>
       </div>
 
       {/* ── Actions ── */}
-      <SectionDivider title="备份与恢复" />
+      <SectionDivider title={intl.t("ui.backupRestore")} />
       <div className="flex flex-col gap-1.5">
         <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
           <div className="min-w-0">
-            <div className="text-sm text-foreground">立即备份</div>
-            <div className="mt-0.5 text-[11px] text-muted-foreground/70">立即创建完整备份</div>
+            <div className="text-sm text-foreground">{intl.t("ui.runBackupNow")}</div>
+            <div className="mt-0.5 text-[11px] text-muted-foreground/70">{intl.t("ui.createsAFullArchiveImmediately")}</div>
           </div>
           <button
             onClick={() => void onRunBackupNow()}
             disabled={capabilities.runNow.disabled || data.runNow.isPending}
-            title={zh(capabilities.runNow.disabledReason)}
+            title={intl.text(capabilities.runNow.disabledReason)}
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Upload className="size-3" />
-            {zh(data.runNow.isPending ? "Running…" : "Run now")}
+            {intl.text(data.runNow.isPending ? "Running…" : "Run now")}
           </button>
         </div>
 
         <div className={cn(SETTINGS_PANEL_INSET, "flex items-center justify-between gap-4 px-4 py-3")}>
           <div className="min-w-0">
-            <div className="text-sm text-foreground">从备份还原</div>
+            <div className="text-sm text-foreground">{intl.t("ui.restoreFromBackup")}</div>
             <div className="mt-0.5 text-[11px] text-muted-foreground/70">
-              {zh(selectedBackup
+              {intl.text(selectedBackup
                 ? `Selected: ${new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(selectedBackup.createdAt))}`
                 : "No backup selected")}
             </div>
@@ -186,24 +189,24 @@ export function BackupSection({
             <AlertDialogTrigger asChild>
               <button
                 disabled={capabilities.restore.disabled || !selectedBackup || data.restore.isPending}
-                title={zh(capabilities.restore.disabledReason)}
+                title={intl.text(capabilities.restore.disabledReason)}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Download className="size-3" />
-                {zh(data.restore.isPending ? "Restoring…" : "Restore")}
+                {intl.text(data.restore.isPending ? "Restoring…" : "Restore")}
               </button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>要还原完整系统备份吗？</AlertDialogTitle>
+                <AlertDialogTitle>{intl.t("ui.restoreFullSystemBackup")}</AlertDialogTitle>
                 <AlertDialogDescription>
-                  {zh(selectedBackup
+                  {intl.text(selectedBackup
                     ? `This will fully replace the current database and /DATA contents with ${selectedBackup.id}, then reboot the server.`
                     : "Select a backup first.")}
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>取消</AlertDialogCancel>
+                <AlertDialogCancel>{intl.t("ui.cancel")}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={(e) => {
                     e.preventDefault();
@@ -212,7 +215,7 @@ export function BackupSection({
                   }}
                   disabled={!selectedBackup || data.restore.isPending}
                 >
-                  {zh(data.restore.isPending ? "Restoring…" : "Restore Backup")}
+                  {intl.text(data.restore.isPending ? "Restoring…" : "Restore Backup")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -221,10 +224,10 @@ export function BackupSection({
       </div>
 
       {/* ── Recent Backups ── */}
-      <SectionDivider title="最近的备份" />
+      <SectionDivider title={intl.t("ui.recentBackups")} />
       {data.backups.length === 0 ? (
         <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-3 text-xs text-muted-foreground")}>
-          尚无已完成的备份。
+          {intl.t("ui.noCompletedBackupsYet")}
         </div>
       ) : (
         <div className={cn(SETTINGS_PANEL_INSET, "divide-y divide-glass-border/50 overflow-hidden")}>
@@ -253,7 +256,7 @@ export function BackupSection({
                   </div>
                 </div>
                 {isSelected && (
-                  <span className="text-[11px] font-medium text-primary">已选择</span>
+                  <span className="text-[11px] font-medium text-primary">{intl.t("ui.selected")}</span>
                 )}
               </button>
             );

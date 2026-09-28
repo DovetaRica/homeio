@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   InfoBanner,
   SectionDivider,
@@ -31,6 +32,7 @@ export function UpdatesSection({
   autoCheckEnabled,
   onToggleAutoCheck,
 }: UpdatesSectionProps) {
+  const intl = useI18n();
   const hasUpdate = data.updateAvailable && !!data.latestVersion;
   const lastCheckedLabel = data.checkedAt
     ? new Date(data.checkedAt).toLocaleString()
@@ -61,7 +63,7 @@ export function UpdatesSection({
               hasUpdate ? "bg-status-amber" : "bg-status-green",
             )} />
             <span className="text-sm font-medium text-foreground">
-              {zh(hasUpdate ? `v${data.latestVersion} available` : "Up to date")}
+              {intl.text(hasUpdate ? `v${data.latestVersion} available` : "Up to date")}
             </span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -71,7 +73,7 @@ export function UpdatesSection({
               className="inline-flex items-center gap-1.5 rounded-lg border border-glass-border bg-background/55 px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
               <RefreshCw className={cn("size-3", data.isChecking && "animate-spin")} />
-              {zh(data.isChecking ? "Checking…" : "Check")}
+              {intl.text(data.isChecking ? "Checking…" : "Check")}
             </button>
             {hasUpdate && (
               <button
@@ -79,7 +81,7 @@ export function UpdatesSection({
                 disabled={capabilities.updateHomeio.disabled || data.isApplying || data.isRecoveryActive}
                 className="inline-flex items-center gap-1.5 rounded-lg bg-primary/15 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {zh(data.isApplying || data.isRecoveryActive ? "Updating…" : "Update")}
+                {intl.text(data.isApplying || data.isRecoveryActive ? "Updating…" : "Update")}
               </button>
             )}
           </div>
@@ -88,32 +90,32 @@ export function UpdatesSection({
         {/* Version rows */}
         <div className="divide-y divide-glass-border/50 border-t border-glass-border/50 px-4">
           <div className="flex items-center justify-between py-2.5">
-            <span className="text-xs text-muted-foreground">当前版本</span>
+            <span className="text-xs text-muted-foreground">{intl.t("ui.currentVersion")}</span>
             <span className="font-mono text-xs font-medium text-foreground">{data.currentVersion}</span>
           </div>
           <div className="flex items-center justify-between py-2.5">
-            <span className="text-xs text-muted-foreground">最新版本</span>
+            <span className="text-xs text-muted-foreground">{intl.t("ui.latestVersion")}</span>
             <span className="font-mono text-xs font-medium text-foreground">
               {data.latestVersion ?? "—"}
             </span>
           </div>
           <div className="flex items-center justify-between py-2.5">
-            <span className="text-xs text-muted-foreground">上次检查</span>
+            <span className="text-xs text-muted-foreground">{intl.t("ui.lastChecked")}</span>
             <span className="text-xs text-foreground">{lastCheckedLabel}</span>
           </div>
         </div>
       </div>
 
       {/* ── Preferences ── */}
-      <SectionDivider title="偏好设置" />
+      <SectionDivider title={intl.t("ui.preferences")} />
       <div className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
         <Toggle
-          label="自动检查更新"
-          description="每天检查新版本"
+          label={intl.t("ui.autoCheckForUpdates")}
+          description={intl.t("ui.checkForNewUpdatesDaily")}
           enabled={autoCheckEnabled}
           onToggle={() => onToggleAutoCheck(!autoCheckEnabled)}
           disabled={capabilities.autoCheck.disabled}
-          disabledReason={zh(capabilities.autoCheck.disabledReason)}
+          disabledReason={intl.text(capabilities.autoCheck.disabledReason)}
         />
       </div>
     </div>

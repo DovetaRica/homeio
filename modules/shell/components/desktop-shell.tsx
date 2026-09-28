@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import {
   Activity,
   Bell,
@@ -83,6 +84,7 @@ export function DesktopShell() {
 }
 
 function DesktopShellInner() {
+  const intl = useI18n();
   const router = useRouter();
   const {
     data: currentUser,
@@ -168,12 +170,12 @@ function DesktopShellInner() {
     clearPersistedPowerActionCompletion(window.localStorage);
 
     if (completion.action === "update") {
-      toast.success(zh("Homeio update completed."));
+      toast.success(intl.t("ui.homeioUpdateCompleted"));
       return;
     }
 
-    toast.success(zh("System action completed."));
-  }, [rebootRecovery.isActive, rebootRecovery.isHydrated]);
+    toast.success(intl.text("System action completed."));
+  }, [rebootRecovery.isActive, rebootRecovery.isHydrated, intl]);
 
   useEffect(() => {
     if (rebootRecovery.isActive || !rebootRecovery.isHydrated) return;
@@ -425,7 +427,7 @@ function DesktopShellInner() {
       return;
 
     if (id === "terminal" && currentUser?.isDemoMode) {
-      toast.info(zh("Terminal is disabled in demo mode."));
+      toast.info(intl.text("Terminal is disabled in demo mode."));
       return;
     }
 
@@ -705,9 +707,9 @@ function DesktopShellInner() {
           <div className="fixed top-14 right-5 z-50 hidden xl:flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-3 py-1.5 backdrop-blur-md shadow-lg shadow-black/20">
             <span className="size-1.5 rounded-full bg-primary animate-pulse" />
             <span className="text-xs font-semibold text-primary tracking-tight">
-              演示
+              {intl.t("ui.demo")}
             </span>
-            <span className="text-xs text-foreground/50">· 只读</span>
+            <span className="text-xs text-foreground/50">{intl.t("ui.readOnly")}</span>
           </div>
         )}
 
@@ -759,7 +761,7 @@ function DesktopShellInner() {
         {/* Windows */}
         {openWindows.includes("files") && (
           <Window
-            title="文件"
+            title={intl.t("ui.files")}
             icon={<FolderOpen className="size-4 text-sky-400" />}
             onClose={() => closeWindow("files")}
             onMinimize={() => minimizeWindow("files")}
@@ -778,7 +780,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("settings") && (
           <Window
-            title="设置"
+            title={intl.t("ui.settings")}
             icon={<Settings className="size-4 text-muted-foreground" />}
             onClose={() => closeWindow("settings")}
             onMinimize={() => minimizeWindow("settings")}
@@ -805,7 +807,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("monitor") && (
           <Window
-            title="监控"
+            title={intl.t("ui.monitor")}
             icon={<Activity className="size-4 text-primary" />}
             onClose={() => closeWindow("monitor")}
             onMinimize={() => minimizeWindow("monitor")}
@@ -824,7 +826,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("notifications") && (
           <Window
-            title="通知"
+            title={intl.t("ui.notifications")}
             icon={<Bell className="size-4 text-primary" />}
             onClose={() => closeWindow("notifications")}
             onMinimize={() => minimizeWindow("notifications")}
@@ -843,7 +845,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("app-store") && (
           <Window
-            title="应用商店"
+            title={intl.t("ui.appStore")}
             icon={<ShoppingBag className="size-4 text-sky-400" />}
             onClose={() => closeWindow("app-store")}
             onMinimize={() => minimizeWindow("app-store")}
@@ -865,7 +867,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("custom-install") && (
           <Window
-            title="安装自定义应用"
+            title={intl.t("ui.installCustomApp")}
             icon={<Package className="size-4 text-primary" />}
             onClose={() => closeWindow("custom-install")}
             onMinimize={() => minimizeWindow("custom-install")}
@@ -887,7 +889,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("app-settings") && appSettingsTarget && (
           <Window
-            title={zh(`${appSettingsTarget.appName} Settings`)}
+            title={intl.t('dynamic.appSettings', {value0: appSettingsTarget.appName})}
             icon={<Settings className="size-4 text-primary" />}
             onClose={() => {
               closeWindow("app-settings");
@@ -917,7 +919,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("terminal") && (
           <Window
-            title={zh(terminalMode === "logs" ? "Container Logs" : "Terminal")}
+            title={intl.text(terminalMode === "logs" ? "Container Logs" : "Terminal")}
             icon={<TerminalSquare className="size-4 text-emerald-400" />}
             onClose={() => closeWindow("terminal")}
             onMinimize={() => minimizeWindow("terminal")}
@@ -939,7 +941,7 @@ function DesktopShellInner() {
 
         {openWindows.includes("disk-manager") && (
           <Window
-            title="磁盘管理"
+            title={intl.t("ui.diskManager")}
             icon={<HardDrive className="size-4 text-amber-400" />}
             onClose={() => closeWindow("disk-manager")}
             onMinimize={() => minimizeWindow("disk-manager")}
@@ -961,7 +963,7 @@ function DesktopShellInner() {
           <button
             onClick={() => { setIsSettingsSearchOpen(true); setSettingsSearchQuery(""); }}
             className="system-pill-surface flex cursor-pointer items-center gap-1.5 px-2.5 py-1 text-foreground/30 transition-colors hover:text-foreground/55"
-            aria-label="打开命令面板"
+            aria-label={intl.t("ui.openCommandPalette")}
           >
             <Search className="size-2.5 shrink-0" />
             <span className="font-mono text-[9px] tracking-widest">⌘K</span>

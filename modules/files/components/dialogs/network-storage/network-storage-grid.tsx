@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Globe, Loader2, Plug, Trash2 } from "@/components/icons/platform-icons";
 
 type ConfiguredShare = {
@@ -33,13 +35,14 @@ export function NetworkStorageGrid({
   onSelectServer,
   onUnmount,
 }: NetworkStorageGridProps) {
+  const intl = useI18n();
   const hasContent = discoveredServers.length > 0 || configuredShares.length > 0;
 
   if (isDiscovering && !hasContent) {
     return (
       <div className="flex min-h-52 items-center justify-center gap-2 text-sm text-muted-foreground">
         <Loader2 className="size-4 animate-spin" />
-        正在扫描网络…
+        {intl.t("ui.scanningNetwork")}
       </div>
     );
   }
@@ -48,8 +51,8 @@ export function NetworkStorageGrid({
     return (
       <div className="flex min-h-52 flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground">
         <Globe className="size-8 opacity-25" />
-        <span>未发现服务器或共享。</span>
-        <span className="text-xs opacity-60">请尝试重新扫描网络。</span>
+        <span>{intl.t("ui.noServersOrSharesFound")}</span>
+        <span className="text-xs opacity-60">{intl.t("ui.tryRescanningTheNetwork")}</span>
       </div>
     );
   }
@@ -62,7 +65,7 @@ export function NetworkStorageGrid({
       {hasDiscovered && (
         <div>
           <p className="mb-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/50">
-            网络中发现的设备
+            {intl.t("ui.discoveredOnNetwork")}
           </p>
           <div className="flex flex-col gap-1.5">
             {discoveredServers.map((server) => (
@@ -79,7 +82,7 @@ export function NetworkStorageGrid({
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-medium text-foreground">{server}</div>
-                  <div className="text-[10px] text-muted-foreground/60">SMB 服务器</div>
+                  <div className="text-[10px] text-muted-foreground/60">{intl.t("ui.smbServer")}</div>
                 </div>
                 <button
                   type="button"
@@ -87,7 +90,7 @@ export function NetworkStorageGrid({
                   disabled={isBusy}
                   className="shrink-0 rounded-lg bg-sky-500/15 px-3 py-1.5 text-xs font-medium text-sky-400 transition-colors hover:bg-sky-500/25 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  使用
+                  {intl.t("ui.use")}
                 </button>
               </div>
             ))}
@@ -98,7 +101,7 @@ export function NetworkStorageGrid({
       {hasConfigured && (
         <div>
           <p className="mb-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/50">
-            已配置的共享
+            {intl.t("ui.configuredShares")}
           </p>
           <div className="flex flex-col gap-1.5">
             {configuredShares.map((share) => (
@@ -118,7 +121,7 @@ export function NetworkStorageGrid({
                     {share.host}/{share.share}
                   </div>
                   <div className="truncate text-[10px] text-muted-foreground/60">
-                    挂载于 /{share.mountPath}
+                    {intl.t("ui.mountedAt")}{share.mountPath}
                   </div>
                 </div>
                 <div className="flex shrink-0 items-center gap-1.5">
@@ -129,7 +132,7 @@ export function NetworkStorageGrid({
                       disabled={isBusy}
                       className="rounded-lg bg-emerald-500/15 px-3 py-1.5 text-xs font-medium text-emerald-400 transition-colors hover:bg-emerald-500/25 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      卸载挂载
+                      {intl.t("ui.unmount")}
                     </button>
                   ) : (
                     <button
@@ -138,7 +141,7 @@ export function NetworkStorageGrid({
                       disabled={isBusy}
                       className="rounded-lg bg-amber-500/15 px-3 py-1.5 text-xs font-medium text-amber-400 transition-colors hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      挂载
+                      {intl.t("ui.mount")}
                     </button>
                   )}
                   <button
@@ -146,7 +149,7 @@ export function NetworkStorageGrid({
                     onClick={() => onRemove(share.id)}
                     disabled={isBusy}
                     className="flex size-7 items-center justify-center rounded-lg text-muted-foreground/40 transition-colors hover:bg-status-red/10 hover:text-status-red disabled:cursor-not-allowed disabled:opacity-50"
-                    aria-label="移除共享"
+                    aria-label={intl.t("ui.removeShare")}
                   >
                     <Trash2 className="size-3.5" />
                   </button>

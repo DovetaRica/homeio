@@ -1,5 +1,6 @@
 
-import { zh } from "@/lib/i18n/zh";
+import { useI18n } from "@/i18n/use-i18n";
+
 import type { CSSProperties, ImgHTMLAttributes, ReactElement, SVGProps } from "react";
 
 type KoraIconProps = SVGProps<SVGSVGElement> & {
@@ -23,6 +24,7 @@ function createKoraIcon(src: string, alt = ""): LucideIcon {
     alt: iconAlt = alt,
     ...props
   }: KoraIconProps) => {
+  const intl = useI18n();
     const inlineSize = sizeValue(size);
     const iconStyle: CSSProperties | undefined = inlineSize
       ? { width: inlineSize, height: inlineSize, ...style }
@@ -32,7 +34,7 @@ function createKoraIcon(src: string, alt = ""): LucideIcon {
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
-        alt={zh(iconAlt)}
+        alt={intl.text(iconAlt)}
         aria-hidden={iconAlt ? undefined : true}
         draggable={false}
         className={className}

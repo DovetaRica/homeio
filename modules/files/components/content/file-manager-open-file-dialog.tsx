@@ -1,7 +1,8 @@
 "use client";
-import { zh } from "@/lib/i18n/zh";
 
 
+
+import { useI18n } from "@/i18n/use-i18n";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Save, X } from "@/components/icons/platform-icons";
 import type { FileReadResponse } from "@/lib/shared/contracts/files";
@@ -53,6 +54,7 @@ export function OpenFileDialog({
   openFileViewer,
   showSaveOpenFile,
 }: OpenFileDialogProps) {
+  const intl = useI18n();
   const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
 
   const headerEntry =
@@ -73,13 +75,13 @@ export function OpenFileDialog({
       <Dialog open onOpenChange={(open) => { if (!open) handleCloseRequest(); }}>
         <DialogContent
           showCloseButton={false}
-          aria-label={zh(`Open file ${openFile.entry.name}`)}
+          aria-label={intl.t('dynamic.openFile', {value0: openFile.entry.name})}
           className={`h-[min(88vh,920px)] w-[min(96vw,76rem)] max-w-[min(96vw,76rem)] gap-0 overflow-hidden rounded-[calc(var(--radius)+0.5rem)] border-glass-border/70 bg-popover/90 p-0 shadow-[0_24px_64px_rgba(0,0,0,0.45)] backdrop-blur-2xl sm:max-w-[min(96vw,76rem)] lg:w-[min(92vw,84rem)] lg:max-w-[min(92vw,84rem)] ${FILES_PANEL_INSET}`}
         >
           {/* Accessible title/description (visually hidden) */}
           <DialogTitle className="sr-only">{openFile.entry.name}</DialogTitle>
           <DialogDescription className="sr-only">
-            文件编辑器 — {openFileBadgeLabel}
+            {intl.t("ui.fileEditor")} {openFileBadgeLabel}
           </DialogDescription>
 
           {/* Window chrome title bar */}
@@ -89,7 +91,7 @@ export function OpenFileDialog({
               <button
                 onClick={handleCloseRequest}
                 className="group flex size-3 cursor-pointer items-center justify-center rounded-full bg-[#ff5f57] transition-all hover:brightness-110"
-                aria-label="关闭"
+                aria-label={intl.t("ui.close")}
               >
                 <X className="size-[7px] text-[#6a0002] opacity-0 transition-opacity group-hover:opacity-100" />
               </button>
@@ -109,7 +111,7 @@ export function OpenFileDialog({
                 {hasUnsavedChanges ? (
                   <span
                     className="size-1.5 shrink-0 rounded-full bg-status-amber"
-                    title="尚未保存的更改"
+                    title={intl.t("ui.unsavedChanges")}
                   />
                 ) : null}
                 <span className={`${FILES_BADGE_SURFACE} px-1.5 py-px text-[10px] uppercase tracking-wider text-primary/70`}>
@@ -151,7 +153,7 @@ export function OpenFileDialog({
                   className="system-primary-action pointer-events-auto inline-flex h-9 items-center gap-1.5 px-4 text-sm font-medium transition-all hover:brightness-110 disabled:pointer-events-none disabled:opacity-0"
                 >
                   <Save className="size-3.5" />
-                  保存
+                  {intl.t("ui.save")}
                 </button>
               </div>
             ) : null}
@@ -160,7 +162,7 @@ export function OpenFileDialog({
             {showDiscardConfirm ? (
               <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-4 border-t border-glass-border/50 bg-popover/90 px-5 py-3 backdrop-blur-xl">
                 <p className="text-sm text-foreground/75">
-                  放弃以下文件的更改：{zh(" ")}
+                  {intl.t("ui.discardChangesTo")}{intl.text(" ")}
                   <span className="font-medium text-foreground">{openFile.entry.name}</span>?
                 </p>
                 <div className="flex items-center gap-2">
@@ -168,13 +170,13 @@ export function OpenFileDialog({
                     onClick={() => setShowDiscardConfirm(false)}
                     className="h-8 rounded-[var(--system-radius-control)] border border-glass-border/60 bg-white/5 px-3 text-xs font-medium text-foreground/70 transition-colors hover:bg-white/8 hover:text-foreground"
                   >
-                    继续编辑
+                    {intl.t("ui.keepEditing")}
                   </button>
                   <button
                     onClick={() => { setShowDiscardConfirm(false); onClose(); }}
                     className="h-8 rounded-[var(--system-radius-control)] border border-status-red/20 bg-status-red/12 px-3 text-xs font-medium text-status-red transition-colors hover:bg-status-red/20"
                   >
-                    放弃更改
+                    {intl.t("ui.discard")}
                   </button>
                 </div>
               </div>
@@ -184,7 +186,7 @@ export function OpenFileDialog({
           {/* Status bar */}
           {editorNotice && !showDiscardConfirm ? (
             <div className="shrink-0 border-t border-glass-border/50 bg-background/30 px-4 py-2">
-              <span className="text-[11px] text-muted-foreground/60">{zh(editorNotice)}</span>
+              <span className="text-[11px] text-muted-foreground/60">{intl.text(editorNotice)}</span>
             </div>
           ) : null}
         </DialogContent>

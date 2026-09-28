@@ -1,3 +1,5 @@
+
+import { useI18n } from "@/i18n/use-i18n";
 import * as React from 'react'
 import {
   ChevronLeftIcon,
@@ -69,6 +71,7 @@ function PaginationPrevious({
   className,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) {
+  const intl = useI18n();
   return (
     <PaginationLink
       aria-label="Go to previous page"
@@ -77,7 +80,7 @@ function PaginationPrevious({
       {...props}
     >
       <ChevronLeftIcon />
-      <span className="hidden sm:block">上一步</span>
+      <span className="hidden sm:block">{intl.t("ui.previous")}</span>
     </PaginationLink>
   )
 }
@@ -86,6 +89,7 @@ function PaginationNext({
   className,
   ...props
 }: React.ComponentProps<typeof PaginationLink>) {
+  const intl = useI18n();
   return (
     <PaginationLink
       aria-label="Go to next page"
@@ -93,7 +97,7 @@ function PaginationNext({
       className={cn('gap-1 px-2.5 sm:pr-2.5', className)}
       {...props}
     >
-      <span className="hidden sm:block">下一步</span>
+      <span className="hidden sm:block">{intl.t("ui.next")}</span>
       <ChevronRightIcon />
     </PaginationLink>
   )
@@ -103,6 +107,7 @@ function PaginationEllipsis({
   className,
   ...props
 }: React.ComponentProps<'span'>) {
+  const intl = useI18n();
   return (
     <span
       aria-hidden
@@ -111,7 +116,7 @@ function PaginationEllipsis({
       {...props}
     >
       <MoreHorizontalIcon className="size-4" />
-      <span className="sr-only">更多页面</span>
+      <span className="sr-only">{intl.t("ui.morePages")}</span>
     </span>
   )
 }
