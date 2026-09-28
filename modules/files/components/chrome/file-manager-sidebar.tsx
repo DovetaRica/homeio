@@ -172,7 +172,7 @@ export function FileManagerSidebar({
                       <span className={cn("size-5 shrink-0", isActive ? "text-primary" : "text-muted-foreground/70")}>
                         {item.icon}
                       </span>
-                      <span className="flex-1 truncate text-left text-[14px] font-medium leading-5">{section.title === "Favorites" ? item.name : item.name}</span>
+                      <span className="flex-1 truncate text-left text-[14px] font-medium leading-5">{section.title === "Favorites" ? intl.text(item.name) : item.name}</span>
                     </button>
                   );
                 })}

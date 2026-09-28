@@ -207,10 +207,10 @@ export function FileManagerToolbar({
         </button>
         <button
           onClick={onCycleSortBy}
-          title={intl.t('dynamic.sortBy', {value0: intl.text(sortBy)})}
+          title={intl.t('dynamic.sortBy', {value0: intl.text(sortBy === "name" ? "Name" : sortBy === "size" ? "Size" : "Modified")})}
           className="rounded-lg px-2 py-1 text-xs capitalize text-muted-foreground transition-colors hover:bg-background/50 hover:text-foreground"
         >
-          <span className="hidden xl:inline">{sortBy}</span>
+          <span className="hidden xl:inline">{intl.text(sortBy === "name" ? "Name" : sortBy === "size" ? "Size" : "Modified")}</span>
         </button>
         <button
           onClick={onToggleSortDir}

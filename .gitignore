@@ -44,3 +44,6 @@ doc/
 
 # Internal planning docs
 TODO.md
+
+# Local incremental type-check cache
+*.tsbuildinfo
