@@ -10,7 +10,7 @@ export default getRequestConfig(async () => {
   return {
     locale,
     // Explicit per-message English fallback; no mutable process-wide locale.
-    messages: locale === 'zh-CN' ? {ui: {...en.ui, ...zhCN.ui}, dynamic: {...en.dynamic, ...zhCN.dynamic}} : en,
+    messages: locale === 'zh-CN' ? {ui: {...en.ui, ...zhCN.ui}, dynamic: {...en.dynamic, ...zhCN.dynamic}, nas: {...en.nas, ...zhCN.nas, fields: {...en.nas.fields, ...zhCN.nas.fields}}} : en,
     timeZone: process.env.TZ || 'UTC',
   };
 });

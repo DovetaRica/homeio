@@ -1,0 +1,1465 @@
+{
+  "resources": [
+    {
+      "id": "pools",
+      "label": {
+        "en": "Storage pools",
+        "zh-CN": "存储池"
+      },
+      "query": "pool.query",
+      "key": "id",
+      "columns": [
+        "name",
+        "status",
+        "healthy",
+        "size",
+        "allocated",
+        "free"
+      ],
+      "actions": [
+        "pool.create",
+        "pool.scrub",
+        "pool.export",
+        "pool.attach",
+        "pool.replace",
+        "pool.detach",
+        "pool.offline",
+        "pool.online"
+      ],
+      "extra": false
+    },
+    {
+      "id": "datasets",
+      "label": {
+        "en": "Datasets",
+        "zh-CN": "数据集"
+      },
+      "query": "pool.dataset.query",
+      "key": "id",
+      "columns": [
+        "id",
+        "type",
+        "used",
+        "available",
+        "compression",
+        "mountpoint"
+      ],
+      "actions": [
+        "pool.dataset.create",
+        "pool.dataset.update",
+        "pool.dataset.delete",
+        "pool.dataset.lock",
+        "pool.dataset.unlock",
+        "filesystem.setacl",
+        "filesystem.setperm"
+      ],
+      "extra": false
+    },
+    {
+      "id": "disks",
+      "label": {
+        "en": "Disks",
+        "zh-CN": "磁盘"
+      },
+      "query": "disk.query",
+      "key": "identifier",
+      "columns": [
+        "name",
+        "model",
+        "size",
+        "type",
+        "serial"
+      ],
+      "actions": [
+        "disk.update",
+        "disk.wipe"
+      ],
+      "extra": false
+    },
+    {
+      "id": "snapshots",
+      "label": {
+        "en": "Snapshots",
+        "zh-CN": "快照"
+      },
+      "query": "pool.snapshot.query",
+      "key": "id",
+      "columns": [
+        "id",
+        "dataset",
+        "snapshot_name"
+      ],
+      "actions": [
+        "pool.snapshot.create",
+        "pool.snapshot.delete",
+        "pool.snapshot.rollback",
+        "pool.snapshot.clone"
+      ],
+      "extra": false
+    },
+    {
+      "id": "smb",
+      "label": {
+        "en": "SMB shares",
+        "zh-CN": "SMB 共享"
+      },
+      "query": "sharing.smb.query",
+      "key": "id",
+      "columns": [
+        "name",
+        "path",
+        "enabled",
+        "purpose"
+      ],
+      "actions": [
+        "sharing.smb.create",
+        "sharing.smb.update",
+        "sharing.smb.delete"
+      ],
+      "extra": false
+    },
+    {
+      "id": "apps",
+      "label": {
+        "en": "TrueNAS apps",
+        "zh-CN": "TrueNAS 应用"
+      },
+      "query": "app.query",
+      "key": "id",
+      "columns": [
+        "name",
+        "state",
+        "human_version",
+        "custom_app",
+        "upgrade_available"
+      ],
+      "actions": [
+        "app.create",
+        "app.start",
+        "app.stop",
+        "app.redeploy",
+        "app.update",
+        "app.upgrade",
+        "app.delete"
+      ],
+      "extra": false
+    },
+    {
+      "id": "snapshotTasks",
+      "label": {
+        "en": "Snapshot schedules",
+        "zh-CN": "快照计划"
+      },
+      "query": "pool.snapshottask.query",
+      "key": "id",
+      "columns": [
+        "id",
+        "dataset",
+        "recursive",
+        "enabled",
+        "schedule"
+      ],
+      "actions": [
+        "pool.snapshottask.create",
+        "pool.snapshottask.update",
+        "pool.snapshottask.delete",
+        "pool.snapshottask.run"
+      ],
+      "extra": false
+    },
+    {
+      "id": "cron",
+      "label": {
+        "en": "Scheduled tasks",
+        "zh-CN": "定时任务"
+      },
+      "query": "cronjob.query",
+      "key": "id",
+      "columns": [
+        "id",
+        "description",
+        "user",
+        "enabled",
+        "schedule"
+      ],
+      "actions": [
+        "cronjob.create",
+        "cronjob.update",
+        "cronjob.delete",
+        "cronjob.run"
+      ],
+      "extra": false
+    },
+    {
+      "id": "users",
+      "label": {
+        "en": "Users",
+        "zh-CN": "用户"
+      },
+      "query": "user.query",
+      "key": "id",
+      "columns": [
+        "username",
+        "full_name",
+        "uid",
+        "locked",
+        "roles"
+      ],
+      "actions": [
+        "user.create",
+        "user.update",
+        "user.delete"
+      ],
+      "extra": false
+    },
+    {
+      "id": "groups",
+      "label": {
+        "en": "Groups",
+        "zh-CN": "用户组"
+      },
+      "query": "group.query",
+      "key": "id",
+      "columns": [
+        "group",
+        "gid",
+        "roles"
+      ],
+      "actions": [
+        "group.create",
+        "group.update",
+        "group.delete"
+      ],
+      "extra": false
+    },
+    {
+      "id": "network",
+      "label": {
+        "en": "Interfaces and bonds",
+        "zh-CN": "网卡与聚合"
+      },
+      "query": "interface.query",
+      "key": "id",
+      "columns": [
+        "name",
+        "type",
+        "ipv4_dhcp",
+        "aliases",
+        "state"
+      ],
+      "actions": [
+        "interface.create",
+        "interface.update",
+        "interface.delete",
+        "interface.commit",
+        "interface.checkin",
+        "interface.rollback"
+      ],
+      "extra": false
+    },
+    {
+      "id": "networkConfig",
+      "label": {
+        "en": "Gateway and DNS",
+        "zh-CN": "网关与 DNS"
+      },
+      "query": "network.configuration.config",
+      "key": "id",
+      "columns": [
+        "hostname",
+        "domain",
+        "ipv4gateway",
+        "nameserver1",
+        "nameserver2"
+      ],
+      "actions": [
+        "network.configuration.update"
+      ],
+      "extra": false
+    },
+    {
+      "id": "services",
+      "label": {
+        "en": "System services",
+        "zh-CN": "系统服务"
+      },
+      "query": "service.query",
+      "key": "id",
+      "columns": [
+        "service",
+        "state",
+        "enable"
+      ],
+      "actions": [
+        "service.update",
+        "service.control"
+      ],
+      "extra": false
+    },
+    {
+      "id": "alerts",
+      "label": {
+        "en": "Alerts",
+        "zh-CN": "告警"
+      },
+      "query": "alert.list",
+      "key": "uuid",
+      "columns": [
+        "level",
+        "formatted",
+        "datetime",
+        "dismissed"
+      ],
+      "actions": [
+        "alert.dismiss",
+        "alert.restore"
+      ],
+      "extra": false
+    },
+    {
+      "id": "jobs",
+      "label": {
+        "en": "Job progress",
+        "zh-CN": "任务进度"
+      },
+      "query": "core.get_jobs",
+      "key": "id",
+      "columns": [
+        "id",
+        "method",
+        "state",
+        "progress",
+        "time_started",
+        "error"
+      ],
+      "actions": [
+        "core.job_abort"
+      ],
+      "extra": false
+    },
+    {
+      "id": "system",
+      "label": {
+        "en": "System settings",
+        "zh-CN": "系统设置"
+      },
+      "query": "system.general.config",
+      "key": "id",
+      "columns": [
+        "ui_address",
+        "ui_port",
+        "ui_httpsport",
+        "timezone",
+        "language"
+      ],
+      "actions": [
+        "system.general.update",
+        "system.reboot",
+        "system.shutdown"
+      ],
+      "extra": false
+    },
+    {
+      "id": "nfs",
+      "label": {
+        "en": "NFS shares",
+        "zh-CN": "NFS 共享"
+      },
+      "query": "sharing.nfs.query",
+      "key": "id",
+      "columns": [
+        "path",
+        "enabled",
+        "comment"
+      ],
+      "actions": [
+        "sharing.nfs.create",
+        "sharing.nfs.update",
+        "sharing.nfs.delete"
+      ],
+      "extra": true
+    },
+    {
+      "id": "replication",
+      "label": {
+        "en": "Replication",
+        "zh-CN": "复制任务"
+      },
+      "query": "replication.query",
+      "key": "id",
+      "columns": [
+        "name",
+        "direction",
+        "transport",
+        "enabled",
+        "state"
+      ],
+      "actions": [
+        "replication.create",
+        "replication.update",
+        "replication.delete",
+        "replication.run"
+      ],
+      "extra": true
+    },
+    {
+      "id": "cloud",
+      "label": {
+        "en": "Cloud sync",
+        "zh-CN": "云同步"
+      },
+      "query": "cloudsync.query",
+      "key": "id",
+      "columns": [
+        "description",
+        "path",
+        "direction",
+        "enabled",
+        "job"
+      ],
+      "actions": [
+        "cloudsync.create",
+        "cloudsync.update",
+        "cloudsync.delete",
+        "cloudsync.sync"
+      ],
+      "extra": true
+    },
+    {
+      "id": "vms",
+      "label": {
+        "en": "Virtual machines",
+        "zh-CN": "虚拟机"
+      },
+      "query": "vm.query",
+      "key": "id",
+      "columns": [
+        "name",
+        "description",
+        "status",
+        "autostart"
+      ],
+      "actions": [
+        "vm.create",
+        "vm.update",
+        "vm.delete",
+        "vm.start",
+        "vm.stop",
+        "vm.restart"
+      ],
+      "extra": false
+    },
+    {
+      "id": "scrub",
+      "label": {
+        "en": "Scrub schedules",
+        "zh-CN": "存储池校验计划"
+      },
+      "query": "pool.scrub.query",
+      "key": "id",
+      "columns": [
+        "pool_name",
+        "threshold",
+        "enabled",
+        "schedule"
+      ],
+      "actions": [
+        "pool.scrub.create",
+        "pool.scrub.update",
+        "pool.scrub.delete"
+      ],
+      "extra": false
+    },
+    {
+      "id": "vmDevices",
+      "label": {
+        "en": "VM devices",
+        "zh-CN": "虚拟机设备"
+      },
+      "query": "vm.device.query",
+      "key": "id",
+      "columns": [
+        "id",
+        "vm",
+        "dtype",
+        "order",
+        "attributes"
+      ],
+      "actions": [
+        "vm.device.create",
+        "vm.device.update",
+        "vm.device.delete"
+      ],
+      "extra": false
+    },
+    {
+      "id": "privileges",
+      "label": {
+        "en": "Management privileges",
+        "zh-CN": "管理权限"
+      },
+      "query": "privilege.query",
+      "key": "id",
+      "columns": [
+        "name",
+        "local_groups",
+        "roles",
+        "web_shell"
+      ],
+      "actions": [
+        "privilege.create",
+        "privilege.update",
+        "privilege.delete"
+      ],
+      "extra": false
+    }
+  ],
+  "operations": {
+    "pool.create": {
+      "method": "pool.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "pools"
+    },
+    "pool.scrub": {
+      "method": "pool.scrub",
+      "label": {
+        "en": "Start / stop scrub",
+        "zh-CN": "启动 / 停止校验"
+      },
+      "job": true,
+      "item": true,
+      "danger": false,
+      "resource": "pools"
+    },
+    "pool.export": {
+      "method": "pool.export",
+      "label": {
+        "en": "Export / destroy pool",
+        "zh-CN": "导出 / 销毁存储池"
+      },
+      "job": true,
+      "item": true,
+      "danger": true,
+      "resource": "pools"
+    },
+    "pool.attach": {
+      "method": "pool.attach",
+      "label": {
+        "en": "Attach disk",
+        "zh-CN": "添加磁盘"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "pools"
+    },
+    "pool.replace": {
+      "method": "pool.replace",
+      "label": {
+        "en": "Replace disk",
+        "zh-CN": "替换磁盘"
+      },
+      "job": true,
+      "item": true,
+      "danger": true,
+      "resource": "pools"
+    },
+    "pool.detach": {
+      "method": "pool.detach",
+      "label": {
+        "en": "Detach disk",
+        "zh-CN": "分离磁盘"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "pools"
+    },
+    "pool.offline": {
+      "method": "pool.offline",
+      "label": {
+        "en": "Offline disk",
+        "zh-CN": "离线磁盘"
+      },
+      "job": false,
+      "item": true,
+      "danger": false,
+      "resource": "pools"
+    },
+    "pool.online": {
+      "method": "pool.online",
+      "label": {
+        "en": "Online disk",
+        "zh-CN": "上线磁盘"
+      },
+      "job": false,
+      "item": true,
+      "danger": false,
+      "resource": "pools"
+    },
+    "pool.dataset.create": {
+      "method": "pool.dataset.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "datasets"
+    },
+    "pool.dataset.update": {
+      "method": "pool.dataset.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "datasets"
+    },
+    "pool.dataset.delete": {
+      "method": "pool.dataset.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "datasets"
+    },
+    "pool.dataset.lock": {
+      "method": "pool.dataset.lock",
+      "label": {
+        "en": "Lock",
+        "zh-CN": "锁定"
+      },
+      "job": true,
+      "item": false,
+      "danger": true,
+      "resource": "datasets"
+    },
+    "pool.dataset.unlock": {
+      "method": "pool.dataset.unlock",
+      "label": {
+        "en": "Unlock",
+        "zh-CN": "解锁"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "datasets"
+    },
+    "filesystem.setacl": {
+      "method": "filesystem.setacl",
+      "label": {
+        "en": "Edit ACL",
+        "zh-CN": "编辑 ACL 权限"
+      },
+      "job": true,
+      "item": false,
+      "danger": true,
+      "resource": "datasets"
+    },
+    "filesystem.setperm": {
+      "method": "filesystem.setperm",
+      "label": {
+        "en": "Edit POSIX permissions",
+        "zh-CN": "编辑 POSIX 权限"
+      },
+      "job": true,
+      "item": false,
+      "danger": true,
+      "resource": "datasets"
+    },
+    "disk.update": {
+      "method": "disk.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "disks"
+    },
+    "disk.wipe": {
+      "method": "disk.wipe",
+      "label": {
+        "en": "Wipe disk",
+        "zh-CN": "擦除磁盘"
+      },
+      "job": true,
+      "item": false,
+      "danger": true,
+      "resource": "disks"
+    },
+    "pool.snapshot.create": {
+      "method": "pool.snapshot.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "snapshots"
+    },
+    "pool.snapshot.delete": {
+      "method": "pool.snapshot.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "snapshots"
+    },
+    "pool.snapshot.rollback": {
+      "method": "pool.snapshot.rollback",
+      "label": {
+        "en": "Roll back",
+        "zh-CN": "回滚"
+      },
+      "job": false,
+      "item": false,
+      "danger": true,
+      "resource": "snapshots"
+    },
+    "pool.snapshot.clone": {
+      "method": "pool.snapshot.clone",
+      "label": {
+        "en": "Clone",
+        "zh-CN": "克隆"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "snapshots"
+    },
+    "sharing.smb.create": {
+      "method": "sharing.smb.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "smb"
+    },
+    "sharing.smb.update": {
+      "method": "sharing.smb.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "smb"
+    },
+    "sharing.smb.delete": {
+      "method": "sharing.smb.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "smb"
+    },
+    "app.create": {
+      "method": "app.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "apps"
+    },
+    "app.start": {
+      "method": "app.start",
+      "label": {
+        "en": "Start",
+        "zh-CN": "启动"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "apps"
+    },
+    "app.stop": {
+      "method": "app.stop",
+      "label": {
+        "en": "Stop",
+        "zh-CN": "停止"
+      },
+      "job": true,
+      "item": false,
+      "danger": true,
+      "resource": "apps"
+    },
+    "app.redeploy": {
+      "method": "app.redeploy",
+      "label": {
+        "en": "Redeploy",
+        "zh-CN": "重新部署"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "apps"
+    },
+    "app.update": {
+      "method": "app.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": true,
+      "item": true,
+      "danger": true,
+      "resource": "apps"
+    },
+    "app.upgrade": {
+      "method": "app.upgrade",
+      "label": {
+        "en": "Upgrade",
+        "zh-CN": "升级"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "apps"
+    },
+    "app.delete": {
+      "method": "app.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": true,
+      "item": true,
+      "danger": true,
+      "resource": "apps"
+    },
+    "pool.snapshottask.create": {
+      "method": "pool.snapshottask.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "snapshotTasks"
+    },
+    "pool.snapshottask.update": {
+      "method": "pool.snapshottask.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "snapshotTasks"
+    },
+    "pool.snapshottask.delete": {
+      "method": "pool.snapshottask.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "snapshotTasks"
+    },
+    "pool.snapshottask.run": {
+      "method": "pool.snapshottask.run",
+      "label": {
+        "en": "Run now",
+        "zh-CN": "立即运行"
+      },
+      "job": false,
+      "item": true,
+      "danger": false,
+      "resource": "snapshotTasks"
+    },
+    "cronjob.create": {
+      "method": "cronjob.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "cron"
+    },
+    "cronjob.update": {
+      "method": "cronjob.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "cron"
+    },
+    "cronjob.delete": {
+      "method": "cronjob.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "cron"
+    },
+    "cronjob.run": {
+      "method": "cronjob.run",
+      "label": {
+        "en": "Run now",
+        "zh-CN": "立即运行"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "cron"
+    },
+    "user.create": {
+      "method": "user.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "users"
+    },
+    "user.update": {
+      "method": "user.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "users"
+    },
+    "user.delete": {
+      "method": "user.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "users"
+    },
+    "group.create": {
+      "method": "group.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "groups"
+    },
+    "group.update": {
+      "method": "group.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "groups"
+    },
+    "group.delete": {
+      "method": "group.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "groups"
+    },
+    "interface.create": {
+      "method": "interface.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "network"
+    },
+    "interface.update": {
+      "method": "interface.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "network"
+    },
+    "interface.delete": {
+      "method": "interface.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "network"
+    },
+    "interface.commit": {
+      "method": "interface.commit",
+      "label": {
+        "en": "Test network changes (60 seconds)",
+        "zh-CN": "试运行网络配置（60 秒）"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "network"
+    },
+    "interface.checkin": {
+      "method": "interface.checkin",
+      "label": {
+        "en": "Confirm network and save",
+        "zh-CN": "确认网络可用并保存"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "network"
+    },
+    "interface.rollback": {
+      "method": "interface.rollback",
+      "label": {
+        "en": "Roll back",
+        "zh-CN": "回滚"
+      },
+      "job": false,
+      "item": false,
+      "danger": true,
+      "resource": "network"
+    },
+    "network.configuration.update": {
+      "method": "network.configuration.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": false,
+      "danger": true,
+      "resource": "networkConfig"
+    },
+    "service.update": {
+      "method": "service.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "services"
+    },
+    "service.control": {
+      "method": "service.control",
+      "label": {
+        "en": "Start / stop / restart",
+        "zh-CN": "启动 / 停止 / 重启"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "services"
+    },
+    "alert.dismiss": {
+      "method": "alert.dismiss",
+      "label": {
+        "en": "Dismiss alert",
+        "zh-CN": "忽略告警"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "alerts"
+    },
+    "alert.restore": {
+      "method": "alert.restore",
+      "label": {
+        "en": "Restore alert",
+        "zh-CN": "恢复告警"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "alerts"
+    },
+    "core.job_abort": {
+      "method": "core.job_abort",
+      "label": {
+        "en": "Abort job",
+        "zh-CN": "中止任务"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "jobs"
+    },
+    "system.general.update": {
+      "method": "system.general.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": false,
+      "danger": true,
+      "resource": "system"
+    },
+    "system.reboot": {
+      "method": "system.reboot",
+      "label": {
+        "en": "Reboot NAS",
+        "zh-CN": "重启 NAS"
+      },
+      "job": true,
+      "item": false,
+      "danger": true,
+      "resource": "system"
+    },
+    "system.shutdown": {
+      "method": "system.shutdown",
+      "label": {
+        "en": "Shut down NAS",
+        "zh-CN": "关闭 NAS"
+      },
+      "job": true,
+      "item": false,
+      "danger": true,
+      "resource": "system"
+    },
+    "sharing.nfs.create": {
+      "method": "sharing.nfs.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "nfs"
+    },
+    "sharing.nfs.update": {
+      "method": "sharing.nfs.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "nfs"
+    },
+    "sharing.nfs.delete": {
+      "method": "sharing.nfs.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "nfs"
+    },
+    "replication.create": {
+      "method": "replication.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "replication"
+    },
+    "replication.update": {
+      "method": "replication.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "replication"
+    },
+    "replication.delete": {
+      "method": "replication.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "replication"
+    },
+    "replication.run": {
+      "method": "replication.run",
+      "label": {
+        "en": "Run now",
+        "zh-CN": "立即运行"
+      },
+      "job": true,
+      "item": false,
+      "danger": false,
+      "resource": "replication"
+    },
+    "cloudsync.create": {
+      "method": "cloudsync.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "cloud"
+    },
+    "cloudsync.update": {
+      "method": "cloudsync.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "cloud"
+    },
+    "cloudsync.delete": {
+      "method": "cloudsync.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "cloud"
+    },
+    "cloudsync.sync": {
+      "method": "cloudsync.sync",
+      "label": {
+        "en": "Sync now",
+        "zh-CN": "立即同步"
+      },
+      "job": true,
+      "item": true,
+      "danger": false,
+      "resource": "cloud"
+    },
+    "vm.create": {
+      "method": "vm.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "vms"
+    },
+    "vm.update": {
+      "method": "vm.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "vms"
+    },
+    "vm.delete": {
+      "method": "vm.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "vms"
+    },
+    "vm.start": {
+      "method": "vm.start",
+      "label": {
+        "en": "Start",
+        "zh-CN": "启动"
+      },
+      "job": false,
+      "item": true,
+      "danger": false,
+      "resource": "vms"
+    },
+    "vm.stop": {
+      "method": "vm.stop",
+      "label": {
+        "en": "Stop",
+        "zh-CN": "停止"
+      },
+      "job": true,
+      "item": true,
+      "danger": true,
+      "resource": "vms"
+    },
+    "vm.restart": {
+      "method": "vm.restart",
+      "label": {
+        "en": "Restart",
+        "zh-CN": "重启"
+      },
+      "job": true,
+      "item": true,
+      "danger": false,
+      "resource": "vms"
+    },
+    "pool.scrub.create": {
+      "method": "pool.scrub.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "scrub"
+    },
+    "pool.scrub.update": {
+      "method": "pool.scrub.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "scrub"
+    },
+    "pool.scrub.delete": {
+      "method": "pool.scrub.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "scrub"
+    },
+    "vm.device.create": {
+      "method": "vm.device.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "vmDevices"
+    },
+    "vm.device.update": {
+      "method": "vm.device.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "vmDevices"
+    },
+    "vm.device.delete": {
+      "method": "vm.device.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "vmDevices"
+    },
+    "privilege.create": {
+      "method": "privilege.create",
+      "label": {
+        "en": "Create",
+        "zh-CN": "创建"
+      },
+      "job": false,
+      "item": false,
+      "danger": false,
+      "resource": "privileges"
+    },
+    "privilege.update": {
+      "method": "privilege.update",
+      "label": {
+        "en": "Edit",
+        "zh-CN": "编辑"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "privileges"
+    },
+    "privilege.delete": {
+      "method": "privilege.delete",
+      "label": {
+        "en": "Delete",
+        "zh-CN": "删除"
+      },
+      "job": false,
+      "item": true,
+      "danger": true,
+      "resource": "privileges"
+    }
+  }
+}
