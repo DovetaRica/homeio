@@ -1,4 +1,5 @@
 "use client";
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
@@ -105,7 +106,9 @@ function invalidateSharedFolderQueries(
 }
 
 export function useLocalFolderShares() {
+  const nasMode=useNasDesktop();
   return useQuery({
+    enabled:!nasMode,
     queryKey: queryKeys.localFolderShares,
     queryFn: listSharedFolders,
     staleTime: 5_000,

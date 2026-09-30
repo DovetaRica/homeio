@@ -2,6 +2,10 @@
 
 
 
+import {useNasDesktop,desktopSectionEnabled} from "@/modules/shell/desktop-mode";
+import {NasDashboard} from "@/modules/nas/dashboard";
+import {NasInfrastructurePanel} from "@/modules/nas/infrastructure-panel";
+import {NasDesktopWidgets} from "@/modules/nas/desktop-chrome";
 import { useI18n } from "@/i18n/use-i18n";
 import {
   Activity,
@@ -84,6 +88,7 @@ export function DesktopShell() {
 }
 
 function DesktopShellInner() {
+  const nasMode=useNasDesktop();
   const intl = useI18n();
   const router = useRouter();
   const {
@@ -201,11 +206,12 @@ function DesktopShellInner() {
 
   const filteredSettingsSections = useMemo(() => {
     const query = settingsSearchQuery.trim().toLowerCase();
-    if (!query) return SETTINGS_SEARCH_SECTIONS;
-    return SETTINGS_SEARCH_SECTIONS.filter((section) =>
+    const sections=SETTINGS_SEARCH_SECTIONS.filter(s=>desktopSectionEnabled(s.id,nasMode));
+    if (!query) return sections;
+    return sections.filter((section) =>
       section.label.toLowerCase().includes(query),
     );
-  }, [settingsSearchQuery]);
+  }, [settingsSearchQuery,nasMode]);
 
   const getNextFocusableWindow = useCallback(
     (excludedId?: string) => {
@@ -479,7 +485,7 @@ function DesktopShellInner() {
     [openWindow],
   );
 
-  const requestLogsCommand = useCallback(
+  const _requestLogsCommand = useCallback(
     (command: string) => {
       terminalCommandIdRef.current += 1;
       setTerminalMode("logs");
@@ -755,7 +761,7 @@ function DesktopShellInner() {
           />
 
           {/* System Widgets (right sidebar) */}
-          <SystemWidgets />
+          {nasMode?<NasDesktopWidgets/>:<SystemWidgets />}
         </div>
 
         {/* Windows */}
@@ -820,7 +826,7 @@ function DesktopShellInner() {
             isMinimized={minimizedWindows.includes("monitor")}
             animationsEnabled={appearance.animationsEnabled}
           >
-            <Monitor />
+            {nasMode?<NasDashboard embedded officialUrl="http://192.168.31.221"/>:<Monitor />}
           </Window>
         )}
 
@@ -954,7 +960,7 @@ function DesktopShellInner() {
             isMinimized={minimizedWindows.includes("disk-manager")}
             animationsEnabled={appearance.animationsEnabled}
           >
-            <DiskManager />
+            {nasMode?<NasInfrastructurePanel section="storage"/>:<DiskManager />}
           </Window>
         )}
 

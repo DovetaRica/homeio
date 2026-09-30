@@ -1,5 +1,6 @@
 "use client";
 
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
@@ -66,6 +67,7 @@ import { useSystemMetrics } from "@/modules/system/hooks/useSystemMetrics";
 import { useWifiNetworks } from "@/modules/system/hooks/useWifiNetworks";
 
 export function useSettingsBackend() {
+  const nasMode=useNasDesktop();
   const queryClient = useQueryClient();
   const { isUpdateRecoveryActive, setIsUpdateRecoveryActive } = useUpdateRecoveryState();
 
@@ -81,7 +83,7 @@ export function useSettingsBackend() {
     queryKey: queryKeys.systemUpdates,
     queryFn: fetchSystemUpdatesRequest,
     staleTime: 60_000,
-    enabled: !isUpdateRecoveryActive,
+    enabled: !nasMode && !isUpdateRecoveryActive,
   });
   const systemPreferencesQuery = useQuery({
     queryKey: queryKeys.systemPreferences,
@@ -96,16 +98,19 @@ export function useSettingsBackend() {
   const backupsQuery = useQuery({
     queryKey: queryKeys.systemBackups,
     queryFn: fetchSystemBackupsRequest,
+    enabled:!nasMode,
     staleTime: 60_000,
   });
   const scheduledRebootQuery = useQuery({
     queryKey: queryKeys.powerSchedule,
     queryFn: fetchScheduledRebootRequest,
+    enabled:!nasMode,
     staleTime: 60_000,
   });
   const powerCapabilitiesQuery = useQuery({
     queryKey: queryKeys.powerCapabilities,
     queryFn: fetchPowerCapabilitiesRequest,
+    enabled:!nasMode,
     staleTime: 5 * 60_000,
   });
 

@@ -1,4 +1,5 @@
 "use client";
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
@@ -178,7 +179,9 @@ function invalidateNetworkQueries(queryClient: ReturnType<typeof useQueryClient>
 }
 
 export function useNetworkShares() {
+  const nasMode=useNasDesktop();
   return useQuery({
+    enabled:!nasMode,
     queryKey: queryKeys.networkShares,
     queryFn: listShares,
     staleTime: 5_000,

@@ -1,5 +1,6 @@
 "use client";
 
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 import { useQuery } from "@tanstack/react-query";
 import type { SystemUpdateStatus } from "@/lib/shared/contracts/system";
 import { queryKeys } from "@/lib/shared/query-keys";
@@ -19,7 +20,9 @@ async function fetchSystemUpdateStatusRequest(): Promise<SystemUpdateStatus> {
 }
 
 export function useSystemUpdateStatus() {
+  const nasMode=useNasDesktop();
   return useQuery({
+    enabled:!nasMode,
     queryKey: queryKeys.systemUpdates,
     queryFn: fetchSystemUpdateStatusRequest,
     staleTime: 60_000,

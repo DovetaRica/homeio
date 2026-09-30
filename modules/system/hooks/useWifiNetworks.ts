@@ -1,5 +1,6 @@
 "use client";
 
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 import { useQuery } from "@tanstack/react-query";
 import type { WifiAccessPoint } from "@/lib/shared/contracts/network";
 import { queryKeys } from "@/lib/shared/query-keys";
@@ -26,7 +27,9 @@ async function fetchWifiNetworks() {
 }
 
 export function useWifiNetworks() {
+  const nasMode=useNasDesktop();
   return useQuery({
+    enabled:!nasMode,
     queryKey: queryKeys.networkNetworks,
     queryFn: fetchWifiNetworks,
     refetchInterval: (query) => {

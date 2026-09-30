@@ -1,3 +1,4 @@
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 import { useEffect, useState } from "react";
 import type { ContainerStats, DockerStatsPayload } from "@/lib/shared/contracts/docker";
 
@@ -80,12 +81,14 @@ export function useDockerStats() {
  * Hook to fetch Docker stats once (non-streaming)
  */
 export function useDockerStatsSnapshot() {
+  const nasMode=useNasDesktop();
   const [stats, setStats] = useState<ContainerStats[]>([]);
   const [daemonAvailable, setDaemonAvailable] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!nasMode);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if(nasMode)return;
     const fetchStats = async () => {
       try {
         setIsLoading(true);
@@ -107,7 +110,7 @@ export function useDockerStatsSnapshot() {
     };
 
     void fetchStats();
-  }, []);
+  }, [nasMode]);
 
   return {
     stats,

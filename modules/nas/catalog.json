@@ -353,9 +353,7 @@
         "language"
       ],
       "actions": [
-        "system.general.update",
-        "system.reboot",
-        "system.shutdown"
+        "system.general.update"
       ],
       "extra": false
     },
@@ -1149,28 +1147,6 @@
         "zh-CN": "编辑"
       },
       "job": false,
-      "item": false,
-      "danger": true,
-      "resource": "system"
-    },
-    "system.reboot": {
-      "method": "system.reboot",
-      "label": {
-        "en": "Reboot NAS",
-        "zh-CN": "重启 NAS"
-      },
-      "job": true,
-      "item": false,
-      "danger": true,
-      "resource": "system"
-    },
-    "system.shutdown": {
-      "method": "system.shutdown",
-      "label": {
-        "en": "Shut down NAS",
-        "zh-CN": "关闭 NAS"
-      },
-      "job": true,
       "item": false,
       "danger": true,
       "resource": "system"

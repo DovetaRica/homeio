@@ -2,6 +2,7 @@
 
 
 
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 import { useI18n } from "@/i18n/use-i18n";
 import { Cloud, HardDrive, Plus } from "@/components/icons/platform-icons";
 import { OsIcon } from "@/components/icons/OsIcon";
@@ -72,6 +73,7 @@ export function FileManagerSidebar({
   onEjectDrive,
 }: SidebarProps) {
   const intl = useI18n();
+  const nasMode=useNasDesktop();
   const currentUserQuery = useCurrentUser();
   const isDemoMode = currentUserQuery.data?.isDemoMode ?? false;
   const [addMenuOpen, setAddMenuOpen] = useState(false);
@@ -95,14 +97,14 @@ export function FileManagerSidebar({
           const isCloud = section.title === "Cloud";
           const items =
             section.title === "Locations" ? locationItems : isCloud ? cloudItems : section.items;
-          if (isCloud && cloudItems.length === 0) return null;
+          if (isCloud && (!FEATURE_FLAGS.GOOGLE_DRIVE || cloudItems.length === 0)) return null;
           return (
             <div key={section.title} className="mb-3">
               <div className="mb-1.5 flex items-center justify-between px-3">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/65">
                   {intl.text(section.title)}
                 </span>
-                {section.title === "Locations" && !isDemoMode && (
+                {section.title === "Locations" && !isDemoMode && !nasMode && (
                   <div ref={addMenuRef} className="relative">
                     <button
                       onClick={() => setAddMenuOpen((v) => !v)}

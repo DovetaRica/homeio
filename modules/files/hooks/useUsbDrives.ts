@@ -1,4 +1,5 @@
 "use client";
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 
 import type { UsbDrive, UsbSseEvent } from "@/lib/shared/contracts/usb";
 import { queryKeys } from "@/lib/shared/query-keys";
@@ -13,16 +14,19 @@ async function fetchUsbDrives(): Promise<UsbDrive[]> {
 }
 
 export function useUsbDrives() {
+  const nasMode=useNasDesktop();
   const queryClient = useQueryClient();
 
   const { data: drives = [] } = useQuery({
     queryKey: queryKeys.usbDrives,
     queryFn: fetchUsbDrives,
+    enabled:!nasMode,
     staleTime: 10_000,
     refetchInterval: 15_000,
   });
 
   useEffect(() => {
+    if(nasMode)return;
     const source = new EventSource("/api/v1/files/usb/stream");
 
     const handleEvent = () => {
@@ -45,7 +49,7 @@ export function useUsbDrives() {
       }
       source.close();
     };
-  }, [queryClient]);
+  }, [queryClient,nasMode]);
 
   const mountMutation = useMutation({
     mutationFn: async (driveId: string) => {

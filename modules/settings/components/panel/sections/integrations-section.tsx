@@ -2,6 +2,7 @@
 
 
 
+import {FEATURE_FLAGS} from "@/lib/shared/feature-flags";
 import { useI18n } from "@/i18n/use-i18n";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -1044,8 +1045,7 @@ export function IntegrationsSection() {
   const intl = useI18n();
   return (
     <div className="flex flex-col gap-1">
-      <SectionDivider title={intl.t("ui.googleDrive")} />
-      <GoogleDriveConfig />
+      {FEATURE_FLAGS.GOOGLE_DRIVE&&<><SectionDivider title={intl.t("ui.googleDrive")} /><GoogleDriveConfig /></>}
       <SectionDivider title="Tailscale" />
       <TailscaleConfig />
       <SectionDivider title={intl.t("ui.cloudflareTunnel")} />

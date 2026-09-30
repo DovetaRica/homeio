@@ -1,5 +1,6 @@
 "use client";
 
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 import { useQuery } from "@tanstack/react-query";
 import type { NetworkStatus } from "@/lib/shared/contracts/network";
 import { queryKeys } from "@/lib/shared/query-keys";
@@ -25,7 +26,9 @@ async function fetchNetworkStatus() {
 }
 
 export function useNetworkStatus() {
+  const nasMode=useNasDesktop();
   return useQuery({
+    enabled:!nasMode,
     queryKey: queryKeys.networkStatus,
     queryFn: fetchNetworkStatus,
     refetchInterval: (query) => {

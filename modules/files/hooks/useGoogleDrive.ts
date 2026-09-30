@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {FEATURE_FLAGS} from "@/lib/shared/feature-flags";
 import { queryKeys } from "@/lib/shared/query-keys";
 
 export type GoogleDriveConnection = {
@@ -42,6 +43,7 @@ export function useGoogleDriveConnections() {
   return useQuery({
     queryKey: queryKeys.googleDriveConnections,
     queryFn: listConnections,
+    enabled:FEATURE_FLAGS.GOOGLE_DRIVE,
     staleTime: 5_000,
   });
 }

@@ -2,6 +2,8 @@
 
 
 
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
+import {NasDesktopStatusBar} from "@/modules/nas/desktop-chrome";
 import { useI18n } from "@/i18n/use-i18n";
 import { BatteryFull, Bell, CloudSun, Tailscale } from "@/components/icons/platform-icons";
 import { BatteryPopover } from "@/modules/system/components/status-bar/battery-popover";
@@ -40,7 +42,11 @@ function toTitleCaseUsername(value: string | null) {
     .join(" ");
 }
 
-export function StatusBar({
+export function StatusBar(props:StatusBarProps) {
+  const nasMode=useNasDesktop();
+  return nasMode?<NasDesktopStatusBar onOpenNotifications={props.onOpenNotifications}/>:<StandardStatusBar {...props}/>;
+}
+function StandardStatusBar({
   onLock: _onLock,
   onLogout: _onLogout,
   isLogoutPending: _isLogoutPending = false,

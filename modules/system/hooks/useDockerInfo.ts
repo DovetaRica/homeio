@@ -1,5 +1,6 @@
 "use client";
 
+import {useNasDesktop} from "@/modules/shell/desktop-mode";
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/shared/query-keys";
 import type { DockerInfo } from "@/lib/shared/contracts/docker";
@@ -20,7 +21,9 @@ async function fetchDockerInfo(): Promise<DockerInfo> {
  * Returns `null` data (not an error) when the daemon is unreachable (503).
  */
 export function useDockerInfo() {
+  const nasMode=useNasDesktop();
   return useQuery({
+    enabled:!nasMode,
     queryKey: queryKeys.dockerInfo,
     queryFn: fetchDockerInfo,
     staleTime: 60_000, // engine info rarely changes; refresh once per minute

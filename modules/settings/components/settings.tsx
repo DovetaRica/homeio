@@ -2,6 +2,9 @@
 
 
 
+import {useNasDesktop,desktopSectionEnabled} from "@/modules/shell/desktop-mode";
+import {NasInfrastructurePanel} from "@/modules/nas/infrastructure-panel";
+import {NasDesktopGeneral} from "@/modules/nas/desktop-chrome";
 import { useI18n } from "@/i18n/use-i18n";
 import { useDesktopPreferences } from "@/hooks/useDesktopPreferences";
 import {
@@ -43,11 +46,12 @@ export function SettingsPanel({
   onOpenDiskManager,
 }: SettingsPanelProps) {
   const intl = useI18n();
+  const nasMode=useNasDesktop();
   const settingsBackend = useSettingsBackend();
   const desktopPreferences = useDesktopPreferences();
   const { activeSection, setActiveSection } = useActiveSettingsSection(
     selectedSection,
-    SETTINGS_SECTIONS.map((section) => section.id),
+    SETTINGS_SECTIONS.filter(s=>desktopSectionEnabled(s.id,nasMode)).map((section) => section.id),
   );
 
   const generalController = useGeneralSettingsController(
@@ -68,7 +72,7 @@ export function SettingsPanel({
   useUpdatesAutoCheckEffect({
     activeSection,
     isHydrated: desktopPreferences.isHydrated,
-    autoCheckEnabled: desktopPreferences.preferences.autoCheckUpdates,
+    autoCheckEnabled: !nasMode && desktopPreferences.preferences.autoCheckUpdates,
     onCheckForUpdates: settingsBackend.actions.checkForUpdates,
   });
 
@@ -85,6 +89,13 @@ export function SettingsPanel({
     notificationController,
     backupController,
     onOpenDiskManager,
+  }).filter(s=>desktopSectionEnabled(s.id,nasMode)).map(s=>{
+    if(!nasMode)return s;
+    if(s.id==='general')return {...s,liveApply:true,save:undefined,render:()=> <NasDesktopGeneral/>};
+    if(s.id==='network'||s.id==='storage'||s.id==='docker') {
+      const id=s.id;return {...s,label:id==='docker'?intl.t('nas.apps'):s.label,liveApply:true,save:undefined,render:()=> <NasInfrastructurePanel key={id} section={id}/>};
+    }
+    return s;
   });
   const activeDefinition =
     sectionDefinitions.find((section) => section.id === activeSection) ??
@@ -103,7 +114,7 @@ export function SettingsPanel({
                   "mb-1 px-3 text-[10px] font-semibold uppercase tracking-[0.16em]",
                   group.label === "Danger Zone" ? "text-status-red/60" : "text-muted-foreground/50",
                 )}>
-                  {intl.text(group.label)}
+                  {nasMode&&group.label==='Infrastructure'?intl.t('nas.title'):intl.text(group.label)}
                 </div>
                 <div className="flex flex-col gap-0.5">
                   {sections.map((section) => {
