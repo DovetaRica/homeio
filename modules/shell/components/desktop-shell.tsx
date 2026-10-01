@@ -5,6 +5,8 @@
 import {useNasDesktop,desktopSectionEnabled} from "@/modules/shell/desktop-mode";
 import {NasDashboard} from "@/modules/nas/dashboard";
 import {NasInfrastructurePanel} from "@/modules/nas/infrastructure-panel";
+import {useLocale, useTranslations} from "next-intl";
+import {SYSTEM_SECTION_IDS, systemSectionLabel} from "@/modules/settings/system-navigation";
 import {NasDesktopWidgets} from "@/modules/nas/desktop-chrome";
 import { useI18n } from "@/i18n/use-i18n";
 import {
@@ -79,15 +81,19 @@ const SETTINGS_SEARCH_SECTIONS = [
   { id: "power", label: "Power" },
 ] as const;
 
-export function DesktopShell() {
+type DesktopShellProps = {initialSettingsSection?: string};
+
+export function DesktopShell({initialSettingsSection}: DesktopShellProps = {}) {
   return (
     <StoreActionsProvider>
-      <DesktopShellInner />
+      <DesktopShellInner initialSettingsSection={initialSettingsSection} />
     </StoreActionsProvider>
   );
 }
 
-function DesktopShellInner() {
+function DesktopShellInner({initialSettingsSection}: DesktopShellProps) {
+  const locale = useLocale();
+  const systemT = useTranslations("systemSettings");
   const nasMode=useNasDesktop();
   const intl = useI18n();
   const router = useRouter();
@@ -97,10 +103,10 @@ function DesktopShellInner() {
     isLoading: isLoadingUser,
     isError: isCurrentUserError,
   } = useCurrentUser();
-  const [openWindows, setOpenWindows] = useState<string[]>([]);
+  const [openWindows, setOpenWindows] = useState<string[]>(initialSettingsSection ? ["settings"] : []);
   const [closingWindows, setClosingWindows] = useState<string[]>([]);
   const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
-  const [focusedWindow, setFocusedWindow] = useState<string | null>(null);
+  const [focusedWindow, setFocusedWindow] = useState<string | null>(initialSettingsSection ? "settings" : null);
   const [isLocked, setIsLocked] = useState(false);
   const [isLockStateHydrated, setIsLockStateHydrated] = useState(false);
   const [isLogoutPending, setIsLogoutPending] = useState(false);
@@ -108,7 +114,8 @@ function DesktopShellInner() {
   const [settingsSearchQuery, setSettingsSearchQuery] = useState("");
   const [settingsSectionRequest, setSettingsSectionRequest] = useState<
     string | null
-  >(null);
+  >(initialSettingsSection ?? null);
+  const [settingsRequestKey, setSettingsRequestKey] = useState(0);
   const [appStoreLaunchRequest, setAppStoreLaunchRequest] = useState<{
     nonce: number;
     search?: string;
@@ -206,12 +213,12 @@ function DesktopShellInner() {
 
   const filteredSettingsSections = useMemo(() => {
     const query = settingsSearchQuery.trim().toLowerCase();
-    const sections=SETTINGS_SEARCH_SECTIONS.filter(s=>desktopSectionEnabled(s.id,nasMode));
+    const sections=nasMode ? SYSTEM_SECTION_IDS.map(id => ({id, label: systemSectionLabel(id,locale,systemT)})) : SETTINGS_SEARCH_SECTIONS.filter(s=>desktopSectionEnabled(s.id,nasMode));
     if (!query) return sections;
     return sections.filter((section) =>
       section.label.toLowerCase().includes(query),
     );
-  }, [settingsSearchQuery,nasMode]);
+  }, [settingsSearchQuery,nasMode,locale,systemT]);
 
   const getNextFocusableWindow = useCallback(
     (excludedId?: string) => {
@@ -240,6 +247,11 @@ function DesktopShellInner() {
   );
 
   const openWindow = useCallback((id: string) => {
+    if(nasMode && ["monitor","disk-manager","notifications"].includes(id)) {
+      setSettingsSectionRequest(id === "disk-manager" ? "pools" : id === "notifications" ? "alerts" : "overview");
+      setSettingsRequestKey(value => value + 1);
+      id = "settings";
+    }
     if (closeTimersRef.current[id]) {
       window.clearTimeout(closeTimersRef.current[id]);
       delete closeTimersRef.current[id];
@@ -255,7 +267,7 @@ function DesktopShellInner() {
       return [...prev, id];
     });
     setFocusedWindow(id);
-  }, []);
+  }, [nasMode]);
 
   const minimizeWindow = useCallback(
     (id: string) => {
@@ -379,6 +391,7 @@ function DesktopShellInner() {
   const openSettingsSection = useCallback(
     (sectionId: string) => {
       setSettingsSectionRequest(sectionId);
+      setSettingsRequestKey(value => value + 1);
       setIsSettingsSearchOpen(false);
       setSettingsSearchQuery("");
       const section = SETTINGS_SEARCH_SECTIONS.find(
@@ -761,7 +774,7 @@ function DesktopShellInner() {
           />
 
           {/* System Widgets (right sidebar) */}
-          {nasMode?<NasDesktopWidgets/>:<SystemWidgets />}
+          {nasMode?<NasDesktopWidgets onOpenSettings={openSettingsSection}/>:<SystemWidgets />}
         </div>
 
         {/* Windows */}
@@ -786,12 +799,12 @@ function DesktopShellInner() {
 
         {openWindows.includes("settings") && (
           <Window
-            title={intl.t("ui.settings")}
-            icon={<Settings className="size-4 text-muted-foreground" />}
+            title={nasMode ? systemT("title") : intl.t("ui.settings")}
+            icon={nasMode ? undefined : <Settings className="size-4 text-muted-foreground" />}
             onClose={() => closeWindow("settings")}
             onMinimize={() => minimizeWindow("settings")}
-            defaultWidth={860}
-            defaultHeight={620}
+            defaultWidth={nasMode ? 1120 : 860}
+            defaultHeight={nasMode ? 700 : 620}
             zIndex={getWindowZ("settings")}
             dockPosition={appearance.dockPosition}
             onFocus={() => setFocusedWindow("settings")}
@@ -806,6 +819,8 @@ function DesktopShellInner() {
               onAppearanceChange={updateAppearance}
               wallpaperAccentColor={wallpaperAccentColor}
               selectedSection={settingsSectionRequest}
+              selectionRequestKey={settingsRequestKey}
+              onSectionChange={setSettingsSectionRequest}
               onOpenDiskManager={() => openWindow("disk-manager")}
             />
           </Window>

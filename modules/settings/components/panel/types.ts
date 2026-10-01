@@ -97,6 +97,8 @@ export type SettingsPanelProps = {
   onAppearanceChange: (patch: Partial<AppearanceSettings>) => void;
   wallpaperAccentColor: string | null;
   selectedSection?: string | null;
+  selectionRequestKey?: number;
+  onSectionChange?: (section: string) => void;
   onOpenDiskManager?: () => void;
 };
 

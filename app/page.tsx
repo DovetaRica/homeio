@@ -1,13 +1,13 @@
 import { DesktopShell } from "@/modules/shell/components/desktop-shell";
 import { RealtimeBootstrap } from "@/components/providers/realtime-bootstrap";
-import { NasDashboard } from "@/modules/nas/dashboard";
+import { DesktopModeProvider } from "@/modules/shell/desktop-mode";
 
 export default function HomePage() {
-  if (process.env.HOMEIO_NAS_MODE === 'true') return <NasDashboard officialUrl={process.env.TRUENAS_UI_URL ?? 'https://192.168.31.221'}/>;
+  const nasMode = process.env.HOMEIO_NAS_MODE === 'true';
   return (
     <>
       <RealtimeBootstrap />
-      <DesktopShell />
+      <DesktopModeProvider nasMode={nasMode}><DesktopShell initialSettingsSection={nasMode ? 'overview' : undefined}/></DesktopModeProvider>
     </>
   );
 }

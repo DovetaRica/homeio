@@ -1,4 +1,61 @@
 {
+  "systemSettings": {
+    "shortTitle": "Settings",
+    "title": "System settings",
+    "navigation": "System settings navigation",
+    "filter": "Find a setting…",
+    "noResults": "No matching settings",
+    "official": "TrueNAS console",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "session": "Desktop account",
+    "languageNotice": "Your language choice is saved and used throughout the desktop.",
+    "sections": {
+      "overview": "Overview",
+      "audit": "Activity log",
+      "appearance": "Appearance",
+      "language": "Language",
+      "desktop-account": "Desktop account",
+      "notifications": "Notifications"
+    },
+    "groups": {
+      "system": "System",
+      "storage": "Storage",
+      "network": "Network",
+      "access": "Users & permissions",
+      "automation": "Automation & devices",
+      "preferences": "Desktop preferences",
+      "more": "Other services"
+    },
+    "descriptions": {
+      "overview": "Your storage, applications and system status in one place.",
+      "system": "System configuration, services and recent activity.",
+      "storage": "Manage disks, ZFS storage, snapshots and shares.",
+      "network": "Manage interfaces, gateways and DNS.",
+      "access": "Manage TrueNAS accounts, groups and privileges.",
+      "automation": "Manage schedules and virtual machine devices.",
+      "preferences": "Make this desktop work the way you want.",
+      "more": "Manage additional TrueNAS services."
+    },
+    "appearance": {
+      "style": "Visual style",
+      "rhine": "Rhine / archive terminal",
+      "dock": "Dock position",
+      "icons": "Application icon size",
+      "font": "Text size",
+      "animation": "Interface animation",
+      "bottom": "Bottom",
+      "left": "Left",
+      "right": "Right",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "compact": "Compact",
+      "default": "Default",
+      "extra-large": "Extra large",
+      "applies": "Changes apply immediately and are saved for your next visit."
+    }
+  },
   "ui": {
     "resizeWindow": "Resize window",
     "home": "Home",

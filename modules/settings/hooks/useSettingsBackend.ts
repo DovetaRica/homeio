@@ -88,11 +88,13 @@ export function useSettingsBackend() {
   const systemPreferencesQuery = useQuery({
     queryKey: queryKeys.systemPreferences,
     queryFn: fetchSystemPreferencesRequest,
+    enabled: !nasMode,
     staleTime: 60_000,
   });
   const systemSecurityQuery = useQuery({
     queryKey: queryKeys.systemSecurity,
     queryFn: fetchSystemSecurityRequest,
+    enabled: !nasMode,
     staleTime: 60_000,
   });
   const backupsQuery = useQuery({

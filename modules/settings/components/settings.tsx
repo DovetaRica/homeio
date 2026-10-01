@@ -3,8 +3,7 @@
 
 
 import {useNasDesktop,desktopSectionEnabled} from "@/modules/shell/desktop-mode";
-import {NasInfrastructurePanel} from "@/modules/nas/infrastructure-panel";
-import {NasDesktopGeneral} from "@/modules/nas/desktop-chrome";
+import {SystemSettings} from "./system-settings";
 import { useI18n } from "@/i18n/use-i18n";
 import { useDesktopPreferences } from "@/hooks/useDesktopPreferences";
 import {
@@ -43,6 +42,8 @@ export function SettingsPanel({
   onAppearanceChange,
   wallpaperAccentColor,
   selectedSection,
+  selectionRequestKey,
+  onSectionChange,
   onOpenDiskManager,
 }: SettingsPanelProps) {
   const intl = useI18n();
@@ -89,17 +90,12 @@ export function SettingsPanel({
     notificationController,
     backupController,
     onOpenDiskManager,
-  }).filter(s=>desktopSectionEnabled(s.id,nasMode)).map(s=>{
-    if(!nasMode)return s;
-    if(s.id==='general')return {...s,liveApply:true,save:undefined,render:()=> <NasDesktopGeneral/>};
-    if(s.id==='network'||s.id==='storage'||s.id==='docker') {
-      const id=s.id;return {...s,label:id==='docker'?intl.t('nas.apps'):s.label,liveApply:true,save:undefined,render:()=> <NasInfrastructurePanel key={id} section={id}/>};
-    }
-    return s;
-  });
+  }).filter(s=>desktopSectionEnabled(s.id,nasMode));
   const activeDefinition =
     sectionDefinitions.find((section) => section.id === activeSection) ??
     sectionDefinitions[0];
+
+  if (nasMode) return <SystemSettings selectedSection={selectedSection} selectionRequestKey={selectionRequestKey} onSectionChange={onSectionChange} definitions={sectionDefinitions} backend={settingsBackend} appearance={appearance} onAppearanceChange={onAppearanceChange}/>;
 
   return (
     <div className="flex h-full min-h-0 min-w-0">

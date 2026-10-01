@@ -6,6 +6,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { writePersistedPowerActionCompletion } from "@/lib/desktop/reboot-state";
 import { createTestQueryClient, createWrapper } from "@/test/query-client-wrapper";
 
+import {NextIntlClientProvider} from 'next-intl';
+import en from '@/messages/en.json';
+import {DesktopModeProvider} from '@/modules/shell/desktop-mode';
+
 const { toastSuccessMock } = vi.hoisted(() => ({
   toastSuccessMock: vi.fn(),
 }));
@@ -88,6 +92,9 @@ vi.mock("@/modules/shell/components/dock", () => ({
       </div>
       <button onClick={() => onItemClick?.("app-store")}>Dock App Store</button>
       <button onClick={() => onItemClick?.("settings")}>Dock Settings</button>
+      <button onClick={() => onItemClick?.("monitor")}>Dock Monitor</button>
+      <button onClick={() => onItemClick?.("disk-manager")}>Dock Disks</button>
+      <button onClick={() => onItemClick?.("notifications")}>Dock Alerts</button>
     </div>
   ),
 }));
@@ -101,8 +108,9 @@ vi.mock("@/modules/system/components/monitor", () => ({
   Monitor: () => <div>Monitor</div>,
 }));
 vi.mock("@/modules/settings/components/settings", () => ({
-  SettingsPanel: () => <div>SettingsPanel</div>,
+  SettingsPanel: ({selectedSection}: {selectedSection?: string}) => <div data-testid="settings-panel" data-section={selectedSection}>SettingsPanel</div>,
 }));
+vi.mock('@/modules/nas/desktop-chrome', () => ({NasDesktopWidgets: () => <div>NAS summary</div>}));
 vi.mock("@/modules/system/components/status-bar", () => ({
   StatusBar: () => <div>StatusBar</div>,
 }));
@@ -136,9 +144,9 @@ vi.mock("@/modules/shell/components/window", () => ({
 
 import { DesktopShell } from "@/modules/shell/components/desktop-shell";
 
-function renderDesktopShell() {
+function renderDesktopShell(nasMode = false) {
   const client = createTestQueryClient();
-  return render(<DesktopShell />, {
+  return render(<NextIntlClientProvider locale="en" messages={en} timeZone="UTC"><DesktopModeProvider nasMode={nasMode}><DesktopShell initialSettingsSection={nasMode ? 'overview' : undefined}/></DesktopModeProvider></NextIntlClientProvider>, {
     wrapper: createWrapper(client),
   });
 }
@@ -318,6 +326,21 @@ describe("DesktopShell reboot handling", () => {
       expect(toastSuccessMock).toHaveBeenCalledWith("Homeio update completed.");
     });
     expect(localStorage.getItem("system.power.action.completed.v1")).toBeNull();
+  });
+
+  it('routes NAS monitor, disks and alerts into the same settings window', async () => {
+    useCurrentUserMock.mockReturnValue({data: {id: 'u1', username: 'admin'}, isLoading: false, isError: false});
+    useRebootRecoveryMock.mockReturnValue({isHydrated: true, isActive: false});
+    renderDesktopShell(true);
+    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('overview');
+    fireEvent.click(screen.getByRole('button', {name: 'Dock Disks'}));
+    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('pools');
+    fireEvent.click(screen.getByRole('button', {name: 'Dock Alerts'}));
+    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('alerts');
+    fireEvent.click(screen.getByRole('button', {name: 'Dock Monitor'}));
+    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('overview');
+    expect(screen.getAllByTestId('window-System settings')).toHaveLength(1);
+    expect(screen.getByTestId('dock-state').textContent).toContain('"activeWindows":["settings"]');
   });
 
   it("focuses an open window from the dock instead of closing it", async () => {

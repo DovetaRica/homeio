@@ -1,8 +1,14 @@
 /* @vitest-environment jsdom */
 
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render as testingRender, screen } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import type { AppearanceSettings } from "@/lib/desktop/appearance";
+
+import {NextIntlClientProvider} from 'next-intl';
+import en from '@/messages/en.json';
+function render(ui: Parameters<typeof testingRender>[0]) {
+  return testingRender(<NextIntlClientProvider locale="en" messages={en} timeZone="UTC">{ui}</NextIntlClientProvider>);
+}
 
 const mockUseSettingsBackend = vi.fn();
 const mockUseDesktopPreferences = vi.fn();
@@ -643,7 +649,7 @@ describe("SettingsPanel", () => {
     fireEvent.click(screen.getByRole("button", { name: /^Shutdown/ }));
     fireEvent.click(screen.getByRole("button", { name: "Shutdown now" }));
     expect(backend.actions.shutdownNow).toHaveBeenCalledTimes(1);
-    fireEvent.click(screen.getByRole("switch", { name: "Toggle Scheduled reboot" }));
+    fireEvent.click(screen.getByRole("switch", { name: /^Toggle Scheduled reboot$/i }));
     fireEvent.click(screen.getByRole("button", { name: "Save schedule" }));
     expect(backend.actions.saveScheduledReboot).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole("button", { name: "Factory Reset" }));

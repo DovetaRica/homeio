@@ -3,6 +3,7 @@
 
 
 import { useI18n } from "@/i18n/use-i18n";
+import {useNasDesktop} from '@/modules/shell/desktop-mode';
 import { Maximize2, Minimize2, Minus, X } from "@/components/icons/platform-icons";
 import {
   Tooltip,
@@ -46,6 +47,7 @@ export function Window({
   animationsEnabled = true,
 }: WindowProps) {
   const intl = useI18n();
+  const topClearance = useNasDesktop() ? 44 : 0;
   const [isMaximized, setIsMaximized] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState({ x: -1, y: -1 });
@@ -60,10 +62,10 @@ export function Window({
   // Center on mount
   useEffect(() => {
     if (position.x === -1) {
-      setPosition({
-        x: Math.max(40, (window.innerWidth - size.w) / 2),
-        y: Math.max(50, (window.innerHeight - size.h) / 2 - 20),
-      });
+      const w = Math.min(size.w, window.innerWidth - 24);
+      const h = Math.min(size.h, window.innerHeight - BOTTOM_DOCK_CLEARANCE - 60);
+      setSize({w, h});
+      setPosition({x: Math.max(12, (window.innerWidth - w) / 2), y: Math.max(48, (window.innerHeight - BOTTOM_DOCK_CLEARANCE - h) / 2)});
     }
   }, [position.x, size.w, size.h]);
 
@@ -159,7 +161,7 @@ export function Window({
   const maximizedStyle =
     dockPosition === "left"
       ? {
-          top: 0,
+          top: topClearance,
           right: 0,
           bottom: 0,
           left: SIDE_DOCK_CLEARANCE,
@@ -169,7 +171,7 @@ export function Window({
         }
       : dockPosition === "right"
         ? {
-            top: 0,
+            top: topClearance,
             right: SIDE_DOCK_CLEARANCE,
             bottom: 0,
             left: 0,
@@ -178,7 +180,7 @@ export function Window({
             height: "auto",
           }
         : {
-            top: 0,
+            top: topClearance,
             right: 0,
             bottom: BOTTOM_DOCK_CLEARANCE,
             left: 0,
@@ -227,60 +229,16 @@ export function Window({
           cursor: isDragging ? "grabbing" : isMaximized ? "default" : "grab",
         }}
       >
-        <div className="flex items-center gap-2.5">
-          {/* Traffic lights */}
-          <div className="flex items-center gap-1.5">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onClose}
-                  className="group size-3 rounded-[var(--radius)] bg-[#ff5f57] hover:brightness-110 transition-all flex items-center justify-center cursor-pointer"
-                  aria-label={intl.t("ui.closeWindow")}
-                >
-                  <X className="size-2 text-[#4a0002] opacity-0 group-hover:opacity-100 transition-opacity" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>{intl.t("ui.close")}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={onMinimize}
-                  className="group size-3 rounded-[var(--radius)] bg-[#febc2e] hover:brightness-110 transition-all flex items-center justify-center cursor-pointer"
-                  aria-label={intl.t("ui.minimizeWindow")}
-                >
-                  <Minus className="size-2 text-[#5f4a00] opacity-0 group-hover:opacity-100 transition-opacity" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>{intl.t("ui.minimize")}</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={toggleMaximize}
-                  className="group size-3 rounded-[var(--radius)] bg-[#28c840] hover:brightness-110 transition-all flex items-center justify-center cursor-pointer"
-                  aria-label={intl.text(isMaximized ? "Restore window" : "Maximize window")}
-                >
-                  {isMaximized ? (
-                    <Minimize2 className="size-2 text-[#004a00] opacity-0 group-hover:opacity-100 transition-opacity" />
-                  ) : (
-                    <Maximize2 className="size-2 text-[#004a00] opacity-0 group-hover:opacity-100 transition-opacity" />
-                  )}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>
-                {intl.text(isMaximized ? "Restore" : "Maximize")}
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2">
+        <div className="desktop-window-label flex items-center gap-3">
+          <span className="desktop-window-brand">HOMEIO</span>
           {icon}
-          <span className="text-xs font-medium text-foreground">{intl.text(title)}</span>
+          <span className="text-sm font-medium text-foreground">{intl.text(title)}</span>
         </div>
-
-        <div className="w-16" />
+        <div className="desktop-window-controls flex items-center gap-1">
+          <Tooltip><TooltipTrigger asChild><button type="button" onClick={onMinimize} aria-label={intl.t('ui.minimizeWindow')}><Minus className="size-4"/></button></TooltipTrigger><TooltipContent>{intl.t('ui.minimizeWindow')}</TooltipContent></Tooltip>
+          <Tooltip><TooltipTrigger asChild><button type="button" onClick={toggleMaximize} aria-label={intl.text(isMaximized ? 'Restore window' : 'Maximize window')}>{isMaximized ? <Minimize2 className="size-4"/> : <Maximize2 className="size-4"/>}</button></TooltipTrigger><TooltipContent>{intl.text(isMaximized ? 'Restore window' : 'Maximize window')}</TooltipContent></Tooltip>
+          <Tooltip><TooltipTrigger asChild><button type="button" onClick={onClose} aria-label={intl.t('ui.closeWindow')}><X className="size-4"/></button></TooltipTrigger><TooltipContent>{intl.t('ui.closeWindow')}</TooltipContent></Tooltip>
+        </div>
       </div>
 
       {/* Window content */}

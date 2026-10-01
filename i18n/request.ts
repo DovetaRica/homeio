@@ -1,8 +1,7 @@
 import {cookies, headers} from 'next/headers';
 import {getRequestConfig} from 'next-intl/server';
 import {localeCookie, resolveLocale} from './config';
-import en from '@/messages/en.json';
-import zhCN from '@/messages/zh-CN.json';
+import {messagesForLocale} from './messages';
 
 export default getRequestConfig(async () => {
   const [store, requestHeaders] = await Promise.all([cookies(), headers()]);
@@ -10,7 +9,7 @@ export default getRequestConfig(async () => {
   return {
     locale,
     // Explicit per-message English fallback; no mutable process-wide locale.
-    messages: locale === 'zh-CN' ? {ui: {...en.ui, ...zhCN.ui}, dynamic: {...en.dynamic, ...zhCN.dynamic}, nas: {...en.nas, ...zhCN.nas, fields: {...en.nas.fields, ...zhCN.nas.fields}}} : en,
+    messages: messagesForLocale(locale),
     timeZone: process.env.TZ || 'UTC',
   };
 });

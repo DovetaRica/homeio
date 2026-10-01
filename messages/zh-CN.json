@@ -1,4 +1,61 @@
 {
+  "systemSettings": {
+    "shortTitle": "设置",
+    "title": "系统设置",
+    "navigation": "系统设置导航",
+    "filter": "搜索设置…",
+    "noResults": "没有匹配的设置",
+    "official": "TrueNAS 官方控制台",
+    "save": "保存更改",
+    "saving": "正在保存…",
+    "session": "桌面账号",
+    "languageNotice": "语言选择会保存，并应用于整个桌面。",
+    "sections": {
+      "overview": "总览",
+      "audit": "操作记录",
+      "appearance": "外观",
+      "language": "语言",
+      "desktop-account": "桌面账号",
+      "notifications": "通知"
+    },
+    "groups": {
+      "system": "系统",
+      "storage": "存储",
+      "network": "网络",
+      "access": "用户与权限",
+      "automation": "计划与设备",
+      "preferences": "桌面偏好",
+      "more": "其他服务"
+    },
+    "descriptions": {
+      "overview": "存储、应用与系统状态，集中呈现在这里。",
+      "system": "管理系统配置、后台服务与运行记录。",
+      "storage": "管理磁盘、ZFS 存储、快照与文件共享。",
+      "network": "管理网卡、网关与 DNS。",
+      "access": "管理 TrueNAS 用户、用户组与访问权限。",
+      "automation": "管理定时计划与虚拟机设备。",
+      "preferences": "调整这个桌面的使用方式。",
+      "more": "管理其他 TrueNAS 服务。"
+    },
+    "appearance": {
+      "style": "界面风格",
+      "rhine": "莱茵 / 档案终端",
+      "dock": "程序坞位置",
+      "icons": "应用图标大小",
+      "font": "文字大小",
+      "animation": "界面动画",
+      "bottom": "底部",
+      "left": "左侧",
+      "right": "右侧",
+      "small": "小",
+      "medium": "中",
+      "large": "大",
+      "compact": "紧凑",
+      "default": "默认",
+      "extra-large": "特大",
+      "applies": "更改立即生效，下次访问时继续使用。"
+    }
+  },
   "ui": {
     "resizeWindow": "调整窗口大小",
     "home": "桌面",

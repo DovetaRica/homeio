@@ -3,6 +3,7 @@
 
 
 import { useI18n } from "@/i18n/use-i18n";
+import {useNasDesktop} from '@/modules/shell/desktop-mode';
 import { SectionDivider, Toggle } from "@/modules/settings/components/panel/controls";
 import { SETTINGS_PANEL_INSET } from "@/modules/settings/components/panel/surface";
 import type { NotificationSettingsDraft } from "@/modules/settings/components/panel/types";
@@ -51,6 +52,7 @@ function ThresholdRow({
 
 export function NotificationsSection({ draft, onChange }: NotificationsSectionProps) {
   const intl = useI18n();
+  const nasMode = useNasDesktop();
   return (
     <div className="flex flex-col gap-1">
       <SectionDivider title={intl.t("ui.alertTypes")} />
@@ -71,7 +73,7 @@ export function NotificationsSection({ draft, onChange }: NotificationsSectionPr
             description: "Backup success and failure notifications",
             key: "backupReportsEnabled" as const,
           },
-        ].map(({ label, description, key }) => (
+        ].filter(item => !nasMode || item.key === 'systemAlertsEnabled').map(({ label, description, key }) => (
           <div key={key} className={cn(SETTINGS_PANEL_INSET, "px-4 py-1")}>
             <Toggle
               label={intl.text(label)}
