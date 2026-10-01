@@ -188,6 +188,7 @@ export function Window({
   return (
     <div
       ref={windowRef}
+      data-desktop-window
       className={`absolute flex flex-col overflow-hidden border border-glass-border ${
         isMaximized
           ? "rounded-[calc(var(--radius)+0.5rem)] shadow-[0_18px_42px_rgba(0,0,0,0.28)]"

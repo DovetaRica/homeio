@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import "./globals.css";
+import "./rhine.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 
@@ -28,8 +29,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a2332",
-  userScalable: false,
+  themeColor: "#eae5e1",
 };
 
 export default async function RootLayout({
@@ -38,8 +38,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const locale = await getLocale();
+  const rhine = process.env.HOMEIO_NAS_MODE === "true";
   return (
-    <html lang={locale} className="dark" suppressHydrationWarning={true}>
+    <html lang={locale} data-style={rhine ? "rhine" : undefined} className="dark" suppressHydrationWarning={true}>
       <body
         className={`${_inter.variable} ${_geistMono.variable} font-sans antialiased`}
       >

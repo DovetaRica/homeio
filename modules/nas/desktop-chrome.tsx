@@ -24,20 +24,20 @@ export function NasDesktopStatusBar({onOpenNotifications}:{onOpenNotifications?:
   const [calendar,setCalendar]=useState(false);const [date,setDate]=useState(new Date());const {data:user}=useCurrentUser();
   const [now,setNow]=useState<Date|null>(null);
   useEffect(()=>{setNow(new Date());const timer=setInterval(()=>setNow(new Date()),1000);return()=>clearInterval(timer);},[]);
-  return <header className="fixed left-1/2 top-3 z-50 flex -translate-x-1/2 items-center gap-6 rounded-2xl border border-white/10 bg-black/40 px-5 py-3 text-xs text-white backdrop-blur-xl">
+  return <header data-rhine-bar className="fixed left-1/2 top-3 z-50 flex -translate-x-1/2 items-center gap-6 rounded-lg border border-border bg-card px-5 py-3 text-xs text-foreground backdrop-blur-xl">
     <span>{t('greeting',{value0:user?.username??'—'})}</span><button aria-label={ui('notifications')} onClick={onOpenNotifications}><Bell className="size-4"/></button><div className="relative"><button aria-label={ui('openDatePicker')} onClick={()=>setCalendar(!calendar)}>{now?.toLocaleString(locale,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})??'—'}</button>{calendar&&<DatePickerPopover selectedDate={date} onSelectDate={setDate} onClose={()=>setCalendar(false)}/>}</div>
   </header>;
 }
 export function NasDesktopWidgets() {
   const t=useTranslations('nas');const query=useOverview();const data=query.data?.data;
   return <aside className="hidden w-72 shrink-0 space-y-3 overflow-y-auto p-4 xl:block">
-    <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-white backdrop-blur"><p className="mb-3 font-medium">TrueNAS {data?.['system.info']?.version??'—'}</p>
-      {query.error?<p role="alert" className="text-red-300">{query.error.message}</p>:data?<>
+    <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground backdrop-blur"><p className="mb-3 font-medium">TrueNAS {data?.['system.info']?.version??'—'}</p>
+      {query.error?<p role="alert" className="text-status-red">{query.error.message}</p>:data?<>
         {data['pool.query'].map(p=><p key={p.name} className="mb-3">{p.name} · {p.status}</p>)}
         <p className="mb-3">{t('apps')} · {data['app.query'].filter(a=>a.state==='RUNNING').length} / {data['app.query'].length}</p>
         <p>{t('alerts')} · {data['alert.list'].filter(a=>!a.dismissed).length}</p>
       </>:<p>{t('loading')}</p>}
-      <Link href="/" className="mt-4 block text-teal-200">{t('title')} ↗</Link>
+      <Link href="/" className="mt-4 block text-status-green">{t('title')} ↗</Link>
     </div>
   </aside>;
 }

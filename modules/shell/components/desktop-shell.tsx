@@ -670,7 +670,7 @@ function DesktopShellInner() {
   }
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden">
+    <div className={`relative h-screen w-screen overflow-hidden ${nasMode ? 'rhine-desktop' : ''}`}>
       {/* Wallpaper Background */}
       <div className="absolute inset-0">
         <div

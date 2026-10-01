@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" fill="none">
+  <defs>
+    <linearGradient id="paper" x2="1920" y2="1080" gradientUnits="userSpaceOnUse"><stop stop-color="#f2eee8"/><stop offset="1" stop-color="#ded7cc"/></linearGradient>
+    <linearGradient id="edge"><stop stop-color="#b9ad97" stop-opacity=".32"/><stop offset=".3" stop-color="#fff" stop-opacity=".5"/><stop offset="1" stop-color="#b9ad97" stop-opacity=".06"/></linearGradient>
+    <pattern id="archive" width="94" height="120" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)"><path d="M4 0v120" stroke="url(#edge)" stroke-width="30"/><path d="M22 0v120" stroke="#fff" stroke-opacity=".4"/><path d="M30 0v120" stroke="#a39781" stroke-opacity=".12"/></pattern>
+  </defs>
+  <path fill="url(#paper)" d="M0 0h1920v1080H0z"/>
+  <path fill="url(#archive)" d="M0 300h1920v780H0z"/>
+  <path d="M32 80h1856M32 1000h1856" stroke="#766b58" stroke-opacity=".16"/>
+  <path d="M35 80v26m0 894v-26m1850-894v26m0 894v-26" stroke="#766b58" stroke-opacity=".4"/>
+</svg>

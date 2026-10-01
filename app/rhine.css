@@ -1,0 +1,142 @@
+/* Original Homeio adaptation of RhineLabUI's warm archive-terminal direction.
+ * Runtime scope includes portals; existing appearance preferences are retained.
+ */
+html[data-style="rhine"] {
+  color-scheme: light !important;
+  --background: #eae5e1;
+  --foreground: #242622;
+  --card: #faf8f4;
+  --card-foreground: #242622;
+  --popover: #faf8f4;
+  --popover-foreground: #242622;
+  --primary: #946723 !important;
+  --primary-foreground: #ffffff;
+  --accent: #e6cfaa !important;
+  --accent-foreground: #242622;
+  --secondary: #e9e3d9;
+  --secondary-foreground: #242622;
+  --muted: #eeeae3;
+  --muted-foreground: #5f6057;
+  --destructive: #a22e2e;
+  --destructive-foreground: #ffffff;
+  --border: #c6c0b5;
+  --input: #ffffff;
+  --ring: #946723 !important;
+  --sidebar: #f1ede6;
+  --sidebar-foreground: #242622;
+  --sidebar-primary: #946723 !important;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e6cfaa;
+  --sidebar-accent-foreground: #242622;
+  --sidebar-border: #c6c0b5;
+  --sidebar-ring: #946723;
+  --glass: #faf8f4;
+  --glass-border: #c6c0b5;
+  --glass-highlight: #ebe5da;
+  --dock: #f1ede6 !important;
+  --system-surface: #faf8f4;
+  --system-surface-raised: #eeeae3;
+  --radius: 4px !important;
+  --system-radius-panel: 6px;
+  --system-radius-floating: 6px;
+  --system-radius-control: 4px;
+  --system-radius-hero: 6px;
+  --system-radius-icon: 4px;
+  --system-shadow-surface: 0 12px 36px #29251e14;
+  --system-shadow-floating: 0 18px 60px #29251e24;
+  --system-shadow-dock: 0 8px 28px #29251e18;
+  --system-shadow-soft: 0 8px 24px #29251e14;
+  --system-shadow-control: 0 2px 8px #29251e14;
+  --system-shadow-inset: inset 0 1px 0 #fff;
+  --status-green: #246442;
+  --status-amber: #805418;
+  --status-red: #a22e2e;
+}
+
+html[data-style="rhine"] body {
+  font-family: var(--font-inter), "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  line-height: 1.65;
+}
+html[data-style="rhine"] :is(input, select, textarea) {
+  color-scheme: light;
+  accent-color: #946723;
+}
+html[data-style="rhine"] :is(button, a, input, select, textarea, summary):focus-visible {
+  outline: 2px solid #946723;
+  outline-offset: 3px;
+}
+html[data-style="rhine"] ::selection { background: #e6cfaa; color: #242622; }
+
+/* Keep scrolling discoverable in tables, forms and floating windows. */
+html[data-style="rhine"] * { scrollbar-width: thin; scrollbar-color: #999184 #eae5e1; }
+html[data-style="rhine"] *::-webkit-scrollbar { display: block; width: 8px; height: 8px; }
+html[data-style="rhine"] *::-webkit-scrollbar-thumb { background: #999184; border-radius: 4px; }
+html[data-style="rhine"] *::-webkit-scrollbar-track { background: #eae5e1; }
+
+.rhine-grid {
+  background-image: linear-gradient(#6c635208 1px, transparent 1px), linear-gradient(90deg, #6c635208 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+html[data-style="rhine"] .nas-dashboard > aside { border-right-color: #c6c0b5; }
+html[data-style="rhine"] .nas-dashboard nav button[aria-current="page"] {
+  background: #e6cfaa;
+  border-left: 3px solid #946723;
+  padding-left: 9px;
+  font-weight: 600;
+}
+html[data-style="rhine"] .nas-dashboard h1 { font-weight: 600; letter-spacing: -0.035em; }
+html[data-style="rhine"] .nas-dashboard main > header { border-bottom: 1px solid #c6c0b5; padding-bottom: 24px; }
+html[data-style="rhine"] .nas-dashboard table { font-variant-numeric: tabular-nums; }
+html[data-style="rhine"] .nas-dashboard :is(th, td) { font-size: 14px; line-height: 1.6; }
+html[data-style="rhine"] .nas-dashboard th { color: #4d4e46; background: #eeeae3; }
+html[data-style="rhine"] .nas-dashboard :is(input, select, button) { min-height: 40px; }
+html[data-style="rhine"] .nas-dialog { background: #faf8f4; color: #242622; }
+html[data-style="rhine"] .nas-dialog :is(input, select, button) { min-height: 40px; }
+html[data-style="rhine"] :is(.nas-dashboard, .nas-dialog) .text-xs { font-size: 13px; line-height: 1.6; }
+
+/* A static architectural archive backdrop; no canvas or extra runtime assets. */
+html[data-style="rhine"] .rhine-desktop > .absolute.inset-0 {
+  background: #eae5e1 url('/wallpapers/rhine-archive.svg') center / cover no-repeat;
+}
+html[data-style="rhine"] .rhine-desktop > .absolute.inset-0 > * { display: none; }
+html[data-style="rhine"] .rhine-desktop::after {
+  content: 'HOMEIO / NAS WORKSTATION';
+  position: absolute; top: 88px; left: 48px;
+  font-size: 13px; font-weight: 600; letter-spacing: .12em;
+  color: #4d4e46; pointer-events: none;
+}
+html[data-style="rhine"] [data-rhine-bar] { box-shadow: 0 3px 12px #29251e12; }
+html[data-style="rhine"] :is([data-rhine-bar], .nas-dashboard aside) img { filter: grayscale(1) brightness(.35); }
+html[data-style="rhine"] [data-desktop-window] img[src*="/actions/"] { filter: grayscale(1) brightness(.35); }
+html[data-style="rhine"] [data-desktop-window] { background: #faf8f4; box-shadow: var(--system-shadow-floating); }
+html[data-style="rhine"] [data-desktop-window] > div:first-child { background: #faf8f4; }
+html[data-style="rhine"] :is(.system-pill-surface, .system-keycap-surface) { background: #eeeae3; color: #4d4e46; border-color: #c6c0b5; }
+
+/* Upstream desktop still uses a few literal dark surfaces. Adapt those here,
+ * including portal menus, without replacing error/success colour semantics. */
+html[data-style="rhine"] :is([class*="bg-black/"], [class*="bg-white/"]) { background-color: #faf8f4; }
+html[data-style="rhine"] :is([class*="border-white/"], .system-surface, .system-floating-surface, .system-dock-surface) { border-color: #c6c0b5; }
+html[data-style="rhine"] :is([class*="text-white"], [class*="text-foreground/"]) { color: #242622; }
+html[data-style="rhine"] [class*="text-muted-foreground/"] { color: #5f6057; }
+html[data-style="rhine"] [class*="text-primary-foreground"] { color: #fff; }
+html[data-style="rhine"] [class*="backdrop-blur"] { backdrop-filter: none; }
+html[data-style="rhine"] [data-sonner-toast] { background: #faf8f4; color: #242622; border: 1px solid #c6c0b5; }
+html[data-style="rhine"] [data-slot="dialog-overlay"] { background: #24262255; }
+html[data-style="rhine"] [data-slot="dialog-close"] {
+  width: 40px; height: 40px; min-height: 40px; display: grid; place-items: center; padding: 0;
+  opacity: 1; background: #eeeae3; border: 1px solid #c6c0b5;
+}
+html[data-style="rhine"] [data-slot="dialog-close"] img { width: 16px; height: 16px; filter: grayscale(1) brightness(.25); }
+
+@media (max-width: 900px) {
+  html[data-style="rhine"] .rhine-desktop::after { display: none; }
+  html[data-style="rhine"] [data-rhine-bar] { max-width: calc(100vw - 24px); gap: 14px; white-space: nowrap; }
+}
+@media (pointer: coarse) {
+  html[data-style="rhine"] :is(.nas-dashboard, .nas-dialog) :is(button, input, select) { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-style="rhine"] *, html[data-style="rhine"] *::before, html[data-style="rhine"] *::after {
+    animation: none !important; transition: none !important; scroll-behavior: auto !important;
+  }
+}
