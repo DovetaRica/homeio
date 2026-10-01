@@ -27,6 +27,7 @@ export async function listInstalledAppsFromDb(): Promise<InstalledApp[]> {
       webUiPort: appStacks.webUiPort,
       webUiUrl: appStacks.webUiUrl,
       displayName: appStacks.displayName,
+      iconUrl: appStacks.iconUrl,
       updatedAt: appStacks.updatedAt,
     })
     .from(appStacks)
@@ -41,6 +42,7 @@ export async function listInstalledAppsFromDb(): Promise<InstalledApp[]> {
     composePath: row.composePath,
     webUiPort: row.webUiPort,
     webUiUrl: row.webUiUrl ?? null,
+    logoUrl: row.iconUrl ?? null,
     status: "unknown" as const,
     activeOperation: null,
     updatedAt: row.updatedAt instanceof Date ? row.updatedAt.toISOString() : row.updatedAt,

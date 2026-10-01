@@ -1,0 +1,44 @@
+[
+  {
+    "app": "truenas",
+    "file": "truenas.png",
+    "source": "https://192.168.31.221/ui/assets/favicons/apple-touch-icon.png",
+    "sha256": "08e89c5c8209622ffe919b04de47ba7ae592128f2a446ce9c5b24f92e15cb97c"
+  },
+  {
+    "app": "jellyfin",
+    "file": "jellyfin.png",
+    "source": "http://192.168.31.221:8096/web/touchicon.f5bbb798cb2c65908633.png",
+    "sha256": "c346ac6eb60df8f65c1cdbe3fb32c57dfc22e1420abc43d2696b081884b44a21"
+  },
+  {
+    "app": "homeassistant",
+    "file": "homeassistant.png",
+    "source": "http://192.168.31.132:8123/static/icons/favicon-apple-180x180.png",
+    "sha256": "d079dcf425fb7daa637deb2d70e64a56ebaeb549139e6d1e22064fd47da2164c"
+  },
+  {
+    "app": "qbittorrent",
+    "file": "qbittorrent.svg",
+    "source": "http://192.168.31.221:8081/images/qbittorrent-tray.svg",
+    "sha256": "371d532463d91677316853c807f35991e8140b3cd8f6fe25ced10eeef7ee035d"
+  },
+  {
+    "app": "radarr",
+    "file": "radarr.png",
+    "source": "http://192.168.31.221:7878/Content/Images/Icons/apple-touch-icon.png",
+    "sha256": "82ddb36baf4a47ecb3149d063e9850ab94cfdec1704b946471b55fd942250c39"
+  },
+  {
+    "app": "sonarr",
+    "file": "sonarr.png",
+    "source": "http://192.168.31.221:8989/Content/Images/Icons/apple-touch-icon.png",
+    "sha256": "5b806be8094ed60b64599d696477f85b3ab93879aca3ce89b28d9ce4dbe3d685"
+  },
+  {
+    "app": "metacubexd",
+    "file": "metacubexd.png",
+    "source": "http://192.168.31.221:8082/apple-touch-icon-180x180.png",
+    "sha256": "51c6c0136cc74c59df203f2ef4c70f9074945599a1800ff2dfb07b9a3cc545a3"
+  }
+]

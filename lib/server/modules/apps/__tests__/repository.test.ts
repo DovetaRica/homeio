@@ -53,6 +53,7 @@ describe("apps repository", () => {
           stackName: "plex-stack",
           composePath: "/DATA/AppData/plex/docker-compose.yml",
           displayName: "Plex Media Server",
+          iconUrl: "/app-icons/plex.png",
           updatedAt: new Date("2026-02-22T12:00:00.000Z"),
         },
         {
@@ -71,6 +72,7 @@ describe("apps repository", () => {
     expect(result).toEqual([
       {
         id: "plex",
+        logoUrl: "/app-icons/plex.png",
         name: "Plex Media Server",
         stackName: "plex-stack",
         composePath: "/DATA/AppData/plex/docker-compose.yml",
@@ -82,6 +84,7 @@ describe("apps repository", () => {
       },
       {
         id: "home-assistant",
+        logoUrl: null,
         name: "home-assistant",
         stackName: "home-assistant",
         composePath: "/DATA/AppData/home-assistant/docker-compose.yml",

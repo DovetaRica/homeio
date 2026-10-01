@@ -1,0 +1,10 @@
+BEGIN;
+UPDATE app_stacks SET icon_url='/app-icons/truenas.png' WHERE app_id='external-truenas';
+UPDATE app_stacks SET icon_url='/app-icons/jellyfin.png' WHERE app_id='external-jellyfin';
+UPDATE app_stacks SET icon_url='/app-icons/homeassistant.png' WHERE app_id='external-homeassistant';
+UPDATE app_stacks SET icon_url='/app-icons/qbittorrent.svg' WHERE app_id='external-qbittorrent';
+UPDATE app_stacks SET icon_url='/app-icons/radarr.png' WHERE app_id='external-radarr';
+UPDATE app_stacks SET icon_url='/app-icons/sonarr.png' WHERE app_id='external-sonarr';
+UPDATE app_stacks SET icon_url='/app-icons/metacubexd.png' WHERE app_id='external-metacubexd';
+UPDATE app_stacks SET icon_url='/app-icons/sonarr.png' WHERE app_id='external-sonarr-anime';
+COMMIT;
