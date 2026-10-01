@@ -30,7 +30,13 @@ export function targetOf(args: unknown[], method = ''): string {
 }
 export function sameOrigin(request: Request) {
   const origin=request.headers.get('origin');
-  const expected=process.env.HOMEIO_PUBLIC_ORIGIN;
-  // A fixed deployment origin prevents spoofed Host headers from bypassing CSRF.
-  return Boolean(expected && origin===expected && request.headers.get('sec-fetch-site')!=='cross-site');
+  const configured=[process.env.HOMEIO_PUBLIC_ORIGIN,...(process.env.HOMEIO_ALLOWED_ORIGINS??'').split(',')];
+  // Fixed, exact deployment origins preserve LAN access without trusting Host
+  // or forwarded headers. Invalid URLs, paths and wildcards fail closed.
+  const allowed=configured.filter((value): value is string=>{
+    if(!value)return false;
+    try {const url=new URL(value);return ['http:','https:'].includes(url.protocol)&&url.origin===value;}
+    catch {return false;}
+  });
+  return Boolean(origin && allowed.includes(origin) && request.headers.get('sec-fetch-site')!=='cross-site');
 }
