@@ -102,7 +102,7 @@ export function SettingsPanel({
     sectionDefinitions[0];
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full min-h-0 min-w-0">
       <aside className={cn("m-2 flex w-52 shrink-0 flex-col", SETTINGS_PANEL_SHELL)}>
         <div className="flex-1 overflow-y-auto px-2 py-3">
           {SIDEBAR_GROUPS.map((group) => {
@@ -130,9 +130,9 @@ export function SettingsPanel({
                             : "text-muted-foreground hover:bg-background/50 hover:text-foreground",
                         )}
                       >
-                        <section.icon
+                        {!(nasMode && group.label === 'Infrastructure') && <section.icon
                           className={cn("size-4 shrink-0", isActive ? "text-primary" : "text-muted-foreground/60")}
-                        />
+                        />}
                         <span className="flex-1 truncate text-left text-[13px] font-medium">
                           {intl.text(section.label)}
                         </span>
@@ -163,8 +163,8 @@ export function SettingsPanel({
         </div>
       </aside>
 
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-2xl p-5">
+      <main className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+        <div className={nasMode ? "w-full min-w-0 p-5" : "max-w-2xl p-5"}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold text-foreground">
               {intl.text(activeDefinition.label)}

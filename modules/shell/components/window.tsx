@@ -55,6 +55,7 @@ export function Window({
   const dragOffset = useRef({ x: 0, y: 0 });
   const windowRef = useRef<HTMLDivElement>(null);
   const preMaxState = useRef({ x: 0, y: 0, w: 0, h: 0 });
+  const resizeStart = useRef({x:0,y:0,w:0,h:0,mouseX:0,mouseY:0,direction:'se'});
 
   // Center on mount
   useEffect(() => {
@@ -78,6 +79,7 @@ export function Window({
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
       if (isMaximized) return;
+      if ((e.target as HTMLElement).closest('button')) return;
       onFocus?.();
       setIsDragging(true);
       dragOffset.current = {
@@ -89,8 +91,9 @@ export function Window({
   );
 
   const handleResizeMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+    (e: React.MouseEvent, direction = 'se') => {
       if (isMaximized) return;
+      e.preventDefault();
       e.stopPropagation();
       onFocus?.();
       setIsResizing(true);
@@ -98,8 +101,9 @@ export function Window({
         x: e.clientX,
         y: e.clientY,
       };
+      resizeStart.current = {...position,...size,mouseX:e.clientX,mouseY:e.clientY,direction};
     },
-    [isMaximized, onFocus],
+    [isMaximized, onFocus, position, size],
   );
 
   useEffect(() => {
@@ -113,13 +117,13 @@ export function Window({
         });
       }
       if (isResizing) {
-        const dx = e.clientX - dragOffset.current.x;
-        const dy = e.clientY - dragOffset.current.y;
-        setSize((prev) => ({
-          w: Math.max(500, prev.w + dx),
-          h: Math.max(350, prev.h + dy),
-        }));
-        dragOffset.current = { x: e.clientX, y: e.clientY };
+        const r=resizeStart.current;
+        const dx=e.clientX-r.mouseX, dy=e.clientY-r.mouseY;
+        const west=r.direction.includes('w'), north=r.direction.includes('n');
+        const width=r.direction.match(/[ew]/)?Math.max(500,r.w+(west?-dx:dx)):r.w;
+        const height=r.direction.match(/[ns]/)?Math.max(350,r.h+(north?-dy:dy)):r.h;
+        setSize({w:width,h:height});
+        setPosition({x:west?r.x+r.w-width:r.x,y:north?r.y+r.h-height:r.y});
       }
     };
 
@@ -280,16 +284,23 @@ export function Window({
       </div>
 
       {/* Window content */}
-      <div className="flex-1 overflow-hidden bg-card/90 backdrop-blur-2xl">
+      <div className="min-h-0 min-w-0 flex-1 overflow-hidden bg-card/90 backdrop-blur-2xl">
         {children}
       </div>
 
       {/* Resize handle */}
       {!isMaximized && (
-        <div
-          className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize"
-          onMouseDown={handleResizeMouseDown}
-        />
+        <>
+          {(['n','s','e','w','ne','nw','sw'] as const).map(direction=><div key={direction} aria-hidden="true" data-resize-edge={direction}
+            className={`absolute z-30 ${direction==='n'?'inset-x-4 top-0 h-1.5 cursor-ns-resize':direction==='s'?'inset-x-4 bottom-0 h-1.5 cursor-ns-resize':direction==='e'?'inset-y-4 right-0 w-1.5 cursor-ew-resize':direction==='w'?'inset-y-4 left-0 w-1.5 cursor-ew-resize':direction==='ne'?'right-0 top-0 size-4 cursor-nesw-resize':direction==='nw'?'left-0 top-0 size-4 cursor-nwse-resize':'left-0 bottom-0 size-4 cursor-nesw-resize'}`}
+            onMouseDown={event=>handleResizeMouseDown(event,direction)}/>)}
+          <button aria-label={intl.t('ui.resizeWindow')} title={intl.t('ui.resizeWindow')}
+            className="absolute bottom-0 right-0 z-30 flex size-6 cursor-nwse-resize items-end justify-end bg-card p-1 text-muted-foreground"
+            onMouseDown={event=>handleResizeMouseDown(event,'se')}
+            onKeyDown={event=>{const step=event.shiftKey?50:10;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)){event.preventDefault();setSize(previous=>({w:Math.max(500,previous.w+(event.key==='ArrowRight'?step:event.key==='ArrowLeft'?-step:0)),h:Math.max(350,previous.h+(event.key==='ArrowDown'?step:event.key==='ArrowUp'?-step:0))}));}}}>
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 12 12 3M7 12l5-5M11 12l1-1" stroke="currentColor"/></svg>
+          </button>
+        </>
       )}
     </div>
   );

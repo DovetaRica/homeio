@@ -4,7 +4,6 @@ import Link from 'next/link';
 import {useRouter} from 'next/navigation';
 import {useLocale,useTranslations} from 'next-intl';
 import {useQuery,useQueryClient} from '@tanstack/react-query';
-import {Database,Server,Network,Shield,RefreshCw,MonitorSpeaker,LogOut,HardDrive} from '@/components/icons/platform-icons';
 import {LanguageSelect} from '@/i18n/language-select';
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import catalog from './catalog.json';
@@ -27,7 +26,6 @@ function display(value:unknown,locale:string):string {
   return String(value);
 }
 function bytes(value:unknown,locale:string) {const n=Number(value);if(!Number.isFinite(n))return '—';const i=n>0?Math.min(4,Math.floor(Math.log(n)/Math.log(1024))):0;return `${(n/1024**i).toLocaleString(locale,{maximumFractionDigits:1})} ${['B','KiB','MiB','GiB','TiB'][i]}`;}
-const iconFor=(id:string)=>['pools','datasets','snapshots','snapshotTasks','scrub'].includes(id)?Database:['network','networkConfig','smb','nfs'].includes(id)?Network:['users','groups','alerts','audit'].includes(id)?Shield:id==='vms'?MonitorSpeaker:id==='disks'?HardDrive:Server;
 
 export function NasDashboard({officialUrl,initialResource='overview',embedded=false}:{officialUrl:string;initialResource?:string;embedded?:boolean}) {
   const t=useTranslations('nas');const router=useRouter();const locale=useLocale();const language=locale==='zh-CN'?'zh-CN':'en';
@@ -44,17 +42,17 @@ export function NasDashboard({officialUrl,initialResource='overview',embedded=fa
   return <div className={`nas-dashboard ${embedded?'rounded-lg':'min-h-screen'} bg-background text-foreground selection:bg-primary/20`}>
     {!embedded&&<div className="pointer-events-none fixed inset-0 rhine-grid"/>}
     {!embedded&&<aside className="relative border-b border-border bg-sidebar p-4 lg:fixed lg:inset-y-0 lg:w-64 lg:overflow-y-auto lg:border-r lg:border-b-0">
-      <div className="mb-5 flex items-center gap-3 px-2"><div className="flex size-10 items-center justify-center rounded-md border border-status-green/30 bg-status-green/10"><Server className="size-6"/></div><div><p className="font-semibold tracking-tight">TrueNAS</p><p className="text-xs text-muted-foreground">Homeio · {t('title')}</p></div></div>
+      <div className="mb-5 flex items-center gap-3 px-2"><div><p className="font-semibold tracking-tight">TrueNAS</p><p className="text-xs text-muted-foreground">Homeio · {t('title')}</p></div></div>
       <nav aria-label={t('title')} className="flex gap-1 overflow-x-auto lg:flex-col lg:overflow-visible">
-        {[{id:'overview',label:{en:t('overview'),'zh-CN':t('overview')}},...primary].map(r=>{const Icon=iconFor(r.id);return <button key={r.id} onClick={()=>activate(r.id)} aria-current={active===r.id?'page':undefined} className={`flex shrink-0 items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm transition ${active===r.id?'bg-primary/15 text-foreground':'text-muted-foreground hover:bg-muted hover:text-foreground'}`}><Icon className="size-4 shrink-0"/>{r.label[language]}</button>;})}
+        {[{id:'overview',label:{en:t('overview'),'zh-CN':t('overview')}},...primary].map(r=>{return <button key={r.id} onClick={()=>activate(r.id)} aria-current={active===r.id?'page':undefined} className={`flex shrink-0 items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm transition ${active===r.id?'bg-primary/15 text-foreground':'text-muted-foreground hover:bg-muted hover:text-foreground'}`}>{r.label[language]}</button>;})}
         <button className="mt-2 rounded-md px-3 py-2 text-left text-xs text-muted-foreground" onClick={()=>setMore(!more)} aria-expanded={more}>{t('more')} {more?'−':'+'}</button>
         {more&&extras.map(r=><button key={r.id} className={`rounded-md px-3 py-2 text-left text-sm ${active===r.id?'bg-primary/15 text-foreground':'text-muted-foreground'}`} onClick={()=>activate(r.id)}>{r.label[language]}</button>)}
         <button onClick={()=>activate('audit')} className={`rounded-md px-3 py-2.5 text-left text-sm ${active==='audit'?'bg-primary/15 text-foreground':'text-muted-foreground'}`}>{t('audit')}</button>
       </nav>
-      <div className="mt-5 space-y-3 border-t border-border pt-4"><Link className="block px-3 text-sm text-muted-foreground hover:text-status-green" href="/desktop">{t('desktop')}</Link><a className="block px-3 text-sm text-muted-foreground hover:text-status-green" href={officialUrl} target="_blank" rel="noreferrer">{t('official')} ↗</a><LanguageSelect/><button className="flex items-center gap-2 px-3 text-xs text-muted-foreground" onClick={()=>void fetch('/api/auth/logout',{method:'POST'}).then(()=>{router.replace('/login');router.refresh();})}><LogOut className="size-4"/>{t('logout')}</button></div>
+      <div className="mt-5 space-y-3 border-t border-border pt-4"><Link className="block px-3 text-sm text-muted-foreground hover:text-status-green" href="/desktop">{t('desktop')}</Link><a className="block px-3 text-sm text-muted-foreground hover:text-status-green" href={officialUrl} target="_blank" rel="noreferrer">{t('official')} ↗</a><LanguageSelect/><button className="flex items-center gap-2 px-3 text-xs text-muted-foreground" onClick={()=>void fetch('/api/auth/logout',{method:'POST'}).then(()=>{router.replace('/login');router.refresh();})}>{t('logout')}</button></div>
     </aside>}
     <main className={embedded?"relative p-4":"relative mx-auto max-w-[1800px] p-5 md:p-8 lg:ml-64 lg:p-10"}>
-      <header className={`${embedded?'mb-4':'mb-8'} flex flex-wrap items-start justify-between gap-4`}><div>{!embedded&&<p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">HOMEIO / CONTROL SYSTEM</p>}<h1 className={`${embedded?'text-lg':'text-3xl'} font-semibold tracking-tight`}>{title}</h1>{!embedded&&<p className="mt-2 text-sm text-muted-foreground">{t('subtitle')}</p>}</div><button className={`${buttonClass} flex items-center gap-2`} disabled={query.isFetching} onClick={()=>void query.refetch()}><RefreshCw className={`size-4 ${query.isFetching?'animate-spin':''}`}/>{t('refresh')}</button></header>
+      <header className={`${embedded?'mb-4':'mb-8'} flex flex-wrap items-start justify-between gap-4`}><div>{!embedded&&<p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">HOMEIO / CONTROL SYSTEM</p>}<h1 className={`${embedded?'text-lg':'text-3xl'} font-semibold tracking-tight`}>{title}</h1>{!embedded&&<p className="mt-2 text-sm text-muted-foreground">{t('subtitle')}</p>}</div><button className={`${buttonClass} flex items-center gap-2`} disabled={query.isFetching} onClick={()=>void query.refetch()}>{t('refresh')}</button></header>
       {notice&&<div role="status" className="mb-5 rounded-md border border-status-green/30 bg-status-green/5 p-4 text-sm text-status-green">{notice}</div>}
       {query.error&&<div role="alert" className="mb-5 rounded-md border border-status-red/30 bg-status-red/5 p-4 text-sm text-status-red">{query.error.message} · <a href={officialUrl} target="_blank" rel="noreferrer" className="underline">{t('official')}</a></div>}
       {query.isLoading?<p className="py-16 text-center text-muted-foreground">{t('loading')}</p>:active==='overview'?<Overview data={query.data?.data} onNavigate={activate}/>:<>

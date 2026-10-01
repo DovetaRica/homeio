@@ -283,7 +283,15 @@ export function getAppVisualState(app: AppItem) {
     };
   }
 
-  if (app.status === "stopped" || app.status === "unknown") {
+  if (app.status === "unknown") {
+    return {
+      containerClass: "", imageClass: "", dotClass: "bg-muted-foreground/50",
+      dotInnerClass: "", ringClass: "border-transparent", badgeIcon: null,
+      badgeClass: "", badgeIconClass: "", title: "Status unknown",
+    };
+  }
+
+  if (app.status === "stopped") {
     return {
       containerClass: "animate-pulse shadow-status-red/10",
       imageClass: "opacity-65 grayscale",
@@ -293,7 +301,7 @@ export function getAppVisualState(app: AppItem) {
       badgeIcon: AlertTriangle,
       badgeClass: "bg-status-red/15 text-status-red",
       badgeIconClass: "",
-      title: app.status === "unknown" ? "Status unknown" : "Down",
+      title: "Down",
     };
   }
 

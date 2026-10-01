@@ -1,5 +1,6 @@
 {
   "ui": {
+    "resizeWindow": "Resize window",
     "home": "Home",
     "homeServer": "Home Server",
     "homeServer2": "Home server",
