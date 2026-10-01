@@ -7,7 +7,6 @@ import {NasDashboard} from "@/modules/nas/dashboard";
 import {NasInfrastructurePanel} from "@/modules/nas/infrastructure-panel";
 import {useLocale, useTranslations} from "next-intl";
 import {SYSTEM_SECTION_IDS, systemSectionLabel} from "@/modules/settings/system-navigation";
-import {NasDesktopWidgets} from "@/modules/nas/desktop-chrome";
 import { useI18n } from "@/i18n/use-i18n";
 import {
   Activity,
@@ -774,7 +773,7 @@ function DesktopShellInner({initialSettingsSection}: DesktopShellProps) {
           />
 
           {/* System Widgets (right sidebar) */}
-          {nasMode?<NasDesktopWidgets onOpenSettings={openSettingsSection}/>:<SystemWidgets />}
+          {!nasMode && <SystemWidgets />}
         </div>
 
         {/* Windows */}
