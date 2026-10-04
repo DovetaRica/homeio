@@ -395,7 +395,7 @@ describe("StatusBar", () => {
     expect(screen.getByText("OfficeNet")).toBeTruthy();
 
     fireEvent.click(screen.getByRole("button", { name: "Battery status" }));
-    expect(screen.getByText("Battery Status")).toBeTruthy();
+    expect(screen.getByText(/^Battery status$/i)).toBeTruthy();
     expect(screen.getByText("AC Power")).toBeTruthy();
     expect(screen.getByText("Cycle Count")).toBeTruthy();
     expect(screen.getByText("Design / Max")).toBeTruthy();

@@ -83,14 +83,15 @@ import {
 import type { StoreOperationError } from "@/lib/server/modules/apps/operations";
 
 async function waitForLatestEventType(operationId: string, expectedType: string) {
-  for (let index = 0; index < 50; index += 1) {
+  const deadline = Date.now() + 3000;
+  while (Date.now() < deadline) {
     const latest = getLatestStoreOperationEvent(operationId);
     if (latest?.type === expectedType) {
       return latest;
     }
 
     await new Promise((resolve) => {
-      setTimeout(resolve, 0);
+      setTimeout(resolve, 10);
     });
   }
 

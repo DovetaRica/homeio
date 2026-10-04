@@ -1,5 +1,5 @@
 "use client";
-import {useNasDesktop} from "@/modules/shell/desktop-mode";
+import {useNasDesktop} from "@/lib/ui/desktop-mode";
 
 import type { UsbDrive, UsbSseEvent } from "@/lib/shared/contracts/usb";
 import { queryKeys } from "@/lib/shared/query-keys";

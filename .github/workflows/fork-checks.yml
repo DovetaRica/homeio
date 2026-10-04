@@ -1,0 +1,46 @@
+name: Fork verification
+on:
+  push:
+    branches: ['codex/**', 'truenas-desktop']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: fork-checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: home_server
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/home_server
+      HOMEIO_NAS_MODE: 'true'
+      NEXT_OUTPUT: standalone
+      NEXT_TELEMETRY_DISABLED: '1'
+      AUTH_SESSION_SECRET: fork-ci-placeholder-secret-32-chars
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npx tsc --noEmit -p tsconfig.zh-check.json
+      - run: npm test -- --maxWorkers=2
+      - run: npm run build
+        env:
+          NODE_ENV: production

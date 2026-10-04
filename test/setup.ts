@@ -1,6 +1,21 @@
 import { afterEach, vi } from "vitest";
+import type * as TestingLibrary from '@testing-library/react';
 
 vi.mock("server-only", () => ({}));
+// Legacy UI tests predate next-intl. Use the real English messages/provider,
+// rather than mocking translations; explicit locale providers still override it.
+vi.mock('@testing-library/react', async (importOriginal) => {
+  const original = await importOriginal<typeof TestingLibrary>();
+  const {createElement} = await import('react');
+  const {NextIntlClientProvider} = await import('next-intl');
+  const {default: messages} = await import('../messages/en.json');
+  return {...original, render: (ui: Parameters<typeof original.render>[0], options?: Parameters<typeof original.render>[1]) => {
+    const Wrapper = options?.wrapper;
+    return original.render(ui, {...options, wrapper: ({children}) => createElement(NextIntlClientProvider, {
+      locale:'en',messages,timeZone:'Asia/Shanghai',children:Wrapper ? createElement(Wrapper,{children}) : children,
+    })});
+  }};
+});
 
 vi.mock("@/lib/server/modules/auth/api", async () => {
   const { NextResponse } = await import("next/server");

@@ -3,8 +3,10 @@ import "server-only";
 import {
   cp,
   copyFile,
+  type FileHandle,
   lstat,
   mkdir,
+  open,
   readFile,
   readdir,
   rename,
@@ -12,7 +14,6 @@ import {
   stat,
   writeFile,
 } from "node:fs/promises";
-import { createWriteStream } from "node:fs";
 import { execFile, spawn } from "node:child_process";
 import { promisify } from "node:util";
 import { Readable } from "node:stream";
@@ -1590,7 +1591,8 @@ export async function uploadFiles(params: UploadFilesParams): Promise<FileUpload
   const skipped: string[] = [];
 
   await Promise.all(
-    params.files.map(async ({ name, size, stream }) => {
+    params.files.map(async (file) => {
+      const { name, stream } = file;
       let safeName: string;
       try {
         safeName = ensureSafeName(name, includeHidden);
@@ -1616,15 +1618,48 @@ export async function uploadFiles(params: UploadFilesParams): Promise<FileUpload
         return;
       }
 
-      await pipeline(
-        Readable.fromWeb(stream() as import("stream/web").ReadableStream),
-        createWriteStream(targetPath.absolutePath),
-      );
-      uploaded.push({
-        name: safeName,
-        path: targetPath.relativePath,
-        sizeBytes: size,
-      });
+      let handle: FileHandle | undefined;
+      let owned = false;
+
+      try {
+        // Acquire exclusive ownership of the destination before piping so a
+        // racing writer can never be overwritten, and so we can tell whether
+        // this call (and only this call) created the file.
+        handle = await open(targetPath.absolutePath, "wx");
+        owned = true;
+
+        await pipeline(
+          Readable.fromWeb(stream() as import("stream/web").ReadableStream),
+          handle.createWriteStream(),
+        );
+
+        // Read the real byte count from disk once the stream completed; the
+        // caller-provided size is captured before data flows.
+        const savedInfo = await stat(targetPath.absolutePath);
+        uploaded.push({
+          name: safeName,
+          path: targetPath.relativePath,
+          sizeBytes: savedInfo.size,
+        });
+      } catch (error) {
+        if (!owned) {
+          if ((error as NodeJS.ErrnoException)?.code === "EEXIST") {
+            // Another writer won the race; leave their file untouched.
+            skipped.push(name);
+            return;
+          }
+
+          // The exclusive create never succeeded, so the path may belong to a
+          // pre-existing or racing writer — never remove it.
+          throw error;
+        }
+
+        // We hold exclusive ownership: this is our own partial upload, so
+        // close the handle and remove just that file.
+        await handle?.close().catch(() => undefined);
+        await rm(targetPath.absolutePath, { force: true }).catch(() => undefined);
+        throw error;
+      }
     }),
   );
 

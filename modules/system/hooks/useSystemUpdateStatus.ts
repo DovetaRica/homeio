@@ -1,6 +1,6 @@
 "use client";
 
-import {useNasDesktop} from "@/modules/shell/desktop-mode";
+import {useNasDesktop} from "@/lib/ui/desktop-mode";
 import { useQuery } from "@tanstack/react-query";
 import type { SystemUpdateStatus } from "@/lib/shared/contracts/system";
 import { queryKeys } from "@/lib/shared/query-keys";

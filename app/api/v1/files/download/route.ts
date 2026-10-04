@@ -17,9 +17,28 @@ import {
 
 export const runtime = "nodejs";
 
+function toAsciiFallbackFilename(fileName: string) {
+  // Drop characters that would break the quoted-string or inject headers.
+  const sanitized = fileName.replace(/[\u0000-\u001f\u007f"\\]/g, "");
+  // The fallback parameter must be ASCII; the real Unicode name is carried in
+  // the RFC 5987 filename* parameter below.
+  const ascii = sanitized.replace(/[^\x20-\x7e]/g, "_");
+  return ascii.length > 0 ? ascii : "download";
+}
+
+function encodeRfc5987(value: string) {
+  // encodeURIComponent leaves '()* unescaped, but they are not attr-chars.
+  return encodeURIComponent(value).replace(
+    /['()*]/g,
+    (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`,
+  );
+}
+
 function toAttachmentFilename(filePath: string) {
-  const fileName = path.basename(filePath).replaceAll('"', "");
-  return `attachment; filename="${fileName}"`;
+  const fileName = path.basename(filePath);
+  const fallback = toAsciiFallbackFilename(fileName);
+  const encoded = encodeRfc5987(fileName);
+  return `attachment; filename="${fallback}"; filename*=UTF-8''${encoded}`;
 }
 
 export async function GET(request: NextRequest) {

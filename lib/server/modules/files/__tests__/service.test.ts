@@ -1,4 +1,5 @@
-import { lstat, mkdtemp, mkdir, readFile, rm, symlink, writeFile } from "node:fs/promises";
+import { writeFileSync } from "node:fs";
+import { lstat, mkdtemp, mkdir, open, readFile, rm, symlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -14,6 +15,16 @@ vi.mock("@/lib/server/modules/files/stars-repository", () => ({
 vi.mock("@/lib/server/modules/files/trash-repository", () => ({
   listTrashEntriesFromDb: vi.fn(async () => []),
 }));
+
+// Expose the file-open primitive so tests can simulate exclusive-open races
+// and pre-ownership failures without touching the other fs functions.
+vi.mock("node:fs/promises", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("node:fs/promises")>();
+  return {
+    ...actual,
+    open: vi.fn(actual.open),
+  };
+});
 
 vi.mock("@/lib/server/modules/files/path-resolver", () => {
   class FilesPathError extends Error {
@@ -163,6 +174,7 @@ import {
   pasteEntry,
   readFileForViewer,
   searchFiles,
+  uploadFiles,
   writeTextFile,
 } from "@/lib/server/modules/files/service";
 
@@ -274,6 +286,9 @@ describe("files service", () => {
     expect(await readFile(filePath, "utf8")).toBe("after");
 
     await writeFile(filePath, "changed-outside", "utf8");
+    // Do not depend on filesystem timestamp precision or CPU scheduling.
+    const {utimes} = await import('node:fs/promises');
+    await utimes(filePath, new Date(opened.mtimeMs + 3000), new Date(opened.mtimeMs + 3000));
 
     await expect(
       writeTextFile({
@@ -421,6 +436,177 @@ describe("files service", () => {
         timeoutMs: -1_000, // deadline already in the past — trips on first walk
       });
       expect(truncatedResult.truncated).toBe(true);
+    });
+  });
+
+  describe("uploadFiles", () => {
+    function contentStream(bytes: Uint8Array) {
+      return () =>
+        new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(bytes);
+            controller.close();
+          },
+        });
+    }
+
+    beforeEach(async () => {
+      // restoreMocks can clear implementations; always base the open mock on
+      // the real fs implementation unless a test queues a one-shot override.
+      const actual = await vi.importActual<typeof import("node:fs/promises")>(
+        "node:fs/promises",
+      );
+      vi.mocked(open).mockImplementation(actual.open);
+    });
+
+    it("stores the actual streamed byte size for unicode file names", async () => {
+      const content = "héllo 世界 📄";
+      const expectedBytes = Buffer.byteLength(content, "utf8");
+
+      const result = await uploadFiles({
+        destinationPath: "",
+        files: [
+          {
+            name: "报告 📄.txt",
+            size: 0,
+            stream: contentStream(new Uint8Array(Buffer.from(content, "utf8"))),
+          },
+        ],
+      });
+
+      expect(result.skipped).toEqual([]);
+      expect(result.uploaded).toEqual([
+        { name: "报告 📄.txt", path: "报告 📄.txt", sizeBytes: expectedBytes },
+      ]);
+      expect(await readFile(path.join(mockDataRoot, "报告 📄.txt"), "utf8")).toBe(
+        content,
+      );
+    });
+
+    it("skips an existing destination without overwriting or deleting it", async () => {
+      const existingPath = path.join(mockDataRoot, "notes.txt");
+      await writeFile(existingPath, "original", "utf8");
+
+      const result = await uploadFiles({
+        destinationPath: "",
+        files: [
+          {
+            name: "notes.txt",
+            size: 0,
+            stream: contentStream(new Uint8Array(Buffer.from("replacement"))),
+          },
+        ],
+      });
+
+      expect(result.uploaded).toEqual([]);
+      expect(result.skipped).toEqual(["notes.txt"]);
+      expect(await readFile(existingPath, "utf8")).toBe("original");
+    });
+
+    it("does not overwrite or delete a destination created between the check and the exclusive open", async () => {
+      const racePath = path.join(mockDataRoot, "race.txt");
+      const actual = await vi.importActual<typeof import("node:fs/promises")>(
+        "node:fs/promises",
+      );
+
+      vi.mocked(open).mockImplementationOnce(async (target, flags, mode) => {
+        // A concurrent writer wins after the pre-check but before our exclusive
+        // open, so the open must fail without deleting their file.
+        writeFileSync(String(target), "concurrent-writer", "utf8");
+        return actual.open(target, flags, mode);
+      });
+
+      const result = await uploadFiles({
+        destinationPath: "",
+        files: [
+          {
+            name: "race.txt",
+            size: 0,
+            stream: contentStream(new Uint8Array([1, 2, 3])),
+          },
+        ],
+      });
+
+      expect(result.uploaded).toEqual([]);
+      expect(result.skipped).toEqual(["race.txt"]);
+      expect(await readFile(racePath, "utf8")).toBe("concurrent-writer");
+    });
+
+    it("preserves a racing destination when the exclusive open fails before ownership", async () => {
+      const failurePath = path.join(mockDataRoot, "open-failure.txt");
+
+      vi.mocked(open).mockImplementationOnce(async (target) => {
+        // A concurrent writer creates the destination after the pre-check, and
+        // then our exclusive open fails for a reason other than EEXIST. Because
+        // ownership was never acquired, the file must survive.
+        writeFileSync(String(target), "concurrent-open", "utf8");
+        throw Object.assign(new Error("permission denied"), { code: "EACCES" });
+      });
+
+      await expect(
+        uploadFiles({
+          destinationPath: "",
+          files: [
+            {
+              name: "open-failure.txt",
+              size: 0,
+              stream: contentStream(new Uint8Array([1, 2, 3])),
+            },
+          ],
+        }),
+      ).rejects.toMatchObject({ code: "EACCES" });
+
+      expect(await readFile(failurePath, "utf8")).toBe("concurrent-open");
+    });
+
+    it("skips invalid names without reading the stream", async () => {
+      const result = await uploadFiles({
+        destinationPath: "",
+        files: [
+          {
+            name: "../escape.txt",
+            size: 0,
+            stream: () => {
+              throw new Error("stream must not be read for skipped files");
+            },
+          },
+        ],
+      });
+
+      expect(result.uploaded).toEqual([]);
+      expect(result.skipped).toEqual(["../escape.txt"]);
+    });
+
+    it("removes a newly-created partial file when the upload stream fails", async () => {
+      const partialPath = path.join(mockDataRoot, "partial.bin");
+      let remaining = 32;
+
+      await expect(
+        uploadFiles({
+          destinationPath: "",
+          files: [
+            {
+              name: "partial.bin",
+              size: 0,
+              stream: () =>
+                new ReadableStream<Uint8Array>({
+                  pull(controller) {
+                    if (remaining > 0) {
+                      remaining -= 1;
+                      controller.enqueue(new Uint8Array(4096));
+                      return;
+                    }
+                    controller.error(new Error("connection reset"));
+                  },
+                }),
+            },
+          ],
+        }),
+      ).rejects.toThrow();
+
+      await expect(lstat(partialPath)).rejects.toMatchObject({
+        code: "ENOENT",
+      });
     });
   });
 });

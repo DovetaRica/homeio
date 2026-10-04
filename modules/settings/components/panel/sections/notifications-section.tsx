@@ -3,7 +3,7 @@
 
 
 import { useI18n } from "@/i18n/use-i18n";
-import {useNasDesktop} from '@/modules/shell/desktop-mode';
+import {useNasDesktop} from '@/lib/ui/desktop-mode';
 import { SectionDivider, Toggle } from "@/modules/settings/components/panel/controls";
 import { SETTINGS_PANEL_INSET } from "@/modules/settings/components/panel/surface";
 import type { NotificationSettingsDraft } from "@/modules/settings/components/panel/types";

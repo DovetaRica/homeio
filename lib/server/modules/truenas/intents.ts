@@ -2,7 +2,7 @@ import 'server-only';
 import {createCipheriv,createDecipheriv,createHash,randomBytes} from 'node:crypto';
 import {appendFile,mkdir,readFile,writeFile,readdir,unlink} from 'node:fs/promises';
 import path from 'node:path';
-type Intent = {method:string; args:unknown[]; userId:string; sessionId:string; expires:number; target:string};
+type Intent = {method:string; args:unknown[]; userId:string; sessionId:string; expires:number; target:string; baseline?:string};
 const root=()=>path.join(process.env.HOMEIO_STATE_DIR??'/state','nas-operations');
 function key(){const secret=process.env.AUTH_SESSION_SECRET;if(!secret || secret.length<32)throw new Error('Session secret is not configured');return createHash('sha256').update(secret).digest();}
 export async function createIntent(intent: Omit<Intent,'expires'>) {

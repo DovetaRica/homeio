@@ -1,4 +1,4 @@
-import {useNasDesktop} from "@/modules/shell/desktop-mode";
+import {useNasDesktop} from "@/lib/ui/desktop-mode";
 import { useEffect, useState } from "react";
 import type { ContainerStats, DockerStatsPayload } from "@/lib/shared/contracts/docker";
 

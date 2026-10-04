@@ -2,7 +2,7 @@
 
 
 
-import {useNasDesktop} from "@/modules/shell/desktop-mode";
+import {useNasDesktop} from "@/lib/ui/desktop-mode";
 import { useI18n } from "@/i18n/use-i18n";
 import { Cloud, HardDrive, Plus } from "@/components/icons/platform-icons";
 import { OsIcon } from "@/components/icons/OsIcon";

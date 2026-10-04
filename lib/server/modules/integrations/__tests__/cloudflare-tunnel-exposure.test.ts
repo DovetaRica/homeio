@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
+// This unit test must also run in network-isolated build containers.
+vi.mock('node:os', () => ({networkInterfaces: () => ({lan: [{family:'IPv4', internal:false, address:'192.0.2.10'}]})}));
 
 import {
   buildTunnelUrl,

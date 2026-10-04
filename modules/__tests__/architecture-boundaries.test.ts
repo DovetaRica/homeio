@@ -2,7 +2,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const REPO_ROOT = join(import.meta.dirname, "..", "..");
+const portablePath = (value: string) => value.replaceAll('\\', '/');
+const REPO_ROOT = portablePath(join(import.meta.dirname, "..", ".."));
 const SOURCE_ROOTS = ["app", "components", "hooks", "lib", "modules"];
 const FEATURE_MODULES = [
   "modules/apps",
@@ -11,12 +12,12 @@ const FEATURE_MODULES = [
   "modules/system",
 ];
 const SOURCE_FILE_PATTERN = /\.(ts|tsx)$/;
-const CURRENT_TEST_FILE = join(
+const CURRENT_TEST_FILE = portablePath(join(
   REPO_ROOT,
   "modules",
   "__tests__",
   "architecture-boundaries.test.ts",
-);
+));
 
 function isTestFile(filePath: string) {
   return (
@@ -31,7 +32,7 @@ function listSourceFiles(root: string): string[] {
   const files: string[] = [];
 
   for (const entry of entries) {
-    const entryPath = join(root, entry.name);
+    const entryPath = portablePath(join(root, entry.name));
 
     if (entry.isDirectory()) {
       files.push(...listSourceFiles(entryPath));

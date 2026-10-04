@@ -9,6 +9,10 @@ const { execFileMock, statMock } = vi.hoisted(() => ({
 vi.mock("node:child_process", () => ({
   execFile: execFileMock,
 }));
+vi.mock('node:fs', async (importOriginal) => {
+  const original = await importOriginal<typeof import('node:fs')>();
+  return {...original, existsSync: (file: string) => file === '/.dockerenv' ? false : original.existsSync(file)};
+});
 
 vi.mock("node:fs/promises", async (importOriginal) => {
   const original = await importOriginal<typeof NodeFsPromises>();
@@ -118,7 +122,7 @@ describe("update-service", () => {
         "--property=SendSIGKILL=yes",
         "bash",
         "-lc",
-        expect.stringContaining("scripts/update.sh"),
+        expect.stringContaining("update.sh"),
       ]),
       expect.any(Function),
     );

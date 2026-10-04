@@ -33,15 +33,73 @@ function streamingUpload(req: NextRequest): Promise<FileUploadResponse> {
 
     let bb: ReturnType<typeof busboy>;
     try {
-      bb = busboy({ headers: { "content-type": contentType } });
+      bb = busboy({
+        headers: { "content-type": contentType },
+        // Browser multipart filenames are UTF-8 in the raw header bytes;
+        // busboy defaults to latin1 for non-RFC 5987 parameters.
+        defParamCharset: "utf8",
+      });
     } catch (err) {
       reject(new Error(`Invalid multipart request: ${String(err)}`));
       return;
     }
 
+    let settled = false;
+    let source: Readable | null = null;
     let destinationPath = "";
     let includeHidden = false;
+    const fileStreams = new Set<Readable>();
     const filePromises: Promise<FileUploadResponse>[] = [];
+
+    function cleanup() {
+      req.signal?.removeEventListener("abort", onAbort);
+    }
+
+    function teardown(reason: Error) {
+      // Destroy the inbound source and every in-flight file stream so active
+      // pipelines reject (rather than closing cleanly as a complete upload) and
+      // uploadFiles removes any partial files it owns. The 'error' listeners
+      // attached below keep these destructions from becoming unhandled events.
+      for (const stream of fileStreams) {
+        stream.destroy(reason);
+      }
+      fileStreams.clear();
+      source?.destroy();
+      // Pass the reason so busboy does not synthesize its own "end of form"
+      // error during destroy.
+      bb.destroy(reason);
+    }
+
+    function fail(error: unknown) {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      teardown(error instanceof Error ? error : new Error(String(error)));
+      reject(error);
+    }
+
+    function succeed(value: FileUploadResponse) {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve(value);
+    }
+
+    function onAbort() {
+      fail(new Error("Request aborted"));
+    }
+
+    // Registered before any fail() path (including the pre-aborted signal
+    // below) so busboy's own teardown errors are never unhandled.
+    bb.on("error", fail);
+
+    // The signal may already be aborted before we can subscribe; fail closed
+    // instead of waiting for an event that will never fire.
+    if (req.signal?.aborted) {
+      fail(new Error("Request aborted"));
+      return;
+    }
+    req.signal?.addEventListener("abort", onAbort, { once: true });
 
     bb.on("field", (name, value) => {
       if (name === "path") destinationPath = value;
@@ -54,31 +112,55 @@ function streamingUpload(req: NextRequest): Promise<FileUploadResponse> {
       const dest = destinationPath;
       const hidden = includeHidden;
 
-      // Wrap the live busboy Node.js Readable as a web ReadableStream so it
-      // matches the uploadFiles interface. uploadFiles calls stream() and
-      // immediately pipes the result — data flows directly to disk without
-      // any intermediate in-memory buffer.
-      let byteCount = 0;
-      fileStream.on("data", (chunk: Buffer) => {
-        byteCount += chunk.length;
+      fileStreams.add(fileStream);
+      fileStream.once("close", () => {
+        fileStreams.delete(fileStream);
+      });
+      // A skipped part has no pipeline attached; surface errors here so they
+      // never become unhandled 'error' events.
+      fileStream.on("error", (error) => {
+        fail(error);
       });
 
-      const webStream = Readable.toWeb(fileStream) as ReadableStream;
+      // If uploadFiles skips this part (duplicate name, invalid name) it never
+      // reads the stream, which would leave busboy paused and the request
+      // hanging. Resume the unread stream once the file promise settles.
+      const drain = () => {
+        if (!fileStream.readableEnded && !fileStream.destroyed) {
+          fileStream.resume();
+        }
+      };
 
+      // Wrap the live busboy Node.js Readable as a web ReadableStream so it
+      // matches the uploadFiles interface. The conversion pauses the source
+      // stream, so it is done lazily: uploadFiles only calls stream() when it
+      // actually pipes the part to disk. On the skip path nothing reads it and
+      // drain() below can resume the untouched busboy stream. Data flows
+      // directly to disk without any intermediate in-memory buffer, and the
+      // real size is read from disk after the pipeline completes.
+      const filePromise = uploadFiles({
+        destinationPath: dest,
+        includeHidden: hidden,
+        files: [
+          {
+            name: info.filename,
+            size: 0,
+            stream: () => Readable.toWeb(fileStream) as ReadableStream,
+          },
+        ],
+      }).finally(drain);
+
+      // Attach settlement handlers immediately so a rejected promise surfaces
+      // without waiting for 'finish' (which may never arrive on a broken
+      // upload) and never becomes an unhandled rejection.
       filePromises.push(
-        uploadFiles({
-          destinationPath: dest,
-          includeHidden: hidden,
-          files: [
-            {
-              name: info.filename,
-              get size() {
-                return byteCount;
-              },
-              stream: () => webStream,
-            },
-          ],
-        }),
+        filePromise.then(
+          (result) => result,
+          (error) => {
+            fail(error);
+            return { uploaded: [], skipped: [] };
+          },
+        ),
       );
     });
 
@@ -90,18 +172,21 @@ function streamingUpload(req: NextRequest): Promise<FileUploadResponse> {
             merged.uploaded.push(...r.uploaded);
             merged.skipped.push(...r.skipped);
           }
-          resolve(merged);
+          succeed(merged);
         })
-        .catch(reject);
+        .catch(fail);
     });
 
-    bb.on("error", reject);
-
     if (!req.body) {
-      reject(new Error("No request body"));
+      fail(new Error("No request body"));
       return;
     }
-    Readable.fromWeb(req.body as WebReadableStream).pipe(bb);
+
+    source = Readable.fromWeb(req.body as WebReadableStream);
+    source.on("error", (error) => {
+      fail(error);
+    });
+    source.pipe(bb);
   });
 }
 

@@ -2,7 +2,7 @@
 
 
 
-import {useNasDesktop,desktopSectionEnabled} from "@/modules/shell/desktop-mode";
+import {useNasDesktop,desktopSectionEnabled} from "@/lib/ui/desktop-mode";
 import {SystemSettings} from "./system-settings";
 import { useI18n } from "@/i18n/use-i18n";
 import { useDesktopPreferences } from "@/hooks/useDesktopPreferences";

@@ -6,9 +6,15 @@ import {initial,validate,variants,type Schema,type Value} from './schema';
 export const inputClass='w-full rounded-md border border-border bg-input px-3 py-2.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20';
 export const buttonClass='rounded-md border border-border bg-muted px-3 py-2 text-sm transition hover:bg-secondary disabled:opacity-40';
 export function fieldLabel(key:string,t:ReturnType<typeof useTranslations>) {return t.has(`fields.${key}`)?t(`fields.${key}`):key.replaceAll('_',' ');}
-function unwrap(value:Value|undefined):Value|undefined {if(value&&typeof value==='object'&&!Array.isArray(value)&&'value' in value)return value.value;return value;}
+function unwrap(value:Value|undefined,schema:Schema):Value|undefined {
+  if(value&&typeof value==='object'&&!Array.isArray(value)) {
+    if('parsed' in value&&validate(schema,value.parsed).length===0)return value.parsed;
+    if('value' in value)return value.value;
+  }
+  return value;
+}
 
-export function SchemaField({schema,value,onChange,name,seed}:{schema:Schema;value:Value;onChange:(value:Value)=>void;name:string;seed?:Value}) {
+export function SchemaField({schema,value,onChange,name,seed,showOptional=false}:{schema:Schema;value:Value;onChange:(value:Value)=>void;name:string;seed?:Value;showOptional?:boolean}) {
   const t=useTranslations('nas');
   const choices=variants(schema);
   const [variant,setVariant]=useState(()=>Math.max(0,choices.findIndex(s=>validate(s,value).length===0)));
@@ -30,16 +36,17 @@ export function SchemaField({schema,value,onChange,name,seed}:{schema:Schema;val
       const enabled=record[key]!==undefined;
       return <div key={key} className="space-y-2 rounded-md border border-border p-3">
         <div className="flex items-start gap-2">
-          {!isRequired&&<input type="checkbox" aria-label={`${t('enableField')} ${fieldLabel(key,t)}`} checked={enabled} onChange={e=>{const next={...record};if(e.target.checked){const stored=unwrap(seedRecord[key]);next[key]=stored!==undefined&&validate(s,stored).length===0?stored:initial(s);}else delete next[key];onChange(next);}}/>}
+          {!isRequired&&<input type="checkbox" aria-label={`${t('enableField')} ${fieldLabel(key,t)}`} checked={enabled} onChange={e=>{const next={...record};if(e.target.checked){const stored=unwrap(seedRecord[key],s);next[key]=stored!==undefined&&validate(s,stored).length===0?stored:initial(s);}else delete next[key];onChange(next);}}/>}
           <span className="text-sm font-medium">{fieldLabel(key,t)}{isRequired?' *':''}</span>
         </div>
         {(isRequired||enabled)&&<SchemaField schema={s} name={key} value={record[key]??initial(s)} seed={seedRecord[key]} onChange={v=>onChange({...record,[key]:v})}/>}
+        {['memory','quota','refquota'].includes(key)&&<p className="text-xs text-muted-foreground">{t(key==='memory'?'memoryUnitHint':'quotaUnitHint')}</p>}
         {s.description&&<details className="text-xs text-muted-foreground"><summary className="cursor-pointer">{t('details')}</summary><p className="mt-1 whitespace-pre-wrap">{s.description}</p></details>}
       </div>;
     };
     return <div className="space-y-3">
       {required.map(f=>render(f,true))}
-      {optional.length>0&&<details open={optional.some(([k])=>record[k]!==undefined)}><summary className="cursor-pointer py-2 text-sm text-muted-foreground">{t('optional')} ({optional.length})</summary><div className="space-y-2">{optional.map(f=>render(f,false))}</div></details>}
+      {optional.length>0&&(showOptional?<div className="space-y-2">{optional.map(f=>render(f,false))}</div>:<details open={optional.some(([k])=>record[k]!==undefined)}><summary className="cursor-pointer py-2 text-sm text-muted-foreground">{t('optional')} ({optional.length})</summary><div className="space-y-2">{optional.map(f=>render(f,false))}</div></details>)}
       {!fields.length&&<MapFields value={record} onChange={onChange}/>}
     </div>;
   }

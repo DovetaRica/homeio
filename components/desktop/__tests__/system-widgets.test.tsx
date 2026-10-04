@@ -60,7 +60,7 @@ describe("SystemWidgets", () => {
 
     expect(screen.getByText("Uptime")).toBeTruthy();
     expect(screen.getByText("Resources")).toBeTruthy();
-    expect(screen.getByText("Network")).toBeTruthy();
+    expect(screen.getByText(/^Network$/i)).toBeTruthy();
     expect(screen.getByText("4.2 / 8.0 GB")).toBeTruthy();
     expect(screen.getByText("192.168.1.30")).toBeTruthy();
     expect(screen.getByText("21°")).toBeTruthy();

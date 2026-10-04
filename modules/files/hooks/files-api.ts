@@ -17,6 +17,12 @@ import type {
 } from "@/lib/shared/contracts/files";
 
 export type { FilePasteCollision };
+export const MAX_UPLOAD_BYTES = 63 * 1024 * 1024;
+export class FileUploadError extends Error {
+  constructor(public code: 'upload_too_large' | 'upload_invalid_response') {
+    super(code); this.name = 'FileUploadError';
+  }
+}
 
 type ListFilesApiResponse = {
   data: FileListResponse;
@@ -380,6 +386,9 @@ export async function uploadFilesToPath(payload: {
   onProgress?: (loaded: number, total: number) => void;
   signal?: AbortSignal;
 }) {
+  if (payload.files.reduce((sum, file) => sum + file.size, 0) > MAX_UPLOAD_BYTES) {
+    throw new FileUploadError('upload_too_large');
+  }
   const formData = new FormData();
   formData.append("path", payload.destinationPath);
   if (payload.includeHidden) formData.append("includeHidden", "true");
@@ -431,12 +440,21 @@ export async function uploadFilesToPath(payload: {
       xhr.addEventListener("load", () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           settle(() => {
+            try {
             const json = JSON.parse(xhr.responseText) as {
               data: { uploaded: { name: string; path: string; sizeBytes: number }[]; skipped: string[] };
             };
+            if (!json.data || !Array.isArray(json.data.uploaded) || !Array.isArray(json.data.skipped)) {
+              throw new FileUploadError('upload_invalid_response');
+            }
             resolve(json.data);
+            } catch { reject(new FileUploadError('upload_invalid_response')); }
           });
         } else {
+          if (xhr.status === 413) {
+            settle(() => reject(new FileUploadError('upload_too_large')));
+            return;
+          }
           let errorMsg = `Upload failed (${xhr.status})`;
           try {
             const body = JSON.parse(xhr.responseText) as ErrorBody;

@@ -2,7 +2,7 @@
 
 
 
-import {useNasDesktop} from "@/modules/shell/desktop-mode";
+import {useNasDesktop} from "@/lib/ui/desktop-mode";
 import {NasDesktopStatusBar} from "@/modules/nas/desktop-chrome";
 import { useI18n } from "@/i18n/use-i18n";
 import { BatteryFull, Bell, CloudSun, Tailscale } from "@/components/icons/platform-icons";

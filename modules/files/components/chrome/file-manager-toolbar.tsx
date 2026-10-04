@@ -130,7 +130,7 @@ export function FileManagerToolbar({
             onClick={() => uploadInputRef.current?.click()}
             disabled={uploadFilesPending}
             aria-label={intl.t("ui.uploadFiles")}
-            title={intl.text(uploadFilesPending ? "Upload in progress" : "Upload files")}
+            title={uploadFilesPending ? intl.text("Upload in progress") : intl.t('fileTransfer.uploadHint')}
             className={cn(iconBtn, iconBtnIdle, "disabled:cursor-not-allowed disabled:opacity-45")}
           >
             {uploadFilesPending ? (

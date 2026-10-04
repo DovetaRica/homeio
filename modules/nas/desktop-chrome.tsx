@@ -34,9 +34,9 @@ export function NasDesktopWidgets({onOpenSettings}:{onOpenSettings:(section:stri
   return <aside className="nas-desktop-summary hidden w-72 shrink-0 space-y-3 overflow-y-auto p-4 xl:block">
     <div className="rounded-lg border border-border bg-card p-4 text-sm text-foreground backdrop-blur"><p className="mb-3 font-medium">TrueNAS {data?.['system.info']?.version??'—'}</p>
       {query.error?<p role="alert" className="text-status-red">{query.error.message}</p>:data?<>
-        {data['pool.query'].map(p=><p key={p.name} className="mb-3">{p.name} · {p.status}</p>)}
-        <p className="mb-3">{t('apps')} · {data['app.query'].filter(a=>a.state==='RUNNING').length} / {data['app.query'].length}</p>
-        <p>{t('alerts')} · {data['alert.list'].filter(a=>!a.dismissed).length}</p>
+        {data['pool.query']?.map(p=><p key={p.name} className="mb-3">{p.name} · {p.status}</p>)}
+        <p className="mb-3">{t('apps')} · {data['app.query']?`${data['app.query'].filter(a=>a.state==='RUNNING').length} / ${data['app.query'].length}`:'—'}</p>
+        <p>{t('alerts')} · {data['alert.list']?.filter(a=>!a.dismissed).length??'—'}</p>
       </>:<p>{t('loading')}</p>}
       <button onClick={()=>onOpenSettings('overview')} className="nas-desktop-settings-link">{settings('title')} →</button>
     </div>
@@ -45,7 +45,7 @@ export function NasDesktopWidgets({onOpenSettings}:{onOpenSettings:(section:stri
 export function NasDesktopGeneral() {
   const t=useTranslations('nas');const query=useOverview();const info=query.data?.data['system.info'];
   return <div className="space-y-5 text-sm">
-    {query.error&&<p role="alert" className="text-status-red">{query.error.message}</p>}
+    {query.error&&<p role="alert" className="text-status-red">{t(info?'staleData':'readFailed')}</p>}
     <dl className="space-y-3">{[[t('version'),info?.version],[t('fields.hostname'),info?.hostname],[t('cpu'),info?.model],[t('memory'),info?`${(info.physmem/1024**3).toFixed(1)} GiB`:'—']].map(([k,v])=><div key={k} className="flex justify-between gap-4 border-b border-glass-border py-2"><dt className="text-muted-foreground">{k}</dt><dd>{v??'—'}</dd></div>)}</dl>
     <LanguageSelect/><Link href="/" className="block text-primary">{t('title')} ↗</Link>
   </div>;

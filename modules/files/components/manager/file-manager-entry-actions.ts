@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
+import {useTranslations} from 'next-intl';
+import {FileUploadError} from '@/modules/files/hooks/files-api';
 import { toast } from "sonner";
 import {
   buildDownloadUrl,
@@ -97,6 +99,7 @@ export function useFileManagerEntryActions({
   uploadFilesMutation,
   unzipFileMutation,
 }: UseFileManagerEntryActionsArgs) {
+  const transfer = useTranslations('fileTransfer');
   return useMemo(() => {
     async function handleTrashSelected() {
       const names = [...selectedFiles];
@@ -277,7 +280,7 @@ export function useFileManagerEntryActions({
         if (error instanceof Error && error.name === "AbortError") {
           setStatusNotice("Upload canceled");
         } else {
-          setStatusNotice(error instanceof Error ? error.message : "Upload failed");
+          setStatusNotice(error instanceof FileUploadError ? transfer(error.code==='upload_too_large'?'uploadTooLarge':'invalidResponse') : error instanceof Error ? error.message : "Upload failed");
         }
       } finally {
         if (uploadAbortControllerRef.current === controller) {
@@ -395,6 +398,7 @@ export function useFileManagerEntryActions({
       submitRenameDialog,
     };
   }, [
+    transfer,
     createEntryDialog,
     createFileMutation,
     createFolderMutation,

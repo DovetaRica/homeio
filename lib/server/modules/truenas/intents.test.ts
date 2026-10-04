@@ -22,4 +22,11 @@ describe('one-use operation confirmation',()=>{
     await expect(consumeIntent('../audit','one','session')).rejects.toThrow();
     expect((await readdir(path.join(directory,'nas-operations'))).filter(x=>x.endsWith('.used'))).toHaveLength(1);
   });
+  it('keeps an optional baseline inside the encrypted intent and stays compatible without one',async()=>{
+    const token=await createIntent({method:'pool.dataset.update',args:['maindata/example',{compression:'ZSTD'}],userId:'one',sessionId:'session',target:'maindata/example',baseline:'baseline-marker'});
+    const raw=await readFile(path.join(directory,'nas-operations',token+'.json'),'utf8');expect(raw).not.toContain('baseline-marker');
+    expect((await consumeIntent(token,'one','session')).baseline).toBe('baseline-marker');
+    const legacy=await createIntent({method:'app.start',args:['example'],userId:'one',sessionId:'session',target:'example'});
+    expect((await consumeIntent(legacy,'one','session')).baseline).toBeUndefined();
+  });
 });
