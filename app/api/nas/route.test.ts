@@ -20,6 +20,16 @@ describe('NAS API security',()=>{
   it('reports job acceptance without claiming completion and audits no passwords',async()=>{const r=await post({stage:'execute',token:'token',password:'private-test-password',confirmation:'example'});expect(await r.json()).toEqual({accepted:true,job:123,result:null});expect(JSON.stringify(mocks.audit.mock.calls)).not.toContain('private-test-password');});
 });
 describe('NAS overview partial failures',()=>{
+  it('accepts null for no pending network rollback but rejects null required sections',async()=>{
+    mocks.batch.mockResolvedValue([{version:'25.10.6'},[],[],[],null]);
+    const response=await get('?resource=overview');const body=await response.json();
+    expect(response.status).toBe(200);expect(body.errors).toEqual({});
+    expect(body.data['interface.checkin_waiting']).toBeNull();
+    mocks.batch.mockResolvedValue([null,[],[],[],null]);
+    const partial=await (await get('?resource=overview')).json();
+    expect(partial.errors).toEqual({'system.info':'TrueNAS request failed'});
+    expect(partial.data['system.info']).toBeUndefined();
+  });
   it('rejects missing overview results rather than accepting an empty healthy overview',async()=>{
     mocks.batch.mockResolvedValue([]);expect((await get('?resource=overview')).status).toBe(502);
   });

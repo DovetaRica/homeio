@@ -1,7 +1,7 @@
 FROM ghcr.io/doctor-io/homeio@sha256:910d36f9ea15aeff54abf874dd630f253884502a0f2638e522ff4bb400168520
 ARG HOMEIO_REVISION
 LABEL org.opencontainers.image.title="Homeio TrueNAS management" \
-      org.opencontainers.image.version="1.9.6-truenas.16" \
+      org.opencontainers.image.version="1.9.6-truenas.17" \
       org.opencontainers.image.revision=$HOMEIO_REVISION
 # Replace generated output; the base image can contain dependency symlinks
 # at paths where the new standalone build has directories.

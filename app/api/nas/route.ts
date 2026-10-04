@@ -60,7 +60,9 @@ export async function GET(request:Request) {
       const data:Record<string,unknown>={};const errors:Record<string,string>={};
       OVERVIEW_METHODS.forEach((name,index)=>{
         const result=results[index];
-        if(result===undefined||result===null||(typeof result==='object'&&'nasError' in result))errors[name]='TrueNAS request failed';
+        // TrueNAS returns null when no network rollback is pending.
+        const invalidNull=result===null&&name!=='interface.checkin_waiting';
+        if(result===undefined||invalidNull||(result!==null&&typeof result==='object'&&'nasError' in result))errors[name]='TrueNAS request failed';
         else data[name]=redact(result);
       });
       // A partial result keeps the section that succeeded and names the failed method.
