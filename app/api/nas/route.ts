@@ -5,6 +5,7 @@ import {nasBatch,nasCall} from '@/lib/server/modules/truenas/client';
 import {operation,sameOrigin,targetOf,validateOperation} from '@/lib/server/modules/truenas/policy';
 import {audit,consumeIntent,createIntent,pruneIntents,recentAudit} from '@/lib/server/modules/truenas/intents';
 import {assertUnchanged,preparePreview} from '@/lib/server/modules/truenas/preview';
+import {readNasMonitor} from '@/lib/server/modules/truenas/monitor';
 import {jobCountParams,jobPageParams,pageResult,parsePage,snapshotCountParams,snapshotPageParams} from '@/lib/server/modules/truenas/pagination';
 import {redact} from '@/modules/nas/schema';
 import catalog from '@/modules/nas/catalog.json';
@@ -55,6 +56,7 @@ export async function GET(request:Request) {
   try {
     const url=new URL(request.url);const resource=url.searchParams.get('resource')??'overview';
     if(resource==='audit')return json({data:await recentAudit()});
+    if(resource==='monitor')return json({data:await readNasMonitor(),at:new Date().toISOString()});
     if(resource==='overview') {
       const results=await nasBatch(OVERVIEW_METHODS.map(method=>({method})));
       const data:Record<string,unknown>={};const errors:Record<string,string>={};

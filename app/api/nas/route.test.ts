@@ -13,6 +13,18 @@ beforeEach(()=>{for(const mock of Object.values(mocks))mock.mockReset();process.
 const post=(body:unknown,from=origin)=>POST(new Request(origin+'/api/nas',{method:'POST',headers:{origin:from},body:JSON.stringify(body)}));
 const get=(query='')=>GET(new Request(origin+'/api/nas'+query));
 describe('NAS API security',()=>{
+  it('authorizes monitor reads before contacting TrueNAS',async()=>{
+    mocks.session.mockResolvedValue({session:{username:'guest'},response:null});
+    expect((await get('?resource=monitor')).status).toBe(403);
+    expect(mocks.batch).not.toHaveBeenCalled();
+  });
+  it('returns actual monitor samples through the authenticated no-store route',async()=>{
+    const now=Math.floor(Date.now()/1000);
+    mocks.batch.mockResolvedValueOnce([{model:'CPU'},[{name:'cpu'}]]).mockResolvedValueOnce([[{legend:['time','cpu'],data:[[now-1,5]]}]]);
+    const response=await get('?resource=monitor');const body=await response.json();
+    expect(response.status).toBe(200);expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(body.data.graphs[0]).toMatchObject({name:'cpu',data:[[now-1,5]]});
+  });
   it('rejects non-administrator sessions',async()=>{mocks.session.mockResolvedValue({session:{username:'guest'},response:null});expect((await get()).status).toBe(403);});
   it('rejects cross-origin writes before creating any intent',async()=>{expect((await post({stage:'preview',method:'app.start',args:['example']},'https://evil.example')).status).toBe(403);expect(mocks.create).not.toHaveBeenCalled();});
   it('previews without submitting the mutation',async()=>{expect((await post({stage:'preview',method:'app.start',args:['example']})).status).toBe(200);expect(mocks.call.mock.calls.every(([method])=>method!=='app.start')).toBe(true);});

@@ -1478,5 +1478,38 @@
     "uploadTooLarge": "每批上传文件合计最多 63 MiB。请分批上传，大文件请通过 SMB 传输。",
     "invalidResponse": "上传响应无效，请刷新文件列表核实结果。",
     "uploadHint": "上传文件（每批最多 63 MiB；大文件使用 SMB）"
+  },
+  "nasMonitor": {
+    "title": "性能监控",
+    "description": "最近五分钟的 TrueNAS 性能数据，每十秒刷新。",
+    "refresh": "刷新",
+    "cpu": "CPU 使用率",
+    "memory": "可用内存",
+    "totalMemory": "总内存 {value}",
+    "load": "系统负载",
+    "loadPeriod": "一分钟平均负载",
+    "arc": "ZFS 缓存",
+    "arcHint": "ARC 可回收缓存",
+    "trend": "{name} 最近五分钟趋势",
+    "network": "网络流量",
+    "disks": "磁盘读写",
+    "networkUnits": "接收与发送速率，以字节每秒显示。",
+    "diskUnits": "读取与写入速率，以字节每秒显示。",
+    "received": "接收",
+    "sent": "发送",
+    "reads": "读取",
+    "writes": "写入",
+    "unavailable": "暂无可用监控数据",
+    "source": "数据来源：TrueNAS Reporting",
+    "sampleAt": "采样时间 {time}",
+    "stale": "数据未更新，显示的是上次采样结果。",
+    "failed": "无法读取监控数据，请检查 NAS 连接后重试。",
+    "partial": "部分性能数据不可用，已保留可读取的项目。",
+    "details": "查看缺失项目",
+    "loading": "正在读取性能数据…"
+  },
+  "nasDesktop": {
+    "openMonitor": "打开性能监控",
+    "manageApps": "管理 NAS 应用"
   }
 }

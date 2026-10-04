@@ -3,6 +3,7 @@
 
 
 import { useI18n } from "@/i18n/use-i18n";
+import {useNasDesktop} from "@/lib/ui/desktop-mode";
 import {
   ShoppingBag   as AppStore24Regular,
   LayoutGrid    as GridDotsRegular,
@@ -52,6 +53,7 @@ export function Dock({
   animationsEnabled = true,
 }: DockProps) {
   const intl = useI18n();
+  const nasMode = useNasDesktop();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const isVertical = position === "left" || position === "right";
@@ -84,7 +86,7 @@ export function Dock({
         onMouseLeave={() => setHoveredIndex(null)}
         aria-label={intl.t("ui.quickLaunchDock")}
       >
-        {dockItemDefs.map((item, index) => {
+        {dockItemDefs.filter(item => !nasMode || item.id !== 'app-store').map((item, index) => {
           const scale = animationsEnabled ? getScale(index) : 1;
           const isRunning = activeWindows.includes(item.id);
           const isFocused = focusedWindow === item.id;

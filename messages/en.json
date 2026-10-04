@@ -1478,5 +1478,38 @@
     "uploadTooLarge": "Uploads are limited to 63 MiB per batch. Split the batch or use SMB for large files.",
     "invalidResponse": "Invalid upload response. Refresh the file list to check the result.",
     "uploadHint": "Upload files (63 MiB per batch; use SMB for larger files)"
+  },
+  "nasMonitor": {
+    "title": "Performance monitor",
+    "description": "Five minutes of TrueNAS performance data, refreshed every ten seconds.",
+    "refresh": "Refresh",
+    "cpu": "CPU usage",
+    "memory": "Available memory",
+    "totalMemory": "Total memory {value}",
+    "load": "System load",
+    "loadPeriod": "One-minute load average",
+    "arc": "ZFS cache",
+    "arcHint": "Reclaimable ARC cache",
+    "trend": "{name} over the last five minutes",
+    "network": "Network traffic",
+    "disks": "Disk activity",
+    "networkUnits": "Receive and send rates, shown in bytes per second.",
+    "diskUnits": "Read and write rates, shown in bytes per second.",
+    "received": "Receive",
+    "sent": "Send",
+    "reads": "Read",
+    "writes": "Write",
+    "unavailable": "No monitoring data available",
+    "source": "Source: TrueNAS Reporting",
+    "sampleAt": "Sampled at {time}",
+    "stale": "Data has not updated; showing the previous sample.",
+    "failed": "Could not read monitoring data. Check the NAS connection and retry.",
+    "partial": "Some metrics are unavailable; available data is retained.",
+    "details": "View missing metrics",
+    "loading": "Loading performance data…"
+  },
+  "nasDesktop": {
+    "openMonitor": "Open performance monitor",
+    "manageApps": "Manage NAS apps"
   }
 }

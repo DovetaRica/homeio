@@ -107,6 +107,7 @@ vi.mock("@/modules/shell/components/lock-screen", () => ({
 vi.mock("@/modules/system/components/monitor", () => ({
   Monitor: () => <div>Monitor</div>,
 }));
+vi.mock('@/modules/nas/monitor', () => ({NasMonitor: () => <div>NAS performance monitor</div>}));
 vi.mock("@/modules/settings/components/settings", () => ({
   SettingsPanel: ({selectedSection}: {selectedSection?: string}) => <div data-testid="settings-panel" data-section={selectedSection}>SettingsPanel</div>,
 }));
@@ -328,7 +329,7 @@ describe("DesktopShell reboot handling", () => {
     expect(localStorage.getItem("system.power.action.completed.v1")).toBeNull();
   });
 
-  it('routes NAS monitor, disks and alerts into the same settings window', async () => {
+  it('opens independent NAS monitoring while retaining unified management settings', async () => {
     useCurrentUserMock.mockReturnValue({data: {id: 'u1', username: 'admin'}, isLoading: false, isError: false});
     useRebootRecoveryMock.mockReturnValue({isHydrated: true, isActive: false});
     renderDesktopShell(true);
@@ -338,9 +339,27 @@ describe("DesktopShell reboot handling", () => {
     fireEvent.click(screen.getByRole('button', {name: 'Dock Alerts'}));
     expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('alerts');
     fireEvent.click(screen.getByRole('button', {name: 'Dock Monitor'}));
-    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('overview');
+    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('alerts');
+    expect(screen.getByText('NAS performance monitor')).toBeTruthy();
     expect(screen.getAllByTestId('window-System settings')).toHaveLength(1);
-    expect(screen.getByTestId('dock-state').textContent).toContain('"activeWindows":["settings"]');
+    expect(screen.getByTestId('dock-state').textContent).toContain('"activeWindows":["settings","monitor"]');
+    fireEvent.click(screen.getByRole('button', {name: 'Dock App Store'}));
+    expect(screen.queryByText('AppStore')).toBeNull();
+    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('apps');
+  });
+
+  it('removes store quick actions and stale store recents from the NAS command palette', async () => {
+    useCurrentUserMock.mockReturnValue({data: {id: 'u1', username: 'admin'}, isLoading: false, isError: false});
+    useRebootRecoveryMock.mockReturnValue({isHydrated: true, isActive: false});
+    localStorage.setItem('homeio.command-palette.recent.v1', JSON.stringify([{key:'store',kind:'app-store-search',title:'Old store result',subtitle:'unused',search:'Grafana'}]));
+    renderDesktopShell(true);
+    fireEvent.keyDown(window, {key:'k', ctrlKey:true});
+    await waitFor(() => expect(screen.getByText('Open performance monitor')).toBeTruthy());
+    expect(screen.queryByText('Open App Store')).toBeNull();
+    expect(screen.queryByText('Old store result')).toBeNull();
+    expect(screen.queryByText('Grafana')).toBeNull();
+    fireEvent.click(screen.getByText('Manage NAS apps'));
+    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('apps');
   });
 
   it("focuses an open window from the dock instead of closing it", async () => {

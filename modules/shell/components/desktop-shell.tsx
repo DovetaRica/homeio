@@ -3,7 +3,7 @@
 
 
 import {useNasDesktop,desktopSectionEnabled} from "@/modules/shell/desktop-mode";
-import {NasDashboard} from "@/modules/nas/dashboard";
+import {NasMonitor} from "@/modules/nas/monitor";
 import {NasInfrastructurePanel} from "@/modules/nas/infrastructure-panel";
 import {useLocale, useTranslations} from "next-intl";
 import {SYSTEM_SECTION_IDS, systemSectionLabel} from "@/modules/settings/system-navigation";
@@ -246,8 +246,8 @@ function DesktopShellInner({initialSettingsSection}: DesktopShellProps) {
   );
 
   const openWindow = useCallback((id: string) => {
-    if(nasMode && ["monitor","disk-manager","notifications"].includes(id)) {
-      setSettingsSectionRequest(id === "disk-manager" ? "pools" : id === "notifications" ? "alerts" : "overview");
+    if(nasMode && ["app-store","custom-install","disk-manager","notifications"].includes(id)) {
+      setSettingsSectionRequest(id === "disk-manager" ? "pools" : id === "notifications" ? "alerts" : "apps");
       setSettingsRequestKey(value => value + 1);
       id = "settings";
     }
@@ -840,7 +840,7 @@ function DesktopShellInner({initialSettingsSection}: DesktopShellProps) {
             isMinimized={minimizedWindows.includes("monitor")}
             animationsEnabled={appearance.animationsEnabled}
           >
-            {nasMode?<NasDashboard embedded officialUrl="http://192.168.31.221"/>:<Monitor />}
+            {nasMode?<NasMonitor active={!minimizedWindows.includes("monitor")&&!closingWindows.includes("monitor")}/>:<Monitor />}
           </Window>
         )}
 
@@ -863,7 +863,7 @@ function DesktopShellInner({initialSettingsSection}: DesktopShellProps) {
           </Window>
         )}
 
-        {openWindows.includes("app-store") && (
+        {!nasMode && openWindows.includes("app-store") && (
           <Window
             title={intl.t("ui.appStore")}
             icon={<ShoppingBag className="size-4 text-sky-400" />}
@@ -885,7 +885,7 @@ function DesktopShellInner({initialSettingsSection}: DesktopShellProps) {
           </Window>
         )}
 
-        {openWindows.includes("custom-install") && (
+        {!nasMode && openWindows.includes("custom-install") && (
           <Window
             title={intl.t("ui.installCustomApp")}
             icon={<Package className="size-4 text-primary" />}

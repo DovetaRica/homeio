@@ -3,8 +3,15 @@
 import { Dock } from "@/modules/shell/components/dock";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import {DesktopModeProvider} from '@/lib/ui/desktop-mode';
 
 describe("Dock", () => {
+  it('keeps monitoring and settings while hiding the unsupported store in NAS mode', () => {
+    render(<DesktopModeProvider nasMode><Dock/></DesktopModeProvider>);
+    expect(screen.queryByRole('button', {name: 'App Store'})).toBeNull();
+    expect(screen.getByRole('button', {name: 'Monitor'})).toBeTruthy();
+    expect(screen.getByRole('button', {name: 'Settings'})).toBeTruthy();
+  });
   it("highlights only the focused app while keeping running indicators for open apps", () => {
     const { container } = render(
       <Dock

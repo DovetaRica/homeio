@@ -3,6 +3,8 @@
 
 
 import { useI18n } from "@/i18n/use-i18n";
+import {useNasDesktop} from "@/lib/ui/desktop-mode";
+import {useTranslations} from 'next-intl';
 import Image from "next/image";
 import type { StoreAppSummary } from "@/lib/shared/contracts/apps";
 import type { RecentCommandAction } from "@/lib/desktop/recent-actions";
@@ -44,7 +46,7 @@ type CommandPaletteProps = {
   recentActions: readonly CommandPaletteRecentAction[];
   onOpenSettingsSection: (sectionId: string) => void;
   onOpenAppStoreSearch: (input: { search: string; appId?: string }) => void;
-  onOpenWindow: (windowId: "files" | "settings" | "app-store" | "terminal") => void;
+  onOpenWindow: (windowId: "files" | "settings" | "app-store" | "terminal" | "monitor") => void;
   onSelectRecentAction: (action: CommandPaletteRecentAction) => void;
 };
 
@@ -84,6 +86,8 @@ export function CommandPalette({
   onSelectRecentAction,
 }: CommandPaletteProps) {
   const intl = useI18n();
+  const nasMode = useNasDesktop();
+  const desktopT = useTranslations('nasDesktop');
   const normalizedQuery = query.trim();
   const debouncedQuery = useDebouncedValue(normalizedQuery, 180);
 
@@ -100,6 +104,7 @@ export function CommandPalette({
   const appResults = (storeCatalogQuery.data?.apps ?? [])
     .slice(0, normalizedQuery ? 7 : 5);
   const filteredRecentActions = recentActions.filter((action) => {
+    if (nasMode && (action.kind === 'app-store-search' || (action.kind === 'window' && action.windowId === 'app-store'))) return false;
     if (!normalizedQuery) return true;
     const haystack = `${action.title} ${action.subtitle} ${intl.text(action.title)} ${intl.text(action.subtitle)}`.toLowerCase();
     return haystack.includes(normalizedQuery.toLowerCase());
@@ -203,11 +208,11 @@ export function CommandPalette({
             <span>{intl.t("ui.openSettings")}</span>
             <CommandShortcut>{intl.t("ui.system")}</CommandShortcut>
           </CommandItem>
-          <CommandItem onSelect={() => onOpenWindow("app-store")}>
+          {nasMode ? <><CommandItem onSelect={() => onOpenWindow("monitor")}><Search className="size-4 text-primary"/><span>{desktopT('openMonitor')}</span></CommandItem><CommandItem onSelect={() => onOpenSettingsSection('apps')}><ShoppingBag className="size-4 text-primary"/><span>{desktopT('manageApps')}</span></CommandItem></> : <CommandItem onSelect={() => onOpenWindow("app-store")}>
             <ShoppingBag className="size-4 text-sky-400" />
             <span>{intl.t("ui.openAppStore")}</span>
             <CommandShortcut>{intl.t("ui.apps")}</CommandShortcut>
-          </CommandItem>
+          </CommandItem>}
           <CommandItem onSelect={() => onOpenWindow("files")}>
             <FolderOpen className="size-4 text-primary" />
             <span>{intl.t("ui.openFiles")}</span>
@@ -237,7 +242,7 @@ export function CommandPalette({
 
         <CommandSeparator />
 
-        <CommandGroup heading="App Store">
+        {!nasMode && <CommandGroup heading="App Store">
           {storeCatalogQuery.isLoading && normalizedQuery ? (
             <div className="px-2 py-3 text-xs text-muted-foreground">
               {intl.t("ui.searchingApps")}
@@ -284,7 +289,7 @@ export function CommandPalette({
               </CommandShortcut>
             </CommandItem>
           ))}
-        </CommandGroup>
+        </CommandGroup>}
       </CommandList>
     </CommandDialog>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import {useNasDesktop} from "@/lib/ui/desktop-mode";
 import type {
   StoreAppSummary,
   StoreCatalogSource,
@@ -77,7 +78,9 @@ async function fetchStoreCatalog(options?: UseStoreCatalogOptions): Promise<Stor
 }
 
 export function useStoreCatalog(options?: UseStoreCatalogOptions) {
+  const nasMode = useNasDesktop();
   return useQuery({
+    enabled: !nasMode,
     queryKey: [...queryKeys.storeCatalog, options ?? {}] as const,
     queryFn: () => fetchStoreCatalog(options),
     staleTime: 60_000,

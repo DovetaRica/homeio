@@ -2,6 +2,7 @@
 
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { useEffect, useMemo, useReducer, useRef, type MouseEvent } from "react";
+import { useNasDesktop } from "@/lib/ui/desktop-mode";
 import {
   getEditorLanguage,
   normalizePathForBackend,
@@ -55,7 +56,7 @@ import {
   getRemovableItems,
   getStorageSummary,
   getViewFlags,
-  sidebarSections,
+  getSidebarSections,
   sortEntries,
 } from "@/modules/files/components/manager/file-manager-derived";
 import { useFileManagerKeyboard } from "@/modules/files/components/manager/file-manager-keyboard";
@@ -72,9 +73,16 @@ export function FileManager() {
   const uploadAbortControllerRef = useRef<AbortController | null>(null);
   const [state, dispatch] = useReducer(fileManagerReducer, initialState);
   const currentUserQuery = useCurrentUser();
+  const nasMode = useNasDesktop();
 
   const filesRootQuery = useFilesRoot();
   const viewFlags = getViewFlags(state.currentPath);
+  // Dedupes with directoryQuery when the browser is already at the root listing.
+  const rootDirectoryQuery = useFilesDirectory([], false, { enabled: nasMode });
+  const sidebarSections = useMemo(
+    () => getSidebarSections(nasMode, rootDirectoryQuery.isError ? undefined : rootDirectoryQuery.data?.entries),
+    [nasMode, rootDirectoryQuery.isError, rootDirectoryQuery.data?.entries],
+  );
   const directoryQuery = useFilesDirectory(viewFlags.isStarredView ? [] : state.currentPath, state.includeHidden, {
     enabled: !viewFlags.isStarredView,
   });

@@ -1,6 +1,7 @@
 /* @vitest-environment jsdom */
 
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import {DesktopModeProvider} from '@/lib/ui/desktop-mode';
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   mockDirectory,
@@ -13,6 +14,20 @@ import {
 
 describe("FileManager navigation", () => {
   beforeEach(resetFileManagerMocks);
+  it('uses actual NAS mounts as stable shortcuts while browsing inside a directory', async () => {
+    const {FileManager}=await import('@/modules/files/components/file-manager');
+    mockUseFilesDirectory.mockImplementation((path: string[]) => mockDirectory(path.length ? [] : [{name:'movie',path:'movie',type:'folder'},{name:'downloads',path:'downloads',type:'folder'}]));
+    render(<DesktopModeProvider nasMode><FileManager/></DesktopModeProvider>);
+    const shortcuts=within(screen.getByRole('complementary'));
+    expect(screen.queryByRole('button', {name:'Documents',exact:true})).toBeNull();
+    expect(screen.queryByRole('button', {name:'Apps',exact:true})).toBeNull();
+    fireEvent.click(shortcuts.getByRole('button', {name:'movie',exact:true}));
+    await waitFor(() => expect(mockUseFilesDirectory.mock.calls.at(-1)?.[0]).toEqual(['movie']));
+    expect(screen.getByRole('button', {name:'downloads',exact:true})).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', {name:'downloads',exact:true}));
+    await waitFor(() => expect(mockUseFilesDirectory.mock.calls.at(-1)?.[0]).toEqual(['downloads']));
+    expect(screen.getByRole('button', {name:'Starred',exact:true})).toBeTruthy();
+  });
 
   it("navigates to /Shared from sidebar Shared button", async () => {
     await renderFileManager();

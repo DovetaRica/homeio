@@ -3,7 +3,11 @@ import { Folder, HardDrive, Home, StarFilled, Usb } from "@/components/icons/pla
 import { OsIcon } from "@/components/icons/OsIcon";
 import { DEVICE_ICONS, FILE_SIDEBAR_ICONS, FOLDER_ICONS } from "@/components/icons/icon-assets";
 import type { FileListEntry, FileReadResponse } from "@/lib/shared/contracts/files";
-import type { FileManagerSidebarSection, RemovableSidebarItem } from "@/modules/files/components/chrome/file-manager-sidebar";
+import type {
+  FileManagerSidebarItem,
+  FileManagerSidebarSection,
+  RemovableSidebarItem,
+} from "@/modules/files/components/chrome/file-manager-sidebar";
 import type { UsbDrive } from "@/lib/shared/contracts/usb";
 import type { GoogleDriveConnection } from "@/modules/files/hooks/useGoogleDrive";
 import {
@@ -92,6 +96,64 @@ export const sidebarSections: FileManagerSidebarSection[] = [
     items: [],
   },
 ];
+
+function isHiddenSidebarName(name: string): boolean {
+  return name.startsWith(".");
+}
+
+/**
+ * Builds the sidebar sections for the active desktop mode.
+ *
+ * Non-NAS desktops keep the static fabricated favorites unchanged. NAS desktops
+ * only show the virtual Home and Starred entries plus real root folders, so
+ * mounts that do not exist are never advertised. `undefined` root entries
+ * (initial load or a failed root read) fall back to Home and Starred only.
+ */
+export function getSidebarSections(
+  nasMode: boolean,
+  rootEntries: FileListEntry[] | undefined,
+): FileManagerSidebarSection[] {
+  if (!nasMode) return sidebarSections;
+
+  const staticFavorites =
+    sidebarSections.find((section) => section.title === "Favorites")?.items ?? [];
+  const virtualItems = staticFavorites.filter(
+    (item) => item.name === "Home" || item.name === "Starred",
+  );
+
+  const seenNames = new Set(virtualItems.map((item) => item.name));
+  const seenPaths = new Set(virtualItems.map((item) => item.path.join("/")));
+  const rootItems: FileManagerSidebarItem[] = [];
+
+  for (const entry of rootEntries ?? []) {
+    if (entry.type !== "folder") continue;
+    if (isHiddenSidebarName(entry.name)) continue;
+
+    const segments = entry.path.split("/").filter(Boolean);
+    if (segments.length === 0) continue;
+    if (segments.some(isHiddenSidebarName)) continue;
+    if (segments[0] === "Trash") continue;
+
+    const pathKey = segments.join("/");
+    if (seenNames.has(entry.name) || seenPaths.has(pathKey)) continue;
+    seenNames.add(entry.name);
+    seenPaths.add(pathKey);
+
+    rootItems.push({
+      name: entry.name,
+      icon: createKoraIcon(
+        FOLDER_ICONS.default,
+        createElement(Folder, { className: "size-4 text-sky-400" }),
+      ),
+      path: segments,
+    });
+  }
+
+  return [
+    { title: "Favorites", items: [...virtualItems, ...rootItems] },
+    ...sidebarSections.filter((section) => section.title !== "Favorites"),
+  ];
+}
 
 export function formatStorageValue(bytes: number): string {
   if (bytes >= BYTES_PER_TB) {
