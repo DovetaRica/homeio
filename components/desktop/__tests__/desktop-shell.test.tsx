@@ -147,7 +147,7 @@ import { DesktopShell } from "@/modules/shell/components/desktop-shell";
 
 function renderDesktopShell(nasMode = false) {
   const client = createTestQueryClient();
-  return render(<NextIntlClientProvider locale="en" messages={en} timeZone="UTC"><DesktopModeProvider nasMode={nasMode}><DesktopShell initialSettingsSection={nasMode ? 'overview' : undefined}/></DesktopModeProvider></NextIntlClientProvider>, {
+  return render(<NextIntlClientProvider locale="en" messages={en} timeZone="UTC"><DesktopModeProvider nasMode={nasMode}><DesktopShell/></DesktopModeProvider></NextIntlClientProvider>, {
     wrapper: createWrapper(client),
   });
 }
@@ -333,7 +333,10 @@ describe("DesktopShell reboot handling", () => {
     useCurrentUserMock.mockReturnValue({data: {id: 'u1', username: 'admin'}, isLoading: false, isError: false});
     useRebootRecoveryMock.mockReturnValue({isHydrated: true, isActive: false});
     renderDesktopShell(true);
-    expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('overview');
+    expect(screen.queryByTestId('settings-panel')).toBeNull();
+    expect(screen.getByTestId('dock-state').textContent).toContain('"activeWindows":[]');
+    fireEvent.click(screen.getByRole('button', {name: 'Dock Settings'}));
+    expect(screen.getByTestId('settings-panel')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', {name: 'Dock Disks'}));
     expect(screen.getByTestId('settings-panel').getAttribute('data-section')).toBe('pools');
     fireEvent.click(screen.getByRole('button', {name: 'Dock Alerts'}));

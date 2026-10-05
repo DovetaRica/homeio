@@ -7,7 +7,9 @@ export default function HomePage() {
   return (
     <>
       <RealtimeBootstrap />
-      <DesktopModeProvider nasMode={nasMode}><DesktopShell initialSettingsSection={nasMode ? 'overview' : undefined}/></DesktopModeProvider>
+      <DesktopModeProvider nasMode={nasMode}>
+        <DesktopShell />
+      </DesktopModeProvider>
     </>
   );
 }
